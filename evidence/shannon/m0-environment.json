@@ -1,0 +1,104 @@
+{
+  "phase": "M0",
+  "stage": "read",
+  "timestamp": "2026-09-05T23:55:00Z",
+  "environment": {
+    "chainId": 50312,
+    "rpc": "https://dream-rpc.somnia.network",
+    "ws": "wss://api.infra.testnet.somnia.network/ws",
+    "indexer": "https://dev.smk.somnia.host/v1/graphql",
+    "blockNumberObserved": 30000000
+  },
+  "sdk": {
+    "package": "@somnia-chain/markets-sdk",
+    "version": "0.29.0",
+    "evidenceClass": "SHANNON_READ_VERIFIED",
+    "exportsFound": [
+      "SOMNIA_TESTNET_ADDRESSES",
+      "SomniaMarkets"
+    ],
+    "chainExports": ["somniaShannon", "somniaMainnet", "somniaLocal", "somniaElwood", "hidekiTestnet"],
+    "abiExports": [
+      "binaryPoolWriteAbi",
+      "binaryModuleReadAbi",
+      "binaryModuleWriteAbi",
+      "binarySettlementAbi",
+      "erc6909Abi",
+      "oracleHubAbi",
+      "operatorRegistryWriteAbi",
+      "orderBookEventsAbi"
+    ]
+  },
+  "addresses": {
+    "binaryModule": "0x3ecC694Cef705358864a646142ac17A90E29e388",
+    "binaryPoolBeacon": "0x85C01B5ef4F4ed59caC69749565e309f01b14Dbc",
+    "binaryPoolImpl": "0x48e523c9f22f98548d263f0aD444D732e5202C0E",
+    "binarySettlement": "0xbF4a49e0Dfd092e5FBE8E5761064C49533e6Ed23",
+    "clobFactory": "0x1a478019Ae4d24249a962934af0f129CE98B5e6f",
+    "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+    "collateralRouter": "0xbC0C9834B15ACE38bB50dDaa7d7f7C7CC4DC183C",
+    "marketCreator": "0x138CfA6b80475b8c03d7E468b2442278E51e645a",
+    "marketCreatorFactory": "0xE6bEE93cE87c9E6e62aCb621caa7832EE47b4F6B",
+    "marketsCore": "0x2802504314685D89bF6C992CA5a8e7cC78bc0294",
+    "oracleHub": "0xe40db387cC98601Dd11bd634fF2f3AD5686dE32b",
+    "testUsdc": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E"
+  },
+  "operatorRegistry": {
+    "proxy": "0x15C7e8CE38F021c5b45d098AaD788f63090bF20A",
+    "implementation": "0x9707acee9c39fea71564a1b0c840f97f784c22f7",
+    "eip1967Slot": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+    "selectors": {
+      "setOperatorApprovalForPool": "0x7bbc67e6",
+      "setOperatorApprovalGlobal": "0x7f1e31ce",
+      "isApprovedForPool": "view (ABI: pool,owner,operator,selector -> bool)",
+      "isGloballyApproved": "view (ABI: owner,operator,selector -> bool)"
+    },
+    "liveBytecodeHashFor": "implementation"
+  },
+  "placeBinaryOrderFor": {
+    "abiExportedFrom": "binaryPoolWriteAbi",
+    "selector": "0x718c2d4d",
+    "stateMutability": "payable",
+    "signature": "placeBinaryOrderFor(address owner, uint8 kind, uint256 price, uint256 quantity, uint64 expireTimestampNs, uint8 orderType, uint8 selfMatchingOption, address builder, uint96 builderFeeBpsTimes1k, uint64 userData) returns (bool success, uint128 id)",
+    "presentInLiveImpl": true,
+    "presentInLiveProxy": "via BeaconProxy delegation"
+  },
+  "placeBinaryOrder": {
+    "selector": "0x5d97c566",
+    "stateMutability": "payable",
+    "presentInLiveImpl": true,
+    "note": "Variant without owner argument — used by owner directly. We use placeBinaryOrderFor for operator execution."
+  },
+  "liveMarkets": {
+    "sample": [
+      {
+        "marketId": "0x000000000000000000000000000000000000000000000000000000000001493c",
+        "asset": "BTC", "intervalSec": 60, "clobStatus": "Trading",
+        "binaryPoolAddress": "0xad950391341499f1e5ab746e132ddde22d56f162"
+      },
+      {
+        "marketId": "0x000000000000000000000000000000000000000000000000000000000001493d",
+        "asset": "ETH", "intervalSec": 60, "clobStatus": "Trading",
+        "binaryPoolAddress": "0x14f239085d7ed9b9502b5cf4e6a733688f369b61"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000014934",
+        "asset": "BTC", "intervalSec": 300, "clobStatus": "Trading",
+        "binaryPoolAddress": "0x3942c8d750380678be3b716d05e92a07f71c934c",
+        "marketAddress": "0x16c6e449cde5ffbe1f70c759c2da1c13598f7bb9",
+        "quoteDecimals": 6, "baseDecimals": 6,
+        "lastPriceRaw": 850000,
+        "oracleQuestionId": "17886424133863196029805619995644688538738169233998236794801415356076405383806",
+        "yesTokenId": "1543750192500798693299832531835638783904403675094416147781851111490560",
+        "noTokenId": "1543750192500798693299832531835638783904403675094416147781851111490561",
+        "expiry": 1788651300
+      }
+    ],
+    "note": "Pool addresses are distinct per market — pool-recycling risk is structural. Canonical identity remains marketId."
+  },
+  "m0Gate": {
+    "readChecksPass": true,
+    "writeChecksPass": false,
+    "blocker": "PRIOR_OWNER_PRIVATE_KEY is not present in this environment. Per docs/ONESHOT_BUILD_INPUTS.md §35, live Shannon writes require a disposable Shannon-testnet-only owner key with STT gas balance. The control plane forbids using any non-disposable key."
+  }
+}

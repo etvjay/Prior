@@ -1,0 +1,23 @@
+{
+  "name": "prior",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Prior — forecast evidence + bounded execution across live DreamDEX Event Contracts on Somnia Shannon.",
+  "scripts": {
+    "m0:sdk": "tsx scripts/m0-sdk-exports.ts",
+    "m0:markets": "tsx scripts/m0-discover-markets.ts",
+    "m0:inspect": "tsx scripts/m0-inspect-market.ts",
+    "m0:book": "tsx scripts/m0-snapshot-book.ts",
+    "m0:resolution": "tsx scripts/m0-inspect-resolution.ts",
+    "m0:abi": "tsx scripts/m0-inspect-abi.ts"
+  },
+  "dependencies": {
+    "@somnia-chain/markets-sdk": "0.29.0",
+    "viem": "2.21.45"
+  },
+  "devDependencies": {
+    "tsx": "4.19.2",
+    "typescript": "5.7.2"
+  },
+  "packageManager": "pnpm@9.15.0"
+}

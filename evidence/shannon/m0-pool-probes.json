@@ -1,0 +1,159 @@
+[
+  {
+    "fn": "tickSize()",
+    "sel": "0xf210d087",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "lotSize()",
+    "sel": "0x4942f65f",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "minQuantity()",
+    "sel": "0x4318c6dc",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "priceScale()",
+    "sel": "0xa0fbddaf",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "collateral()",
+    "sel": "0xd8dfeb45",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "owner()",
+    "sel": "0x8da5cb5b",
+    "result": "0x0000000000000000000000003ecc694cef705358864a646142ac17a90e29e388",
+    "error": null
+  },
+  {
+    "fn": "getOwner()",
+    "sel": "0x893d20e8",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "getTickSize()",
+    "sel": "0x34084231",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "getLotSize()",
+    "sel": "0xecaf1cdf",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "getMinQuantity()",
+    "sel": "0x5e4f8b59",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "ONE_COLLATERAL()",
+    "sel": "0x19aa825b",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "oneCollateral()",
+    "sel": "0xdd339a1a",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "decimals()",
+    "sel": "0x313ce567",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "priceDecimals()",
+    "sel": "0x05300b28",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "isOpen()",
+    "sel": "0x47535d7b",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "status()",
+    "sel": "0x200d2ed2",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "marketId()",
+    "sel": "0x6ed71ede",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "YES_TOKEN()",
+    "sel": "0x1b142f62",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "NO_TOKEN()",
+    "sel": "0x2fd2adfe",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "yesToken()",
+    "sel": "0xf0d9bb20",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "noToken()",
+    "sel": "0x11a9f10a",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "market()",
+    "sel": "0x80f55605",
+    "result": "0x00000000000000000000000016c6e449cde5ffbe1f70c759c2da1c13598f7bb9",
+    "error": null
+  },
+  {
+    "fn": "orderBook()",
+    "sel": "0x776af5ba",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "bestBid()",
+    "sel": "0x20c1614b",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "bestAsk()",
+    "sel": "0xcffb7d15",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "midpoint()",
+    "sel": "0xceacdca8",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "getMidpoint()",
+    "sel": "0x5df3f375",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "price()",
+    "sel": "0xa035b1fe",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "lastPrice()",
+    "sel": "0x053f14da",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "quote()",
+    "sel": "0x999b93af",
+    "error": "execution reverted"
+  },
+  {
+    "fn": "base()",
+    "sel": "0x5001f3b5",
+    "error": "execution reverted"
+  }
+]

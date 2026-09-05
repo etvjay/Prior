@@ -1,0 +1,957 @@
+{
+  "data": {
+    "marketT": {
+      "fields": [
+        {
+          "name": "asset",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "backing",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "numeric",
+              "kind": "SCALAR",
+              "ofType": null
+            }
+          }
+        },
+        {
+          "name": "baseDecimals",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "Int",
+              "kind": "SCALAR",
+              "ofType": null
+            }
+          }
+        },
+        {
+          "name": "baseIsNative",
+          "type": {
+            "name": "Boolean",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "baseSymbol",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "baseToken",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "binaryPoolAddress",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "candles",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": null,
+              "kind": "LIST",
+              "ofType": {
+                "name": null,
+                "kind": "NON_NULL"
+              }
+            }
+          }
+        },
+        {
+          "name": "clobStatus",
+          "type": {
+            "name": "clobmarketstatus",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "closingCaptureState",
+          "type": {
+            "name": "Int",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "closingMid",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "collateral",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "context",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "createdAtBlock",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "numeric",
+              "kind": "SCALAR",
+              "ofType": null
+            }
+          }
+        },
+        {
+          "name": "createdAtTimestamp",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "numeric",
+              "kind": "SCALAR",
+              "ofType": null
+            }
+          }
+        },
+        {
+          "name": "createdByTx",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "creator",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "cumulativeBaseVolume",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "numeric",
+              "kind": "SCALAR",
+              "ofType": null
+            }
+          }
+        },
+        {
+          "name": "cumulativeFundingPerUnit",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "cumulativeQuoteVolume",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "numeric",
+              "kind": "SCALAR",
+              "ofType": null
+            }
+          }
+        },
+        {
+          "name": "expiry",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "fills",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": null,
+              "kind": "LIST",
+              "ofType": {
+                "name": null,
+                "kind": "NON_NULL"
+              }
+            }
+          }
+        },
+        {
+          "name": "finalized",
+          "type": {
+            "name": "Boolean",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "fundingIntervalSec",
+          "type": {
+            "name": "Int",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "fundingRate",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "fundingUpdatedAt",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "fundingWindowSec",
+          "type": {
+            "name": "Int",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "id",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "String",
+              "kind": "SCALAR",
+              "ofType": null
+            }
+          }
+        },
+        {
+          "name": "indexPrice",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "initialMarginBps",
+          "type": {
+            "name": "Int",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "intervalSec",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "lastPrice",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "lastTradeAt",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "lotSize",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "marginBank",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "markPrice",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "markPriceUpdatedAt",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "marketAddress",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "marketId",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "marketType",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "markettype",
+              "kind": "SCALAR",
+              "ofType": null
+            }
+          }
+        },
+        {
+          "name": "minQuantity",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "netBacking",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "noTokenId",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "nonce",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "openInterest",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "openInterestUpdatedAt",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "operatorId",
+          "type": {
+            "name": "Int",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "oracleQuestion",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "oracleQuestionId",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "orders",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": null,
+              "kind": "LIST",
+              "ofType": {
+                "name": null,
+                "kind": "NON_NULL"
+              }
+            }
+          }
+        },
+        {
+          "name": "outcomeBalances",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": null,
+              "kind": "LIST",
+              "ofType": {
+                "name": null,
+                "kind": "NON_NULL"
+              }
+            }
+          }
+        },
+        {
+          "name": "outcomeSlotCount",
+          "type": {
+            "name": "Int",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "payoutDenominator",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "payoutNumerators",
+          "type": {
+            "name": null,
+            "kind": "LIST",
+            "ofType": {
+              "name": null,
+              "kind": "NON_NULL",
+              "ofType": {
+                "name": "String",
+                "kind": "SCALAR"
+              }
+            }
+          }
+        },
+        {
+          "name": "poolAddress",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "String",
+              "kind": "SCALAR",
+              "ofType": null
+            }
+          }
+        },
+        {
+          "name": "question",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "quoteDecimals",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "Int",
+              "kind": "SCALAR",
+              "ofType": null
+            }
+          }
+        },
+        {
+          "name": "quoteSymbol",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "quoteToken",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "rawMidpoint",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "resolvedAtBlock",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "resolvedAtTimestamp",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "series",
+          "type": {
+            "name": "Series",
+            "kind": "OBJECT",
+            "ofType": null
+          }
+        },
+        {
+          "name": "series_id",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "statusUpdates",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": null,
+              "kind": "LIST",
+              "ofType": {
+                "name": null,
+                "kind": "NON_NULL"
+              }
+            }
+          }
+        },
+        {
+          "name": "stopOrders",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": null,
+              "kind": "LIST",
+              "ofType": {
+                "name": null,
+                "kind": "NON_NULL"
+              }
+            }
+          }
+        },
+        {
+          "name": "stopRegistry",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "strike",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "tickSize",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "tradeCount",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "numeric",
+              "kind": "SCALAR",
+              "ofType": null
+            }
+          }
+        },
+        {
+          "name": "tradingStart",
+          "type": {
+            "name": "numeric",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "venueId",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "voidPolicy",
+          "type": {
+            "name": "Int",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "voidVectorSource",
+          "type": {
+            "name": "Int",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "voided",
+          "type": {
+            "name": null,
+            "kind": "NON_NULL",
+            "ofType": {
+              "name": "Boolean",
+              "kind": "SCALAR",
+              "ofType": null
+            }
+          }
+        },
+        {
+          "name": "winningOutcome",
+          "type": {
+            "name": "Int",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        },
+        {
+          "name": "yesTokenId",
+          "type": {
+            "name": "String",
+            "kind": "SCALAR",
+            "ofType": null
+          }
+        }
+      ]
+    },
+    "orderT": {
+      "inputFields": [
+        {
+          "name": "asset"
+        },
+        {
+          "name": "backing"
+        },
+        {
+          "name": "baseDecimals"
+        },
+        {
+          "name": "baseIsNative"
+        },
+        {
+          "name": "baseSymbol"
+        },
+        {
+          "name": "baseToken"
+        },
+        {
+          "name": "binaryPoolAddress"
+        },
+        {
+          "name": "candles_aggregate"
+        },
+        {
+          "name": "clobStatus"
+        },
+        {
+          "name": "closingCaptureState"
+        },
+        {
+          "name": "closingMid"
+        },
+        {
+          "name": "collateral"
+        },
+        {
+          "name": "context"
+        },
+        {
+          "name": "createdAtBlock"
+        },
+        {
+          "name": "createdAtTimestamp"
+        },
+        {
+          "name": "createdByTx"
+        },
+        {
+          "name": "creator"
+        },
+        {
+          "name": "cumulativeBaseVolume"
+        },
+        {
+          "name": "cumulativeFundingPerUnit"
+        },
+        {
+          "name": "cumulativeQuoteVolume"
+        },
+        {
+          "name": "expiry"
+        },
+        {
+          "name": "fills_aggregate"
+        },
+        {
+          "name": "finalized"
+        },
+        {
+          "name": "fundingIntervalSec"
+        },
+        {
+          "name": "fundingRate"
+        },
+        {
+          "name": "fundingUpdatedAt"
+        },
+        {
+          "name": "fundingWindowSec"
+        },
+        {
+          "name": "id"
+        },
+        {
+          "name": "indexPrice"
+        },
+        {
+          "name": "initialMarginBps"
+        },
+        {
+          "name": "intervalSec"
+        },
+        {
+          "name": "lastPrice"
+        },
+        {
+          "name": "lastTradeAt"
+        },
+        {
+          "name": "lotSize"
+        },
+        {
+          "name": "marginBank"
+        },
+        {
+          "name": "markPrice"
+        },
+        {
+          "name": "markPriceUpdatedAt"
+        },
+        {
+          "name": "marketAddress"
+        },
+        {
+          "name": "marketId"
+        },
+        {
+          "name": "marketType"
+        },
+        {
+          "name": "minQuantity"
+        },
+        {
+          "name": "netBacking"
+        },
+        {
+          "name": "noTokenId"
+        },
+        {
+          "name": "nonce"
+        },
+        {
+          "name": "openInterest"
+        },
+        {
+          "name": "openInterestUpdatedAt"
+        },
+        {
+          "name": "operatorId"
+        },
+        {
+          "name": "oracleQuestion"
+        },
+        {
+          "name": "oracleQuestionId"
+        },
+        {
+          "name": "orders_aggregate"
+        },
+        {
+          "name": "outcomeBalances_aggregate"
+        },
+        {
+          "name": "outcomeSlotCount"
+        },
+        {
+          "name": "payoutDenominator"
+        },
+        {
+          "name": "payoutNumerators"
+        },
+        {
+          "name": "poolAddress"
+        },
+        {
+          "name": "question"
+        },
+        {
+          "name": "quoteDecimals"
+        },
+        {
+          "name": "quoteSymbol"
+        },
+        {
+          "name": "quoteToken"
+        },
+        {
+          "name": "rawMidpoint"
+        },
+        {
+          "name": "resolvedAtBlock"
+        },
+        {
+          "name": "resolvedAtTimestamp"
+        },
+        {
+          "name": "series"
+        },
+        {
+          "name": "series_id"
+        },
+        {
+          "name": "statusUpdates_aggregate"
+        },
+        {
+          "name": "stopOrders_aggregate"
+        },
+        {
+          "name": "stopRegistry"
+        },
+        {
+          "name": "strike"
+        },
+        {
+          "name": "tickSize"
+        },
+        {
+          "name": "tradeCount"
+        },
+        {
+          "name": "tradingStart"
+        },
+        {
+          "name": "venueId"
+        },
+        {
+          "name": "voidPolicy"
+        },
+        {
+          "name": "voidVectorSource"
+        },
+        {
+          "name": "voided"
+        },
+        {
+          "name": "winningOutcome"
+        },
+        {
+          "name": "yesTokenId"
+        }
+      ]
+    },
+    "statusT": null
+  }
+}

@@ -1,0 +1,411 @@
+{
+  "timestamp": "2026-09-05T23:28:51.262Z",
+  "sdkVersion": "0.29.0",
+  "nodeVersion": "v22.23.2",
+  "packagePath": "/home/ubuntu/Prior/node_modules/@somnia-chain/markets-sdk",
+  "packageHash": "8f017e1d201c25256dee8a7a45bd6a3e27a467fef94ae8361943dea5312bc466",
+  "exports": {
+    "root": [
+      "ANSWER_TYPE",
+      "CADENCE_LADDER_SEC",
+      "CADENCE_TOLERANCE_SEC",
+      "CANCEL_ORDER_FOR_SELECTOR",
+      "CANDLE_INTERVALS",
+      "ContractRevertError",
+      "DECIMALS",
+      "DEFAULT_CEX_RATE_BPS",
+      "DEFAULT_FEES",
+      "DEFAULT_SLIPPAGE_BPS",
+      "DEFAULT_SLIPPAGE_MIN_TICKS",
+      "EIGHT_HOURS_SEC",
+      "FUNDING_PRECISION",
+      "HUB_MIN_FREE_BALANCE_WEI",
+      "IndexerError",
+      "InvalidInputError",
+      "MARGIN_STATUS",
+      "MARKET_TYPE_BINARY_V1",
+      "MARKET_TYPE_PLUGINS",
+      "MIN_SERIES_INTERVAL_SEC",
+      "NATIVE_TOKEN_SENTINEL",
+      "NetworkTape",
+      "NotConfiguredError",
+      "ONE_HOUR_SEC",
+      "ONE_YEAR_SEC",
+      "ORDER_KIND",
+      "ORDER_KIND_SIDE",
+      "ORDER_TYPE",
+      "PERP_POOL_FACTORY_MARKET_STATUS_INTERFACE_ID",
+      "PERP_STOP_DROP_REASON",
+      "PLACE_ORDER_FOR_SELECTOR",
+      "PRICE_FEED_DECIMALS",
+      "PRICE_RESOLUTION_SECONDS",
+      "QUERY_KEY_SCOPE",
+      "QUESTION_SOURCE_TYPE",
+      "RAY",
+      "RpcError",
+      "SELF_MATCHING_OPTION",
+      "SOMNIA_MAINNET_ADDRESSES",
+      "SOMNIA_MAINNET_LEND",
+      "SOMNIA_TESTNET_ADDRESSES",
+      "SOMNIA_TESTNET_LEND",
+      "SOMNIA_TESTNET_PRICE_FEED",
+      "SignerRequiredError",
+      "SomniaMarkets",
+      "SomniaMarketsError",
+      "TIMEFRAMES",
+      "ZERO_ADDRESS",
+      "accrueCompounded",
+      "accrueLinear",
+      "annualizedFundingRate",
+      "averageEntryPrice",
+      "balanceFloor",
+      "binaryFillsFor",
+      "binaryFillsFromPortfolio",
+      "binaryMarketTypePlugin",
+      "binaryModuleReadAbi",
+      "binaryModuleWriteAbi",
+      "binaryPoolWriteAbi",
+      "binaryResolutionMode",
+      "binarySettlementAbi",
+      "bookMidPrice",
+      "boundaryPrice",
+      "buildFundingRateSeries",
+      "byNewestFirst",
+      "cadenceBandSec",
+      "candlesKey",
+      "ceilRawAmount",
+      "claimableFrom",
+      "computeBinaryPnl",
+      "computePortfolioAnalytics",
+      "computePositionPnL",
+      "consoleDebugSink",
+      "contractErrorsAbi",
+      "debugCollector",
+      "decodeBinaryVenueFeeParams",
+      "decodeOutcomeId",
+      "decodePerpStopOrderIds",
+      "decodeRevert",
+      "densifyFundingBuckets",
+      "erc20VaultWriteAbi",
+      "erc20WriteAbi",
+      "erc6909Abi",
+      "estPayoutFor",
+      "estimateMarketOrder",
+      "fillKind",
+      "fillsWithinSlippage",
+      "floorRawBalance",
+      "formatIntervalLabel",
+      "fromHuman",
+      "fundingRate1h",
+      "fundingRate8h",
+      "fundingRatePerInterval",
+      "getMarketTypePlugin",
+      "intervalsPerWindow",
+      "isBinaryMarket",
+      "isFundingStale",
+      "isLocalPrecompileUnavailable",
+      "isPerpMarket",
+      "isSpotMarket",
+      "lendDebtTokenAbi",
+      "lendGatewayAbi",
+      "lendPoolAbi",
+      "lendRayRateToApy",
+      "lendUiPoolDataProviderAbi",
+      "listMarketTypePlugins",
+      "marginBankWriteAbi",
+      "markOutcomePosition",
+      "markYesPrice",
+      "marketActivityKey",
+      "marketCreatorsKey",
+      "marketFeesKey",
+      "marketIntervalLabel",
+      "marketKey",
+      "marketOnchainKey",
+      "marketStats24hFromCandles",
+      "marketsKey",
+      "maxVenueFeeBpsKey",
+      "midYesPrice",
+      "normalizeFundingRate",
+      "operatorRegistryWriteAbi",
+      "operatorsKey",
+      "oracleAdaptersKey",
+      "oracleHubAbi",
+      "oracleHubEventsAbi",
+      "orderBookBatchWriteAbi",
+      "orderBookEventsAbi",
+      "outcomeId",
+      "outcomeMarkPrice",
+      "perpLiquidationPrice",
+      "perpMarkForPnl",
+      "perpOrderMarginQuote",
+      "perpPoolWriteAbi",
+      "perpPositionAnalytics",
+      "pnlEventsFor",
+      "portfolioKey",
+      "positionMarkState",
+      "preflightChain",
+      "preflightCreateQuote",
+      "preflightHub",
+      "preflightMarketCreator",
+      "preflightOperator",
+      "preflightRoll",
+      "preflightSeries",
+      "preflightVenue",
+      "priceToProbability",
+      "probabilityToPrice",
+      "quoteBinaryOrderOverBook",
+      "quoteBinarySellOverBook",
+      "quoteBinaryStakeOverBook",
+      "rayMul",
+      "realizedFundingPerBase",
+      "resolveIntervalSec",
+      "sideOfKind",
+      "slippageForCrossing",
+      "snapIntervalSec",
+      "snapToCadence",
+      "spotPoolOperatorRegistryReadAbi",
+      "spotPoolWriteAbi",
+      "spotStopRegistryEventsAbi",
+      "spotStopRegistryWriteAbi",
+      "syncStatusKey",
+      "toHuman",
+      "toHumanString",
+      "tradeContextKey",
+      "transactionActivityKey",
+      "upPercent",
+      "upProbability"
+    ],
+    "chains": [
+      "BridgeToken",
+      "ChainId",
+      "SOMNIA_BRIDGE",
+      "createBridgeTransfer",
+      "defineChain",
+      "getBridgeNetwork",
+      "getBridgeRoute",
+      "getBridgeRouter",
+      "getBridgeToken",
+      "getSomniaChain",
+      "hidekiTestnet",
+      "isBridgeNetwork",
+      "isSomniaChainId",
+      "listBridgeNetworks",
+      "listBridgeTokens",
+      "sendBridgeStep",
+      "somniaChains",
+      "somniaElwood",
+      "somniaLocal",
+      "somniaMainnet",
+      "somniaShannon",
+      "toEip1193Transaction",
+      "warpRouterAbi"
+    ],
+    "native": [
+      "SomniaMempoolStatus",
+      "createNative",
+      "getSomniaRpcError",
+      "isMethodNotFound",
+      "isUnauthorized",
+      "sessionAddress",
+      "sessionPrivateKey"
+    ]
+  },
+  "addresses": {
+    "SOMNIA_TESTNET_ADDRESSES": {
+      "binaryModule": "0x3ecC694Cef705358864a646142ac17A90E29e388",
+      "binaryPoolBeacon": "0x85C01B5ef4F4ed59caC69749565e309f01b14Dbc",
+      "binaryPoolImpl": "0x48e523c9f22f98548d263f0aD444D732e5202C0E",
+      "binarySettlement": "0xbF4a49e0Dfd092e5FBE8E5761064C49533e6Ed23",
+      "clobFactory": "0x1a478019Ae4d24249a962934af0f129CE98B5e6f",
+      "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+      "collateralRouter": "0xbC0C9834B15ACE38bB50dDaa7d7f7C7CC4DC183C",
+      "marketCreator": "0x138CfA6b80475b8c03d7E468b2442278E51e645a",
+      "marketCreatorFactory": "0xE6bEE93cE87c9E6e62aCb621caa7832EE47b4F6B",
+      "marketsCore": "0x2802504314685D89bF6C992CA5a8e7cC78bc0294",
+      "oracleHub": "0xe40db387cC98601Dd11bd634fF2f3AD5686dE32b",
+      "testUsdc": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+      "lend": "{\"pool\":\"0x7Cb9df1bc191B16BeFF9fdEC2cd1ef91Cac18176\",\"poolAddressesProvider\":\"0xEbf503eD254014C152965C52006A34f7Ab3d28f1\",\"uiPoolDataProvider\":\"0xfAb035cAFe664497a9476d3b11904e284Df758c6\",\"wrappedTokenGateway\":\"0x29edCCDB3aE8CDF0ea6077cd3E682BfA6dD53f19\"}"
+    },
+    "hash": "c52770c326bc7a97ce7c9c33d7add511fa7d80c065bfeb17f5c1eb205dbb3782"
+  },
+  "abiExports": [
+    "binaryPoolWriteAbi",
+    "binaryModuleReadAbi",
+    "binaryModuleWriteAbi",
+    "binarySettlementAbi",
+    "erc6909Abi",
+    "oracleHubAbi",
+    "operatorRegistryWriteAbi",
+    "orderBookEventsAbi"
+  ],
+  "placeBinaryMatches": [
+    {
+      "abiName": "binaryPoolWriteAbi",
+      "type": "function",
+      "inputs": [
+        {
+          "type": "uint8",
+          "name": "kind"
+        },
+        {
+          "type": "uint256",
+          "name": "price"
+        },
+        {
+          "type": "uint256",
+          "name": "quantity"
+        },
+        {
+          "type": "uint64",
+          "name": "expireTimestampNs"
+        },
+        {
+          "type": "uint8",
+          "name": "orderType"
+        },
+        {
+          "type": "uint8",
+          "name": "selfMatchingOption"
+        },
+        {
+          "type": "address",
+          "name": "builder"
+        },
+        {
+          "type": "uint96",
+          "name": "builderFeeBpsTimes1k"
+        },
+        {
+          "type": "uint64",
+          "name": "userData"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool",
+          "name": "success"
+        },
+        {
+          "type": "uint128",
+          "name": "id"
+        }
+      ],
+      "stateMutability": "payable",
+      "selector": "0x718c2d4d"
+    },
+    {
+      "abiName": "binaryPoolWriteAbi",
+      "type": "function",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "owner"
+        },
+        {
+          "type": "uint8",
+          "name": "kind"
+        },
+        {
+          "type": "uint256",
+          "name": "price"
+        },
+        {
+          "type": "uint256",
+          "name": "quantity"
+        },
+        {
+          "type": "uint64",
+          "name": "expireTimestampNs"
+        },
+        {
+          "type": "uint8",
+          "name": "orderType"
+        },
+        {
+          "type": "uint8",
+          "name": "selfMatchingOption"
+        },
+        {
+          "type": "address",
+          "name": "builder"
+        },
+        {
+          "type": "uint96",
+          "name": "builderFeeBpsTimes1k"
+        },
+        {
+          "type": "uint64",
+          "name": "userData"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool",
+          "name": "success"
+        },
+        {
+          "type": "uint128",
+          "name": "id"
+        }
+      ],
+      "stateMutability": "payable",
+      "selector": "0x5d97c566"
+    }
+  ],
+  "operatorMatches": [
+    {
+      "abiName": "operatorRegistryWriteAbi",
+      "fn": "setOperatorApprovalGlobal",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "operator"
+        },
+        {
+          "type": "bytes4[]",
+          "name": "selectors"
+        },
+        {
+          "type": "bool",
+          "name": "approved"
+        }
+      ],
+      "outputs": [],
+      "selector": "0x7f1e31ce"
+    },
+    {
+      "abiName": "operatorRegistryWriteAbi",
+      "fn": "setOperatorApprovalForPool",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "pool"
+        },
+        {
+          "type": "address",
+          "name": "operator"
+        },
+        {
+          "type": "bytes4[]",
+          "name": "selectors"
+        },
+        {
+          "type": "bool",
+          "name": "approved"
+        }
+      ],
+      "outputs": [],
+      "selector": "0x7bbc67e6"
+    }
+  ],
+  "abiHashes": {
+    "binaryPoolWriteAbi": "8ddb0c518a91de18f53c57c0074f0d041bdc7efa2c5b5fad31f784422a56454b",
+    "binaryModuleReadAbi": "e757a7ca39655a0aa2f819ffe209d0c12b59e6f8df0745a21b46ca3320986294",
+    "binaryModuleWriteAbi": "b1668887ab0d71f7057e38abfe42db2bd58bb80d6eae7e32f2c30c50c2240a86",
+    "binarySettlementAbi": "613df95c45339ce587f9de0902c2763e9b8c5ad17735fa47db1907a403c1429b",
+    "erc6909Abi": "f3dee3075caa458db449833302b782db706bc6906fdde23348892929f3eda69c",
+    "oracleHubAbi": "a7f49c61bf300bb76b2267ea4fff6341ad804802b0019a501e70908abda22c70",
+    "operatorRegistryWriteAbi": "c233f9883b1f6d2f354abdb42ac98c5620226628962ff02502b0a714865d7939",
+    "orderBookEventsAbi": "85830938324528d42f514f41cd5d6978792585ef1d918f97c073aee320a15241"
+  }
+}
