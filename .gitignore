@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+.pnpm-debug.log*
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+*.env.local
+*.env.*.local
+secrets/
+
+# Build artifacts
+out/
+dist/
+build/
+.next/
+.turbo/
+*.tsbuildinfo
+artifacts/
+typechain-types/
+forge-cache/
+forge-out/
+broadcast/
+cache/
+
+# Editor
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Test
+coverage/
+playwright-report/
+test-results/
+
+# OS
+Thumbs.db
