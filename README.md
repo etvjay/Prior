@@ -1,84 +1,81 @@
-# Resolved Forecast Trials — Repository Control Plane
+# PRIOR
 
-This package is the canonical documentation and agent-governance layer for the Resolved Forecast Trials (RFT) project.
+> Commit what you believe before reality resolves it, then carry fixed decision rules across changing Event Contracts.
 
-## Product decomposition
+PRIOR is a forecasting and persistent-intent prototype built on Somnia Shannon and DreamDEX binary Event Contracts.
 
-- **Forecast Arena** — the first user-facing product.
-- **Resolved Forecast Trial (RFT)** — the primitive.
-- **DreamDEX Event Contracts** — market, order-book, execution and resolution substrate.
-- **Somnia** — execution and persistence substrate.
-- **Forecast Evidence Set (future)** — aggregation primitive over many RFTs.
+## What it does
 
-## Canonical precedence
+- **Forecast** — an immutable belief committed before a market resolves.
+- **RFT** — a Resolved Forecast Trial that compares the Forecast with the market reference and canonical DreamDEX outcome.
+- **Circuit** — a fixed, multi-window intent that evaluates changing Event Contracts without mutating its rules.
+- **Guided execution** — the Circuit computes the exact bounded action first; the owner authorizes that exact proposal. This is not discretionary manual trading.
 
-When two documents conflict, follow this order:
+## Why it is different
 
-1. `docs/GROUND_TRUTH.md`
-2. `docs/SYSTEM_DEFINITION.md`
-3. `docs/PRODUCT_SPEC.md`
-4. `docs/PROTOCOL_SPEC.md`
-5. `docs/CIRCUIT_SPEC.md`
-6. `docs/AUTHORITY_DECISION.md`
-7. `docs/AUTHORITY_MODEL.md`
-8. `docs/EXECUTION_POLICY.md`
-9. `docs/RUNNER_SPEC.md`
-10. `docs/INVARIANTS.md`
-11. `docs/DREAMDEX_INTEGRATION.md`
-12. `docs/SOMNIA_INTEGRATION.md`
-13. `docs/INTERFACE_SURFACES.md`
-14. `docs/DESIGN.md`
-15. `docs/DESIGN_SYSTEM.md`
-16. `docs/FRONTEND_STATE_MACHINE.md`
-17. `docs/BACKEND_ARCHITECTURE.md`
-18. `docs/TEST_SPEC.md`
-19. `docs/DECISIONS.md`
-20. `docs/ASSUMPTIONS.md`
-21. `docs/CONTRADICTIONS.md`
-22. `docs/CANONICAL_STATE.md`
-23. `docs/EVIDENCE_LEDGER.md`
-
-The skills in `/skills` govern how agents execute and review work; they do not override product ground truth.
-
-## Operational entry point
-
-Before a one-shot build or live Shannon run, read:
-
-`docs/ONESHOT_BUILD_INPUTS.md`
-
-It lists secrets, endpoints, SDKs, required funds, dynamic state, evidence outputs, build phases, and review gates. For UI implementation, `docs/UI_ONESHOT_SPEC.md` is the page-by-page interaction contract, `docs/VISUAL_LANGUAGE.md` and `docs/SCREEN_GEOMETRY.md` freeze the visual implementation, and `docs/MOTION_SYSTEM.md` is the canonical motion/choreography contract. These are operational guidance and do not override canonical ground truth.
-
-## Core build loop
+Prediction markets preserve market outcomes. PRIOR preserves the full decision record:
 
 ```text
-external truth
-    ↓
-bounded design
-    ↓
-implementation
-    ↓
-tests
-    ↓
-live evidence
-    ↓
-review
-    ↓
-canonical state update
+belief → market reference → policy decision → execution/abstention → outcome → score
 ```
 
-No feature is considered implemented because it exists in a mock, static UI, README, screenshot, or local-only code path.
+That makes Forecast quality, policy behavior, and PnL inspectable separately.
 
-## Current implementation
+## Live proof
 
-This repository contains the current Prior implementation slices:
+- Market #1: one losing guided DreamDEX position completed the full lifecycle: Forecast, policy, owner authorization, order, fill, resolution, redemption, and RFT scoring.
+- Circuit continuity: one unchanged Circuit processed two real BTC 5m markets. Both Forecasts were committed before resolution; both deterministic policy decisions were ABSTAIN; both RFTs are scored.
+- Runner recovery: the continuity records are keyed by `circuitId × marketId`; restart evidence shows no duplicate Forecast, proposal, or order effects.
 
-- `packages/core`: shared types, deterministic Brier scoring, executable-price Circuit policy, and trade-tag packing.
-- `packages/dreamdex`: pinned `@somnia-chain/markets-sdk@0.29.0` adapter, Shannon discovery, canonical `marketId → pool` binding reads, and SDK executable-book quoting.
-- `contracts`: `RFTRegistry`, `CircuitRegistry`, `CircuitExecutor`, `DreamDexAdapter`, and deterministic Foundry tests.
-- `apps/runner`: restart-safe-oriented liveness skeleton with `/health`, `/ready`, and `/runtime`; no owner key custody.
-- `apps/web`: Prior landing, Live, Forecast, Circuits, Circuit, History, and Profile routes with the frozen dark evidence-instrument visual system.
-- `evidence/shannon`: machine-readable M0 read evidence from live Shannon.
+## Architecture
 
-### Evidence boundary
+```text
+DreamDEX Event Contract
+        ↓ typed market/book reads
+Forecast → RFT commit → CircuitPolicy
+                           ↓
+                 ABSTAIN or exact proposal
+                           ↓
+                    owner authorization
+                           ↓
+                DreamDEX order/fill/resolution
+                           ↓
+                    redemption → RFT score
+```
 
-M0 read-only integration is verified against Shannon chain `50312`, including the exact pinned SDK, live Event Contract discovery, the specialized `placeBinaryOrderFor` selector (`0x5d97c566`), and selector-scoped per-pool operator-registry bytecode. M0 write evidence, deployment, and live multi-market execution remain blocked until a disposable Shannon-only `PRIOR_OWNER_PRIVATE_KEY` with STT is supplied. No mock or local result is presented as live proof.
+## DreamDEX integration
+
+Event Contracts use `@somnia-chain/markets-sdk@0.29.0` on Shannon (`50312`). Market identity is `marketId`; pool addresses may recycle. Onchain market status outranks indexed status. Prices and quantities use fixed-point raw units:
+
+```text
+CollateralRaw = PriceRaw × QuantityRaw / UnitScaleRaw
+```
+
+The autonomous `placeBinaryOrderFor` path remains `BLOCKED_EXTERNAL` by DreamDEX `OnlyApprovedContracts()` and is not used in the demo.
+
+## Run locally
+
+```bash
+pnpm install
+packages/core/node_modules/.bin/vitest run
+packages/core/node_modules/.bin/tsc -p packages/core/tsconfig.json --noEmit
+(cd contracts && forge build && forge test)
+(cd apps/web && node_modules/.bin/next build)
+```
+
+See [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md), [`docs/PROOF_INDEX.md`](docs/PROOF_INDEX.md), and [`docs/JUDGING_MAP.md`](docs/JUDGING_MAP.md).
+
+## Evidence
+
+Machine-readable Shannon evidence is in [`evidence/shannon/`](evidence/shannon/):
+
+- [`market1-lifecycle.json`](evidence/shannon/market1-lifecycle.json)
+- [`circuit-continuity-recovery.json`](evidence/shannon/circuit-continuity-recovery.json)
+
+## Limitations
+
+Proven: guided economic lifecycle, fixed-point accounting, two-market Circuit continuity, deterministic abstention, scored RFTs, and restart/recovery evidence.
+
+Not proven: autonomous Circuit execution, production-safe autonomous executor security, DreamDEX-level exactly-once semantics, production daemon reliability, or browser E2E in the constrained environment. Guided duplicate safety is **Prior-orchestrated**, not a DreamDEX protocol guarantee.
+
+Primary sources: [`docs/SOURCES.md`](docs/SOURCES.md).
