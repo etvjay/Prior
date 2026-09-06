@@ -112,6 +112,11 @@
       "classification": "END_TO_END_VERIFIED"
     }
   ],
+  "strategy": {
+    "type": "INTEGRATION_FIXTURE",
+    "qualityClaim": "NOT_CLAIMED",
+    "detail": "deterministic strategy; no AI forecasting-quality claim"
+  },
   "gates": {
     "A": {
       "status": "PASS",
@@ -129,29 +134,29 @@
       "detail": "provider/session/signer attribution plus core readback"
     },
     "D": {
-      "status": "NOT_CLAIMED",
-      "classification": "NOT_CLAIMED",
-      "detail": "deterministic strategy is an integration fixture, not intelligence evidence"
+      "status": "BLOCKED_EXTERNAL",
+      "classification": "BLOCKED_EXTERNAL",
+      "detail": "no live eligible DreamDEX market/reference was independently observed"
     },
     "E": {
       "status": "BLOCKED_EXTERNAL",
       "classification": "BLOCKED_EXTERNAL",
-      "detail": "no live DreamDEX market reference asserted by this demo"
+      "detail": "no funded signer and no pre-resolution onchain Forecast commitment"
     },
     "F": {
       "status": "BLOCKED_EXTERNAL",
       "classification": "BLOCKED_EXTERNAL",
-      "detail": "no funded wallet/signing key and no onchain Forecast commitment"
+      "detail": "no committed Forecast for the existing Circuit to consume or evaluate"
     },
     "G": {
       "status": "PASS",
       "classification": "END_TO_END_VERIFIED",
-      "detail": "exact replay is idempotent and tampered sign material is rejected"
+      "detail": "execution request returns REJECTED_AUTHORITY and provider has no execution authority"
     },
     "H": {
       "status": "PASS",
       "classification": "END_TO_END_VERIFIED",
-      "detail": "execution request returns REJECTED_AUTHORITY"
+      "detail": "Provider A and B use the same protocol/validation path; replay and tamper checks pass"
     }
   },
   "live": {
