@@ -97,3 +97,23 @@ The economic action cannot execute at a price worse than the Circuit-derived max
 
 ### CINV-020 — Collateral allowance is separate authority
 DreamDEX operator approval and ERC-20 pool allowance are tracked separately; missing either cannot be silently bypassed.
+
+## M4.1 Mandate invariants A-M
+
+These are deterministic `UNIT_VERIFIED` domain invariants in `packages/core/test/mandate.test.ts`. They do not claim new onchain enforcement.
+
+- **A: Forecast authority is not execution authority.** Forecast and execute capabilities are separate typed sets.
+- **B: Execution authority is not Forecast authority.** An execute-only binding cannot submit a Forecast.
+- **C: API/MCP authentication is not capital permission.** An authenticated transport principal without execute capability cannot authorize an action.
+- **D: Capital attenuation is monotonic.** An agent cannot increase `maxPerMarketRaw` or `totalBudgetRaw`.
+- **E: Scope attenuation is monotonic.** An agent cannot add assets or intervals/cadences.
+- **F: Temporal attenuation is monotonic.** An agent cannot extend `expiresAt`.
+- **G: Revocation is always available to the owner.** An agent cannot disable owner-only revocation.
+- **H: Execution limits cannot weaken.** An agent cannot lower `minMarginBps`.
+- **I: Authorized actions are immutable.** An issued envelope's identity, linkage, action, price, quantity, spend, time, and hash cannot mutate.
+- **J: Lifecycle gates future authority.** Paused, expired, revoked, and completed mandates reject future actions.
+- **K: Action idempotency is enforced.** A duplicate `actionId` cannot produce two effects.
+- **L: Historical evidence survives termination.** Revocation does not delete Forecast, RFT, action, or execution evidence.
+- **M: Canonical identity/linkage is deterministic.** Policy set ordering does not change `policyHash`, and bindings must match `mandateId` and `policyHash`.
+
+See `docs/MANDATE_SPEC.md` and `docs/AGENT_AUTHORITY_MODEL.md` for field semantics, traceability, and evidence limits.

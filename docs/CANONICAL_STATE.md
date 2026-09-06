@@ -108,8 +108,17 @@ route motion, Forecast commitment motion, dense-mode drift, order-book behavior,
 execution choreography, History/Profile transitions, mobile motion, reduced-motion
 behavior, and performance/accessibility constraints.
 
-## Visual language frozen
-Prior's implementation visual language is now frozen in:
+## M4.1 domain foundation
+
+M4.1 Mandate and Agent Authority Foundation is implemented locally in `packages/core` with typed `MandatePolicy`, `AgentPrincipal`, `AgentBinding`, `ForecastRequest`, `ForecastSubmission`, and fixed-envelope `AuthorizedAction` objects. Deterministic policy hashing, binding linkage, attenuation, lifecycle, spend, immutability, idempotency, and formatting tests are `UNIT_VERIFIED` only. No new Circuit, contract, UI, deployment, MCP server, or autonomous DreamDEX execution was added.
+
+The M4.1 authority boundary is documented in:
+
+- `docs/MANDATE_SPEC.md`
+- `docs/AGENT_AUTHORITY_MODEL.md`
+
+The highest-priority next action is to build the first Forecast Provider/domain workflow and prove one external agent can submit an attributable Forecast into PRIOR, unless a blocking architecture defect is found.
+
 ```text
 docs/VISUAL_LANGUAGE.md
 docs/SCREEN_GEOMETRY.md

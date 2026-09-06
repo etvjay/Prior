@@ -195,7 +195,234 @@ export function assertBps(p: number, field: string): void {
     throw new Error(`${field} must be integer bps in [0, ${BPS_MAX}], got ${p}`);
   }
 }
-
 export function outcomeToBps(outcome: Outcome): Bps {
   return outcome === Outcome.UP ? BPS_MAX : 0;
+}
+
+// ---------------------------------------------------------------------------
+// M4.1 Mandate and agent-authority foundation.
+// ---------------------------------------------------------------------------
+
+/** Canonical identifiers for authority and execution records. */
+export type MandateId = Hex;
+export type AgentId = Hex;
+export type BindingId = Hex;
+export type ForecastId = TrialId;
+export type IterationId = Hex;
+export type ActionId = Hex;
+export type ExecutionId = Hex;
+export type PolicyHash = Hex;
+
+export const MandateLifecycle = {
+  DRAFT: "DRAFT",
+  APPROVED: "APPROVED",
+  ACTIVE: "ACTIVE",
+  PAUSED: "PAUSED",
+  EXPIRED: "EXPIRED",
+  REVOKED: "REVOKED",
+  COMPLETED: "COMPLETED",
+} as const;
+export type MandateLifecycle = (typeof MandateLifecycle)[keyof typeof MandateLifecycle];
+
+export const AgentSourceType = {
+  HUMAN: "HUMAN",
+  AGENT: "AGENT",
+  MODEL: "MODEL",
+  SERVICE: "SERVICE",
+} as const;
+export type AgentSourceType = (typeof AgentSourceType)[keyof typeof AgentSourceType];
+
+export const MarketVenue = {
+  DREAMDEX: "DreamDEX",
+} as const;
+export type MarketVenue = (typeof MarketVenue)[keyof typeof MarketVenue];
+
+export const MarketAsset = {
+  BTC: "BTC",
+  ETH: "ETH",
+} as const;
+export type MarketAsset = (typeof MarketAsset)[keyof typeof MarketAsset];
+
+/** A new cadence can be represented in a mandate without changing Circuit contracts. */
+export const MandateMarketClass = {
+  BTC_5M: "BTC_5M",
+} as const;
+export type MandateMarketClass = MarketClass | (typeof MandateMarketClass)[keyof typeof MandateMarketClass];
+
+/** Read capabilities are intentionally separate from Forecast and execution. */
+export const ReadCapability = {
+  GET_MANDATE: "getMandate",
+  LIST_ELIGIBLE_MARKETS: "listEligibleMarkets",
+  GET_FORECAST_REQUEST: "getForecastRequest",
+  GET_AUTHORIZED_ACTION: "getAuthorizedAction",
+  GET_EXECUTION_STATUS: "getExecutionStatus",
+  GET_REMAINING_AUTHORITY: "getRemainingAuthority",
+  GET_RFT_HISTORY: "getRftHistory",
+} as const;
+export type ReadCapability = (typeof ReadCapability)[keyof typeof ReadCapability];
+
+export const ForecastCapability = {
+  SUBMIT_FORECAST: "submitForecast",
+} as const;
+export type ForecastCapability = (typeof ForecastCapability)[keyof typeof ForecastCapability];
+
+export const ExecuteCapability = {
+  EVALUATE_ACTION: "evaluateAction",
+  GET_AUTHORIZED_ACTION: "getAuthorizedAction",
+  EXECUTE_AUTHORIZED_ACTION: "executeAuthorizedAction",
+  GET_EXECUTION_STATUS: "getExecutionStatus",
+} as const;
+export type ExecuteCapability = (typeof ExecuteCapability)[keyof typeof ExecuteCapability];
+
+export const AuthorizedActionKind = {
+  BUY_UP: "BUY_UP",
+  BUY_DOWN: "BUY_DOWN",
+} as const;
+export type AuthorizedActionKind = (typeof AuthorizedActionKind)[keyof typeof AuthorizedActionKind];
+
+export interface AgentPrincipal {
+  readonly agentId: AgentId;
+  readonly displayName: string;
+  readonly sourceType: AgentSourceType;
+  readonly forecastAddress?: Address;
+  readonly executorAddress?: Address;
+}
+
+export interface MarketScope {
+  readonly venue: MarketVenue;
+  readonly assets: readonly MarketAsset[];
+  readonly intervalsSec: readonly number[];
+  readonly marketClass: MandateMarketClass;
+  /** Empty means the typed asset/cadence scope is the restriction. */
+  readonly marketIds: readonly MarketId[];
+}
+
+export interface ForecastAuthority {
+  readonly agentIds: readonly AgentId[];
+  readonly capabilities: readonly ForecastCapability[];
+  /** Defaults to one immutable submission per market for v0.1. */
+  readonly maxSubmissionsPerMarket?: number;
+  /** Defaults to true for external/agent submissions. */
+  readonly requireAttributableSigner?: boolean;
+  /** Optional stricter lead time than the policy's market expiry. */
+  readonly minLeadTimeSec?: number;
+}
+
+export interface ExecutionAuthority {
+  readonly agentIds: readonly AgentId[];
+  readonly capabilities: readonly ExecuteCapability[];
+  readonly allowedActions: readonly AuthorizedActionKind[];
+  /** Minimum Forecast-implied margin, in probability basis points. */
+  readonly minMarginBps: Bps;
+  /** Optional maximum lifetime of an issued action envelope. */
+  readonly maxActionLifetimeSec?: number;
+}
+
+export interface CapitalAuthority {
+  /** Maximum collateral reservation for one market, in raw units. */
+  readonly maxPerMarketRaw: import("./units.js").CollateralRaw;
+  /** Maximum cumulative collateral reservation, in raw units. */
+  readonly totalBudgetRaw: import("./units.js").CollateralRaw;
+  /** Maximum configured cumulative loss, in raw units. */
+  readonly stopLossRaw: import("./units.js").CollateralRaw;
+}
+
+export interface TemporalAuthority {
+  /** Owner-approval issuance time, in unix seconds. */
+  readonly issuedAt: bigint;
+  /** Earliest time at which ACTIVE authority may be used, in unix seconds. */
+  readonly startsAt: bigint;
+  /** Exclusive expiry boundary, in unix seconds. */
+  readonly expiresAt: bigint;
+}
+
+export interface RevocationPolicy {
+  readonly enabled: boolean;
+  readonly ownerOnly: true;
+}
+
+export interface MandatePolicy {
+  readonly version: number;
+  readonly mandateId: MandateId;
+  readonly owner: Address;
+  readonly forecasters: readonly AgentPrincipal[];
+  readonly executors: readonly AgentPrincipal[];
+  readonly marketScope: MarketScope;
+  readonly forecastAuthority: ForecastAuthority;
+  readonly executionAuthority: ExecutionAuthority;
+  readonly capitalAuthority: CapitalAuthority;
+  readonly temporalAuthority: TemporalAuthority;
+  readonly lifecycle: MandateLifecycle;
+  readonly revocation: RevocationPolicy;
+}
+
+/** Authenticated transport identity, not a capital permission. */
+export const ApiTransport = {
+  API: "API",
+  HTTP: "HTTP",
+  MCP: "MCP",
+  SDK: "SDK",
+} as const;
+export type ApiTransport = (typeof ApiTransport)[keyof typeof ApiTransport];
+
+export interface AuthenticatedApiPrincipal {
+  readonly transport: ApiTransport;
+  readonly principalId: string;
+}
+export type ApiPrincipal = AuthenticatedApiPrincipal;
+
+export interface AgentBinding {
+  readonly bindingId: BindingId;
+  readonly agentId: AgentId;
+  readonly circuitId: CircuitId;
+  readonly apiPrincipal: AuthenticatedApiPrincipal;
+  readonly forecastAddress?: Address;
+  readonly executorAddress?: Address;
+  readonly readCapabilities: readonly ReadCapability[];
+  readonly forecastCapabilities: readonly ForecastCapability[];
+  readonly executeCapabilities: readonly ExecuteCapability[];
+  readonly issued: bigint;
+  readonly expires: bigint;
+  readonly mandateId: MandateId;
+  readonly policyHash: PolicyHash;
+}
+
+export interface ForecastRequest {
+  readonly forecastId?: ForecastId;
+  readonly circuitId: CircuitId;
+  readonly marketId: MarketId;
+  readonly asset: MarketAsset;
+  readonly intervalSec: number;
+  readonly opensAt: bigint;
+  readonly expiresAt: bigint;
+  readonly forecastDeadline?: bigint;
+  readonly reference?: MarketReference;
+}
+
+/** A signed probability only. This object deliberately has no reasoning field. */
+export interface ForecastSubmission {
+  readonly marketId: MarketId;
+  readonly forecaster: AgentId;
+  readonly forecasterAddress: Address;
+  readonly probabilityUpBps: Bps;
+  readonly generatedAt: bigint;
+  readonly validUntil: bigint;
+  readonly sourceType: AgentSourceType;
+  readonly sourceVersion: string;
+  readonly signature: Hex;
+}
+
+export interface AuthorizedAction {
+  readonly actionId: ActionId;
+  readonly circuitId: CircuitId;
+  readonly marketId: MarketId;
+  readonly executionId: ExecutionId;
+  readonly executorAgentId: AgentId;
+  readonly action: AuthorizedActionKind;
+  readonly maxPriceRaw: import("./units.js").PriceRaw;
+  readonly quantityRaw: import("./units.js").QuantityRaw;
+  readonly maximumSpendRaw: import("./units.js").CollateralRaw;
+  readonly validAfter: bigint;
+  readonly expiresAt: bigint;
+  readonly policyHash: PolicyHash;
 }
