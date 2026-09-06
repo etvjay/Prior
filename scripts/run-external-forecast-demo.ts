@@ -157,7 +157,7 @@ async function main(): Promise<void> {
     const evidence = {
       milestone: "M4.3",
       status: "EXTERNAL_FIXTURE_PATH_VERIFIED_WITH_LIVE_GATES_BLOCKED",
-      classification: "END_TO_END_VERIFIED",
+      classification: "PARTIAL_END_TO_END_VERIFIED",
       evidenceCeiling: "X2_EXTERNAL_FIXTURE_ONLY",
       protocolVersion: primary.request.protocolVersion,
       agentIdentity: {
