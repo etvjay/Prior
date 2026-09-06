@@ -21,12 +21,12 @@
 
 ## Not yet verified
 - `setOperatorApprovalForPool(owner, CircuitExecutor, [0x5d97c566], true)` against the live pool — **WRITE VERIFIED then revoked**; per-pool approval read `true`, but the subsequent `placeBinaryOrderFor` call reached DreamDEX and reverted `0x3fb0ba2e` (`OnlyApprovedContracts()`).
-- Corrected RFT contract deployed at `0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41` — **WRITE VERIFIED**; commit/finalize pending.
-- Guided owner-signature fallback — **IMPLEMENTED_PENDING_LIVE_WRITE**; owner signs specialized `placeBinaryOrder` (`0x718c2d4d`), not generic placement.
-- Tiny IOC autonomous binary order through `CircuitExecutor` — **BLOCKED_EXTERNAL**; no order broadcast.
+- Corrected RFT contract deployed at `0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41` — **WRITE VERIFIED**; Market #1 committed, resolved, redeemed (zero payout), and finalized.
+- Market #1 guided order — **END_TO_END_VERIFIED** for a losing position: owner approval, fill, resolution, zero-payout redemption, and RFT score all read back.
+- Existing Circuit `0x89da292ff1dafee8ae54b4b73a2bf6dfeee1cce7143b57875e73cd997d527f07` — **BLOCKED for Market #2**: immutable `targetWindows=1` and expired `expiresAt=1788664800`.
 
 ## Next gate
-**P0 settlement and RFT finalization for the filled ETH 1h guided order.** Wait for DreamDEX resolution, read settlement and balances, execute the verified redemption path if required, finalize RFT, and record machine-verifiable payout evidence.
+**P0 create a new multi-window Circuit for the two-market proof.** The existing requested Circuit is immutable, one-window, and expired; do not claim Market #2 under it.
 
 ## Newly canonical in v0.2
 ```text

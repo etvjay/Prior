@@ -247,3 +247,17 @@ remaining authority/budget
 ```
 
 All aggregate values must be reconstructable from canonical RFTs, Circuit config, and execution evidence.
+
+### Economic accounting invariant
+
+For guided or autonomous execution, keep these values distinct:
+
+```text
+maximumAuthorizedSpend  = limitPriceRaw × quantityRaw / oneCollateralRaw
+temporaryPull           = amount escrowed at placement
+actualEconomicCost      = fillPriceRaw × filledQuantityRaw / oneCollateralRaw
+returnedCollateral      = temporaryPull − actualEconomicCost
+realizedPnL              = payout − actualEconomicCost
+```
+
+A Circuit must not treat its limit-price authorization as final spend. Where the deployed Circuit contract cannot yet record guided reconciliations onchain, the Runner persists machine-readable reconciliation evidence and must label the accounting projection noncanonical.

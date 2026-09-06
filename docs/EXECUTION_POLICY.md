@@ -169,14 +169,21 @@ For v0.1, safety is more important than perfect capital utilization.
 A safe initial model:
 
 ```text
-reservedSpend += worstCaseAuthorizedSpend
+At proposal/authorization time, record:
+
+```text
+maximumAuthorizedSpend += limitPriceRaw * quantityRaw / oneCollateralRaw
 ```
 
-for each submitted execution.
+After the receipt is decoded, reconcile:
 
-Actual fills/PnL are recorded separately.
+```text
+actualEconomicCost = fillPriceRaw * filledQuantityRaw / oneCollateralRaw
+returnedCollateral = temporaryPull - actualEconomicCost
+actualSpent += actualEconomicCost
+```
 
-A later version may release unused reservation after deterministic fill reconciliation.
+The maximum authorization is a safety ceiling, not final capital usage. Actual fills/PnL remain separate evidence. A retry must use the canonical `circuitId × marketId` identity and may not reserve twice.
 
 ## Reference probability vs execution price
 

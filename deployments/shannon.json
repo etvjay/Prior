@@ -37,5 +37,16 @@
     "userData": 45,
     "status": "FILLED"
   },
-  "evidenceClass": "SHANNON_WRITE_VERIFIED for corrected RFT deployment; GUIDED_ORDER_FILLED; settlement pending market resolution; autonomous order path BLOCKED_EXTERNAL"
+  "market1Lifecycle": {
+    "status": "END_TO_END_VERIFIED",
+    "marketId": "0x0000000000000000000000000000000000000000000000000000000000014aa9",
+    "resolutionTx": "0xfbaf376b2931d5c71e903ddb6db97e330a51a1e1ca8159d010c1090f1dd90e0b",
+    "outcome": "DOWN",
+    "finalizationTx": "0x21b5f66db37481c86cdbf4608b98a7ea15a12527d72ef3c2bf332c5509ebbbcc",
+    "redemptionTx": "0x9af95958ae30c594cd4631b578d193487b6537c1b082f7a825becf69bcf9ec6a",
+    "payoutRaw": 0,
+    "actualCostRaw": 281,
+    "pnlRaw": -281
+  },
+  "evidenceClass": "MARKET1_END_TO_END_VERIFIED; autonomous path BLOCKED_EXTERNAL; requested same-Circuit Market2 proof BLOCKED_EXTERNAL_BY_IMMUTABLE_INTENT"
 }

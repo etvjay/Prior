@@ -1,0 +1,83 @@
+{
+  "chainId": 50312,
+  "network": "Somnia Shannon",
+  "marketId": "0x0000000000000000000000000000000000000000000000000000000000014aa9",
+  "pool": "0x14474fcb5d9cde95812380373919f09bc15fb036",
+  "market": "0x965ccb13359dee54dea65d9ed511731a9658b293",
+  "circuitId": "0x89da292ff1dafee8ae54b4b73a2bf6dfeee1cce7143b57875e73cd997d527f07",
+  "forecastTrialId": "0x8715447158342b01dc8f17b646f5bd3e36c9727d4b78e85d3a5ded630748e727",
+  "accounting": {
+    "ownerCollateralBeforeRaw": 500000000,
+    "maximumAuthorizedRaw": 420,
+    "placementPullRaw": 420,
+    "actualFillPriceRaw": 281000,
+    "quantityRaw": 1000,
+    "economicallyConsumedRaw": 281,
+    "immediateReturnRaw": 139,
+    "ownerCollateralAfterFillRaw": 499999719,
+    "formula": "actualFillPriceRaw * quantityRaw / oneCollateralRaw = 281000 * 1000 / 1000000 = 281",
+    "ownerCollateralAfterRedemptionRaw": 499999719,
+    "poolCollateralBalanceRawAfterFill": 0,
+    "conclusion": "420 temporary pull; 139 immediate return; 281 final cost"
+  },
+  "order": {
+    "tx": "0x4a33bd44512d808199a83969d30110069e18b930cf7935ac50c757fe0890e94c",
+    "block": 480887012,
+    "orderId": "73786976294838227648",
+    "owner": "0x804c7A511D3ea06651007032F1e009d8717dbCB0",
+    "kind": "BUY_YES",
+    "limitPriceRaw": 420000,
+    "actualFillPriceRaw": 281000,
+    "quantityRaw": 1000,
+    "userData": 45,
+    "status": "FILLED"
+  },
+  "resolution": {
+    "status": "Resolved",
+    "isResolved": true,
+    "isVoided": false,
+    "outcomeIdx": 1,
+    "winningSide": "DOWN",
+    "payoutNumerators": [0, 10000000],
+    "resolutionBlock": 480904574,
+    "resolutionTimestamp": 1788663601,
+    "resolutionTx": "0xfbaf376b2931d5c71e903ddb6db97e330a51a1e1ca8159d010c1090f1dd90e0b"
+  },
+  "positions": {
+    "outcomeToken": "0xB52c5934113Af5c0Bb20eb3C72290C8215f755b9",
+    "yesId": "546708931562527324116097900749311975583229766652847687077828933717504",
+    "noId": "546708931562527324116097900749311975583229766652847687077828933717505",
+    "beforeRedemption": {"yesRaw": 1000, "noRaw": 0},
+    "afterRedemption": {"yesRaw": 0, "noRaw": 0}
+  },
+  "settlement": {
+    "poolFinalized": true,
+    "binarySettlementIsFinalizedYes": true,
+    "binarySettlementIsFinalizedNo": true,
+    "redemptionTx": "0x9af95958ae30c594cd4631b578d193487b6537c1b082f7a825becf69bcf9ec6a",
+    "redemptionBlock": 481035075,
+    "redemptionGasUsed": 127491,
+    "payoutRaw": 0,
+    "collateralBeforeRedemptionRaw": 499999719,
+    "collateralAfterRedemptionRaw": 499999719
+  },
+  "rft": {
+    "forecastBps": 5000,
+    "marketReferenceBps": 3520,
+    "forecastCommitTx": "0x62adeaa376dbe6b292fe67e9439fa051361f030f600680a9a1801919698230cc",
+    "forecastCommitBlock": 480886628,
+    "finalizationTx": "0x21b5f66db37481c86cdbf4608b98a7ea15a12527d72ef3c2bf332c5509ebbbcc",
+    "finalizationBlock": 481034726,
+    "status": "SCORED",
+    "outcome": "DOWN",
+    "forecastBrier": 25000000,
+    "marketBrier": 12390400,
+    "marketScoreDelta": -12609600
+  },
+  "immutability": {
+    "doubleFinalize": {"status": "REVERTED", "selector": "0xe405a433", "meaning": "AlreadyTerminal"},
+    "conflictingRecommit": {"status": "REVERTED", "selector": "0x9f7d134c", "meaning": "DuplicateForecast"},
+    "overwrite": "no setter exists; committed fields remain unchanged"
+  },
+  "classification": "END_TO_END_VERIFIED_FOR_LOSING_GUIDED_POSITION; ZERO_PAYOUT; CIRCUIT_ACCOUNTING_OFFCHAIN_RECONCILIATION_PENDING"
+}

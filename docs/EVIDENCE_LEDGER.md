@@ -11,16 +11,12 @@ This file tracks claims and their proof level.
 | `setOperatorApprovalForPool` selector is `0x7bbc67e6` and lives in OperatorRegistry implementation `0x9707acee9c39fea71564a1b0c840f97f784c22f7` | SHANNON_READ_VERIFIED | `evidence/shannon/m0-binary-abi.json`, `m0-opregistry-impl-code.hex` | 2026-09-05 |
 | Live BinaryPool is BeaconProxy via `binaryPoolBeacon` → `binaryPoolImpl` | SHANNON_READ_VERIFIED | `evidence/shannon/m0-binary-impl-code.hex` (beacon slot match) | 2026-09-05 |
 | RFT can read live onchain top-of-book during commit | UNVERIFIED | M0 read-only book probe to be added | — |
-| RFT can read DreamDEX resolution | UNVERIFIED | M0 read-only resolution probe to be added | — |
-| RFT can bind a DreamDEX order using `userData` | UNVERIFIED | M0 write evidence pending (BLOCKED) | — |
-| Corrected RFT deployed on Shannon | SHANNON_WRITE_VERIFIED | `deployments/shannon.json`, `evidence/shannon/guided-execution-and-rft.json`; receipt `0x8828acc998b8fc77c5c2563cc6d10f231f7f31e37de781254ad7e0d0eae923f4` | 2026-09-06 |
-| CircuitRegistry/Executor deployed and executor configured | SHANNON_WRITE_VERIFIED | `deployments/shannon.json`; receipts recorded there | 2026-09-06 |
-| Selector-scoped operator grant/allowance can be written and read back | SHANNON_WRITE_VERIFIED | `deployments/shannon.json`; grant/allowance receipts | 2026-09-06 |
-| `placeBinaryOrderFor` through Prior CircuitExecutor | BLOCKED_EXTERNAL | selector `0x5d97c566`, per-pool approval `true`, call reached DreamDEX, reverted `0x3fb0ba2e` = `OnlyApprovedContracts()`; no order broadcast | 2026-09-06 |
-| Guided owner-signed specialized `placeBinaryOrder` proposal and live order | SHANNON_WRITE_VERIFIED / FILLED | `evidence/shannon/guided-order-eth-1h.json`; tx `0x4a33bd44512d808199a83969d30110069e18b930cf7935ac50c757fe0890e94c`; orderId `73786976294838227648`; fill `281000`; userData `45` | 2026-09-06 |
-| Circuit policy is deterministic | LOCAL_VERIFIED | 35 core tests including executable-price ceiling and guided proposal encoding | 2026-09-06 |
-| Circuit Runner can recover after restart without duplicate action | PARTIAL | durable checkpoint + canonical `circuitId × marketId` key and illegal-transition rejection implemented; live restart proof pending | 2026-09-06 |
-| One Circuit persists across two live DreamDEX markets | UNVERIFIED | P1 pending guided live lifecycle | — |
+| RFT can read DreamDEX resolution | SHANNON_READ_VERIFIED | `evidence/shannon/market1-lifecycle.json`; market status 4, resolution event and payout vector verified | 2026-09-06 |
+| RFT can bind a DreamDEX order using `userData` | SHANNON_READ_VERIFIED | `evidence/shannon/market1-lifecycle.json`; OrderPlaced/OrderFilled decoded with owner and userData `45` | 2026-09-06 |
+| Corrected RFT deployed and Market #1 finalized | END_TO_END_VERIFIED | `evidence/shannon/market1-lifecycle.json`; RFT finalization `0x21b5f66db37481c86cdbf4608b98a7ea15a12527d72ef3c2bf332c5509ebbbcc`; redemption `0x9af95958ae30c594cd4631b578d193487b6537c1b082f7a825becf69bcf9ec6a`; Down resolved; zero payout | 2026-09-06 |
+| Guided accounting reconciles temporary pull to actual fill cost | SHANNON_READ_VERIFIED | 420 pulled, 139 returned, 281 consumed; formula and before/after balances in `market1-lifecycle.json` | 2026-09-06 |
+| Finalized Forecast is immutable | SHANNON_READ_VERIFIED | double finalize `0xe405a433` AlreadyTerminal; conflicting recommit `0x9f7d134c` DuplicateForecast; no setter | 2026-09-06 |
+| Existing requested Circuit can prove Market #2 | BLOCKED_EXTERNAL_BY_IMMUTABLE_INTENT | intent reads `targetWindows=1`, `expiresAt=1788664800`; current timestamp `1788676779`; cannot extend/mutate | 2026-09-06 |
 | Binary Event Contracts use specialized `placeBinaryOrder` / `placeBinaryOrderFor` | SHANNON_READ_VERIFIED | live bytecode of `binaryPoolImpl` 0x48e523c9f22f98548d263f0aD444D732e5202C0E | 2026-09-05 |
 | Generic `placeOrderFor` is unsuitable on BinaryPool | PRIMARY_SOURCE_VERIFIED + SHANNON_READ_VERIFIED | SDK release notes + ABI inspection | 2026-09-05 |
 | DreamDEX supports selector-scoped/per-pool operator grants | SHANNON_READ_VERIFIED | OperatorRegistry impl bytecode | 2026-09-05 |

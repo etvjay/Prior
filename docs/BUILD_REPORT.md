@@ -8,14 +8,13 @@
 
 ## Overall status
 - M0: **PARTIAL** — ABI, markets, deployment, allowance and revocation reads/writes verified; autonomous binary authority is **BLOCKED_EXTERNAL**.
-- Guided execution: **SHANNON_WRITE_VERIFIED / FILLED** — owner signed specialized `placeBinaryOrder`; order and fill evidence captured.
-- RFT: **SHANNON_WRITE_VERIFIED_DEPLOYMENT / COMMIT_VERIFIED** — corrected RFT deployed and Forecast commit verified; finalization awaits resolution.
-- Circuit: **PARTIAL** — corrected registry/executor deployed; local lifecycle/cap tests pass; guided state machine and checkpoint recovery primitives added.
-- Runner: **PARTIAL** — discovery/readiness, durable iteration checkpoint, canonical keying, and local restart/idempotency proof pass; full onchain orchestration remains.
+- Guided execution: **END_TO_END_VERIFIED for Market #1** — owner signed specialized `placeBinaryOrder`; filled, resolved Down, losing position redeemed for zero payout, and RFT finalized.
+- RFT: **SHANNON_WRITE_VERIFIED / FINALIZED** — corrected deployment, commit and score proven.
+- Runner: **PARTIAL** — discovery/readiness, durable checkpoint, canonical keying, and local restart/idempotency proof pass; live two-market recovery is blocked by the expired one-window Circuit.
 - Frontend: **PARTIAL** — guided authority model and wallet submission component are implemented; live proposal hydration remains.
-- Settlement: **PENDING** — order is filled but market settlement is not finalized yet.
+- Circuit accounting: **PARTIAL** — live cost reconciliation is proven in evidence but not recorded by the deployed Circuit contract’s canonical state.
 - Mobile: **PASS** for implemented responsive layout/build coverage; device E2E not run.
-- E2E: **BLOCKED** — requires one live guided order, RFT lifecycle, settlement verification, and two-market recovery proof.
+- E2E: **PARTIAL** — Market #1 guided Forecast → order → fill → resolution → zero-payout redemption → RFT finalization is verified; requested two-market Circuit proof is blocked by the immutable one-window intent.
 
 ## Tests
 - Core Vitest: **PASS — 35 tests** (scoring, policy, trade tags, guided execution).

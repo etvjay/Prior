@@ -118,3 +118,9 @@ Use ADR-style entries.
 **Decision:** Generated UI concepts do not override canonical design docs.
 
 **Reason:** Several explorations contained gradients, generic dashboard patterns, unsupported markets, or outdated terminology.
+
+## D-020 — Separate authorized ceiling from reconciled spend
+
+**Decision:** Circuit accounting records maximum authorized spend, temporary pull/return, actual fill cost, and PnL as separate values. `actualSpent` is computed from fill price and filled quantity; a limit-price ceiling is never treated as final cost.
+
+**Reason:** Live evidence showed a `420` raw temporary pull, `139` raw immediate return, and `281` raw economic cost. Preserving these distinctions is required for safe budget reconciliation.

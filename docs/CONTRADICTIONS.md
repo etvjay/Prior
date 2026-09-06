@@ -146,3 +146,27 @@ Verify DreamDEX's approved-contract/system allowlist path for Event Contract Bin
 
 Status:
 OPEN / LIVE BLOCKER. All temporary grants used in the experiment were revoked and read back false. The guided fallback is now live-proven through a filled owner-signed specialized order; settlement/finalization is a separate pending gate.
+
+## C-007 — Existing Circuit cannot extend to Market #2
+
+Observed:
+The requested unchanged Circuit `0x89da292ff1dafee8ae54b4b73a2bf6dfeee1cce7143b57875e73cd997d527f07` has immutable `targetWindows=1` and `expiresAt=1788664800`. Current Shannon time is `1788676779`; its runtime is still ACTIVE but its authorization window is expired.
+
+Expected:
+A two-market proof requires an unchanged intent whose target window and expiry cover both markets.
+
+Sources:
+- Direct `CircuitRegistry.intents` and `runtime` reads at current Shannon head.
+- `evidence/shannon/market1-lifecycle.json`.
+
+Affected:
+P1 two-market Circuit proof and Runner restart-between-markets proof.
+
+Risk:
+High for the requested demo claim. The intent cannot be edited or extended, and creating a replacement Circuit would not prove the same Circuit.
+
+Decision:
+Preserve Market #1 as verified. Do not process Market #2 under this expired one-window Circuit. Create a new multi-window Circuit only as a separate future proof.
+
+Status:
+BLOCKED_EXTERNAL_BY_IMMUTABLE_INTENT.
