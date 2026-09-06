@@ -1,299 +1,263 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
-import {
-  ACCEPTED_FORECASTS,
-  CONTINUITY_ID,
-  formatBps,
-  score,
-} from "./evidence";
-import {
-  ForecastMiniature,
-  ForecastNode,
-  MarketNode,
-  ProbabilityTrack,
-} from "./components";
-import { sceneNames } from "./lib/motion";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { ForecastNode, MarketNode } from "./components";
+import { motion } from "./lib/motion";
 
-const flowLabels = [
-  "PRIOR",
-  "MARKET",
-  "YOU",
-  "SPACE",
-  "COMMIT",
-  "REALITY",
-  "EVIDENCE",
-  "CIRCUIT",
-  "PRODUCT",
-] as const;
+const flowLabels = ["BELIEF", "MARKET", "YOU", "PROOF", "COMMITMENT", "REALITY", "EVIDENCE", "OBJECT", "INTENT"] as const;
 
-function SceneFlow({ active }: { active: number }) {
+function SceneIntro({ number, label }: { number: number; label: string }) {
   return (
-    <div className="scene-flow" aria-label={`Causal progression, ${flowLabels[active]} is in focus`}>
-      {flowLabels.map((label, index) => (
-        <span
-          className={index < active ? "is-complete" : index === active ? "is-current" : ""}
-          key={label}
-        >
-          <i aria-hidden="true" />
-          <b>{label}</b>
-          {index < flowLabels.length - 1 && <em className="scene-flow-line" aria-hidden="true" />}
-        </span>
-      ))}
+    <div className="landing-scene-meta" aria-label={`Scene ${number} of 9, ${label}`}>
+      <span>{String(number).padStart(2, "0")} / 09</span>
+      <span>{label}</span>
+      <div className="narrative-progress" aria-hidden="true">
+        {flowLabels.map((item, index) => (
+          <i className={index <= number - 1 ? "is-reached" : ""} key={item} />
+        ))}
+      </div>
     </div>
   );
 }
 
-function SceneIntro({ number, title }: { number: number; title: string; active?: number }) {
+function EvidenceFact({ label, value, tone }: { label: string; value: string; tone?: "market" | "forecast" }) {
   return (
-    <>
-      <div className="scene-index">
-        {String(number).padStart(2, "0")} / 09 · {title}
-      </div>
-      <SceneFlow active={number - 1} />
-    </>
+    <div className={`evidence-fact${tone ? ` ${tone}` : ""}`}>
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
+  );
+}
+
+function EnterPriorLink({ final = false }: { final?: boolean }) {
+  const router = useRouter();
+  const [entering, setEntering] = useState(false);
+
+  useEffect(() => () => document.documentElement.removeAttribute("data-prior-route"), []);
+
+  function enter(event: React.MouseEvent<HTMLAnchorElement>) {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    if (entering) return;
+    setEntering(true);
+    document.documentElement.setAttribute("data-prior-route", "live");
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.setTimeout(() => router.push("/live"), reduced ? 0 : motion.duration.route);
+  }
+
+  return (
+    <Link
+      className={`landing-primary${final ? " final-cta" : ""}`}
+      href="/live"
+      onClick={enter}
+      aria-busy={entering}
+    >
+      ENTER PRIOR
+    </Link>
   );
 }
 
 export function LandingScenes() {
   useEffect(() => {
-    const nodes = document.querySelectorAll<HTMLElement>("[data-scene]");
+    const scenes = document.querySelectorAll<HTMLElement>("[data-scene]");
     const observer = new IntersectionObserver(
       (entries) => entries.forEach((entry) => entry.target.classList.toggle("in-view", entry.isIntersecting)),
-      { threshold: 0.28 },
+      { threshold: 0.24 },
     );
-    nodes.forEach((node) => observer.observe(node));
+    scenes.forEach((scene) => observer.observe(scene));
     return () => observer.disconnect();
   }, []);
 
-  const proof = ACCEPTED_FORECASTS[0];
-  const continuityA = ACCEPTED_FORECASTS[1];
-  const continuityB = ACCEPTED_FORECASTS[2];
-
   return (
     <div className="landing-scenes">
-      <section className="landing-scene hero-scene in-view" data-scene="1" aria-labelledby="scene-1">
-        <SceneIntro number={1} title={sceneNames[0]} active={0} />
-        <div className="hero-copy">
-          <p className="wordmark ghost">P R I O R</p>
-          <h1 id="scene-1">
-            <span>COMMIT BEFORE</span>
-            <span>REALITY DOES.</span>
-          </h1>
-          <p className="hero-support">
-            Put your probability on record before an external market resolves. Prior keeps the belief,
-            the reference, and the observed result together as evidence.
-          </p>
-          <div className="hero-actions">
-            <Link className="primary-button" href="/live">Enter live market</Link>
-            <Link className="secondary-button" href={`/forecast/${proof.id}`}>Open accepted Forecast proof</Link>
-          </div>
-          <dl className="mechanism-brief" aria-label="Prior mechanism in brief">
-            <div><dt>MARKET</dt><dd>external reference</dd></div>
-            <div><dt>FORECAST</dt><dd>your probability</dd></div>
-            <div><dt>COMMITMENT</dt><dd>immutable before resolution</dd></div>
-            <div><dt>POLICY</dt><dd>BUY or ABSTAIN under constraints</dd></div>
-            <div><dt>CIRCUIT</dt><dd>intent across changing markets</dd></div>
-            <div><dt>EVIDENCE</dt><dd>observed chain and RFT result</dd></div>
-          </dl>
+      <section className="landing-scene landing-hero in-view" data-scene="1" aria-labelledby="scene-1">
+        <SceneIntro number={1} label="BELIEF" />
+        <div className="hero-thesis">
+          <p className="landing-wordmark" aria-hidden="true">P R I O R</p>
+          <h1 id="scene-1">COMMIT BEFORE REALITY DOES.</h1>
+          <p className="hero-definition">Markets record what happened. PRIOR records what you believed before it happened.</p>
+          <p className="hero-support">Forecast live markets. Commit your probability. Let reality score it later.</p>
+          <EnterPriorLink />
         </div>
-        <div className="hero-specimen" aria-label="Market #1 accepted resolved Forecast specimen">
-          <div className="specimen-head">
-            <span>MARKET #1 · BTC · 5 MIN</span>
-            <span>ACCEPTED SHANNON EVIDENCE · OUTCOME {proof.outcome} · BRIER {score(proof.forecastBrier)}</span>
-          </div>
-          <div className="duel">
-            <div>
-              <span>MARKET AT COMMIT · EXTERNAL</span>
-              <strong className="market-color">{formatBps(proof.referenceBps!)}</strong>
-              <MarketNode label="Market #1 reference" />
-            </div>
-            <div>
-              <span>FORECAST · COMMITTED</span>
-              <strong className="forecast-color">{formatBps(proof.forecastBps)}</strong>
-              <ForecastNode label="Market #1 accepted Forecast" locked />
-            </div>
-          </div>
-          <ProbabilityTrack forecast={proof.forecastBps / 100} market={proof.referenceBps! / 100} locked />
-          <div className="chronology" aria-label="Forecast lifecycle">
-            <span>FORECAST</span><span>COMMIT</span><span>RESOLVE</span><span>EVIDENCE</span>
-          </div>
-          <div className="specimen-result">
-            <span>OBSERVED OUTCOME <b>{proof.outcome}</b></span>
-            <span>RFT SCORE · BRIER <b>{score(proof.forecastBrier)}</b></span>
-          </div>
+        <div className="belief-specimen" aria-label="A belief exists before an outcome is known">
+          <span>BEFORE THE ANSWER</span>
+          <ForecastNode label="Your uncommitted belief" />
+          <b>?</b>
+          <small>ONE PROBABILITY. RECORDED IN TIME.</small>
         </div>
       </section>
 
-      <section className="landing-scene narrative-scene market-scene" data-scene="2" aria-labelledby="scene-2">
-        <SceneIntro number={2} title={sceneNames[1]} active={1} />
-        <div className="scene-copy">
-          <p className="scene-kicker">OBSERVE</p>
-          <h2 id="scene-2">THE MARKET<br />HAS A VIEW.</h2>
-          <p>
-            Market is the external reference: the probability implied by the DreamDEX market when a
-            Forecast is committed. It is context, not ground truth and not your belief.
-          </p>
+      <section className="landing-scene object-scene" data-scene="2" aria-labelledby="scene-2">
+        <SceneIntro number={2} label="MARKET" />
+        <div className="scene-statement">
+          <p className="scene-kicker">MARKET VIEW</p>
+          <h2 id="scene-2">The market has a probability.</h2>
         </div>
-        <div className="scene-visual market-stage">
-          <span className="object-role">MARKET #1 · AT COMMIT</span>
-          <strong className="scene-number market-color">{formatBps(proof.referenceBps!)}</strong>
-          <MarketNode label="Market #1 external reference" />
-          <small>AMBER DIAMOND · FIXED REFERENCE</small>
+        <div className="single-object market-object" aria-label="Market probability, amber diamond, 61 percent">
+          <span>MARKET ◆ 61%</span>
+          <MarketNode label="Market probability" />
         </div>
       </section>
 
-      <section className="landing-scene narrative-scene forecast-scene" data-scene="3" aria-labelledby="scene-3">
-        <SceneIntro number={3} title={sceneNames[2]} active={1} />
-        <div className="scene-copy">
-          <p className="scene-kicker">FORM A BELIEF</p>
-          <h2 id="scene-3">SO DO YOU.</h2>
-          <p>
-            Forecast is your probability for the same outcome. The blue circle stays distinct from the
-            amber Market diamond because disagreement is information, not proof of an edge.
-          </p>
+      <section className="landing-scene object-scene you-scene" data-scene="3" aria-labelledby="scene-3">
+        <SceneIntro number={3} label="YOU" />
+        <div className="scene-statement">
+          <p className="scene-kicker">YOUR BELIEF</p>
+          <h2 id="scene-3">You have one too.</h2>
         </div>
-        <div className="scene-visual forecast-stage">
-          <span className="object-role">MARKET #1 · YOUR FORECAST</span>
-          <strong className="scene-number forecast-color">{formatBps(proof.forecastBps)}</strong>
+        <div className="single-object forecast-object" aria-label="Your probability, blue circle, 72 percent">
+          <span>YOU ● 72%</span>
           <ForecastNode label="Your probability" />
-          <small>BLUE CIRCLE · EDITABLE BEFORE COMMIT</small>
         </div>
       </section>
 
-      <section className="landing-scene field-scene" data-scene="4" aria-labelledby="scene-4">
-        <SceneIntro number={4} title={sceneNames[3]} active={1} />
-        <div className="scene-copy wide-copy">
-          <p className="scene-kicker">COMPARE</p>
-          <h2 id="scene-4">SAME QUESTION.<br />DIFFERENT BELIEF.</h2>
-          <p>
-            Both values occupy one probability field. Market remains the external reference. Forecast
-            remains your probability. Neither value is silently substituted for the other.
-          </p>
+      <section className="landing-scene axis-scene" data-scene="4" aria-labelledby="scene-4">
+        <SceneIntro number={4} label="SHARED AXIS" />
+        <div className="scene-statement centered-statement">
+          <p className="scene-kicker">SAME QUESTION. TWO BELIEFS.</p>
+          <h2 id="scene-4">The difference needs a timestamp.</h2>
+          <p>The difference matters only if we can prove when the belief existed.</p>
         </div>
-        <div className="shared-field" aria-label="Market and Forecast on one probability scale">
-          <ProbabilityTrack forecast={proof.forecastBps / 100} market={proof.referenceBps! / 100} locked />
-          <div className="field-legend"><span><MarketNode /> MARKET REFERENCE</span><span><ForecastNode locked /> YOUR FORECAST</span></div>
+        <div className="narrative-axis" role="img" aria-label="Shared probability axis from zero to one hundred, Market at 61 and You at 72">
+          <div className="axis-labels"><span>MARKET</span><span>YOU</span></div>
+          <strong>0—◆61—●72—100</strong>
+          <div className="axis-key"><span><MarketNode /> MARKET</span><span><ForecastNode /> YOU</span></div>
         </div>
       </section>
 
-      <section className="landing-scene commit-scene" data-scene="5" aria-labelledby="scene-5">
-        <SceneIntro number={5} title={sceneNames[4]} active={2} />
-        <div className="scene-copy centered-copy">
-          <p className="scene-kicker">COMMIT</p>
-          <h2 id="scene-5">ONCE COMMITTED,<br />IT CANNOT BE REWRITTEN.</h2>
-          <p>
-            Commitment makes the Forecast immutable before resolution. A wallet request is not a commit,
-            and submission is not confirmation. Only an observed successful receipt establishes commitment.
-          </p>
+      <section className="landing-scene commit-story" data-scene="5" aria-labelledby="scene-5">
+        <SceneIntro number={5} label="COMMITMENT" />
+        <div className="scene-statement centered-statement">
+          <p className="scene-kicker">MAKE THE TIME BOUNDARY VISIBLE</p>
+          <h2 id="scene-5">COMMIT IT</h2>
+          <p>Before commitment, the probability can change. After confirmation, it cannot be rewritten.</p>
         </div>
-        <div className="commit-diagram" aria-label="The same Forecast crosses a commitment boundary and locks">
-          <span>EDITABLE</span>
-          <div className="commit-rail"><i className="commit-boundary-line" /><ForecastNode label="Committed Forecast" locked /></div>
-          <span>IMMUTABLE</span>
-          <p className="commit-causal-line">DRAFT → WALLET → RECEIPT OK → IMMUTABLE</p>
+        <div className="commit-crossing" role="img" aria-label="Commitment boundary, blue belief moves from before to after and becomes immutable">
+          <div><span>BEFORE</span><strong>●│</strong><small>EDITABLE</small></div>
+          <i aria-hidden="true" />
+          <div><span>AFTER</span><strong>│●</strong><small>IMMUTABLE</small></div>
+        </div>
+        <p className="settled-note">SAME BELIEF. NEW STATE. THE COMMITTED OBJECT STAYS FIXED.</p>
+      </section>
+
+      <section className="landing-scene reality-story" data-scene="6" aria-labelledby="scene-6">
+        <SceneIntro number={6} label="REALITY" />
+        <div className="scene-statement">
+          <p className="scene-kicker">TIME CONTINUES</p>
+          <h2 id="scene-6">Reality keeps moving.</h2>
+          <p>The market changes after commitment. The committed Forecast stays fixed. Then the outcome resolves.</p>
+        </div>
+        <div className="reality-field" aria-label="Market probability moves after commitment while the Forecast remains fixed, then outcome resolves Up">
+          <div className="moving-market"><span>MARKET</span><MarketNode /><b>61 → 68 → 54</b></div>
+          <div className="fixed-forecast"><span>COMMITTED FORECAST</span><ForecastNode locked /><b>72</b></div>
+          <div className="resolved-outcome"><span>REALITY</span><strong>UP</strong><small>RESOLVED</small></div>
         </div>
       </section>
 
-      <section className="landing-scene narrative-scene reality-scene" data-scene="6" aria-labelledby="scene-6">
-        <SceneIntro number={6} title={sceneNames[5]} active={4} />
-        <div className="scene-copy">
-          <p className="scene-kicker">RESOLVE</p>
-          <h2 id="scene-6">REALITY ARRIVES.<br />BELIEF STAYS PUT.</h2>
-          <p>
-            DreamDEX supplies the finalized outcome. The committed Forecast no longer moves. Resolution
-            arrives from the Market side, then the RFT result can be finalized and scored.
-          </p>
+      <section className="landing-scene measure-scene" data-scene="7" aria-labelledby="scene-7">
+        <SceneIntro number={7} label="EVIDENCE" />
+        <div className="scene-statement centered-statement">
+          <p className="scene-kicker">BELIEF MEETS OUTCOME</p>
+          <h2 id="scene-7">NOW WE CAN MEASURE IT</h2>
+          <p className="example-label">GUIDED EXAMPLE</p>
         </div>
-        <div className="scene-visual resolution-stage">
-          <div><span>MARKET #1 OUTCOME</span><strong>{proof.outcome}</strong><MarketNode /></div>
-          <i className="resolution-connector" aria-hidden="true" />
-          <div><span>FORECAST</span><strong className="forecast-color">{formatBps(proof.forecastBps)}</strong><ForecastNode locked /></div>
-          <b className="resolution-stamp">OBSERVED · FINALIZED</b>
+        <div className="evidence-lock" aria-label="Resolved example comparing your forecast with the market at commit">
+          <EvidenceFact label="YOU" value="72%" tone="forecast" />
+          <EvidenceFact label="MARKET AT COMMIT" value="61%" tone="market" />
+          <EvidenceFact label="OUTCOME" value="UP" />
+          <EvidenceFact label="FORECAST SCORE" value="0.0784" />
+          <EvidenceFact label="MARKET SCORE" value="0.1521" />
+          <p className="literal-facts">YOU 72% · MARKET AT COMMIT 61% · OUTCOME UP · FORECAST SCORE 0.0784 · MARKET SCORE 0.1521</p>
+        </div>
+        <div className="causal-separation" aria-label="Belief, decision, execution, and outcome are separate facts">
+          <span>BELIEF</span><i />
+          <span>DECISION</span><i />
+          <span>EXECUTION</span><i />
+          <span>OUTCOME</span>
+        </div>
+        <p className="trade-truth">Being right is not the same as making a good trade.</p>
+      </section>
+
+      <section className="landing-scene named-object-scene" data-scene="8" aria-labelledby="scene-8">
+        <SceneIntro number={8} label="EVIDENCE OBJECT" />
+        <div className="scene-statement centered-statement">
+          <p className="scene-kicker">NOW NAME THE OBJECT</p>
+          <h2 id="scene-8">RESOLVED FORECAST TRIAL</h2>
+          <p>A committed belief, its market reference, and the observed outcome remain together as one inspectable evidence object.</p>
+        </div>
+        <div className="trial-object" aria-label="Resolved Forecast Trial evidence object">
+          <div><ForecastNode locked /><span>BELIEF<br /><b>72% UP</b></span></div>
+          <i aria-hidden="true" />
+          <div><MarketNode /><span>MARKET AT COMMIT<br /><b>61% UP</b></span></div>
+          <i aria-hidden="true" />
+          <div><span>OUTCOME<br /><b>UP</b></span></div>
+          <strong>RESOLVED · SCORED · IMMUTABLE</strong>
         </div>
       </section>
 
-      <section className="landing-scene evidence-scene" data-scene="7" aria-labelledby="scene-7">
-        <SceneIntro number={7} title={sceneNames[6]} active={5} />
-        <div className="scene-copy wide-copy">
-          <p className="scene-kicker">RETAIN PROOF</p>
-          <h2 id="scene-7">EVIDENCE IS WHAT<br />THE CHAIN OBSERVED.</h2>
-          <p>
-            Evidence is the observed chain and RFT result, not a marketing claim. This Market #1 specimen
-            comes from the repository&apos;s accepted Shannon lifecycle artifact.
-          </p>
+      <section className="landing-scene circuit-story" data-scene="9" aria-labelledby="scene-9">
+        <SceneIntro number={9} label="PERSISTENT INTENT" />
+        <div className="circuit-question">
+          <p>ONE FORECAST IS ONE MOMENT</p>
+          <h2 id="scene-9">WHAT ABOUT THE NEXT MARKET?</h2>
+          <p>A Circuit carries one bounded decision rule across new markets. It evaluates each market and may act or abstain.</p>
         </div>
-        <div className="evidence-equation" aria-label="Market #1 accepted evidence values">
-          <span>Forecast <b className="forecast-color">{formatBps(proof.forecastBps)}</b></span>
-          <span>Market at commit <b className="market-color">{formatBps(proof.referenceBps!)}</b></span>
-          <span>Outcome <b>{proof.outcome}</b></span>
-          <span>Brier <b>{score(proof.forecastBrier)}</b></span>
-        </div>
-        <div className="proof-action-row">
-          <ForecastMiniature forecast={proof} />
-          <Link className="secondary-button" href={`/forecast/${proof.id}`}>Inspect accepted Forecast proof</Link>
-        </div>
-      </section>
 
-      <section className="landing-scene circuit-scene" data-scene="8" aria-labelledby="scene-8">
-        <SceneIntro number={8} title={sceneNames[7]} active={6} />
-        <div className="scene-copy wide-copy">
-          <p className="scene-kicker">CONTINUE INTENT</p>
-          <h2 id="scene-8">RULES STAY FIXED.<br />MARKETS CHANGE.</h2>
-          <p>
-            Policy decides BUY or ABSTAIN under constraints. Circuit is persistent intent across changing
-            markets: one immutable rule set is evaluated again for each distinct market window.
-          </p>
+        <div className="fixed-intent" aria-label="Fixed Circuit intent">
+          <span>FIXED INTENT</span>
+          <strong>ONLY ACT WHEN THE FORECAST AND AVAILABLE MARKET PRICE DIFFER BY AT LEAST 8 POINTS.</strong>
+          <small>THE RULE DOES NOT CHANGE BETWEEN ITERATIONS.</small>
         </div>
-        <div className="intent-spine">
-          <span>CIRCUIT INTENT · LOCKED</span>
-          <b>BTC · 5m · 4 windows · 8pt minimum margin</b>
-          <small>AUTONOMOUS PATH · BLOCKED_EXTERNAL · accepted examples below are guided abstentions</small>
+
+        <div className="circuit-iterations" aria-label="Circuit continuity across two real scored markets">
+          <article>
+            <header><span>Market A</span><b>REAL CONTINUITY EVIDENCE</b></header>
+            <div className="iteration-comparison"><span className="forecast-color"><small>FORECAST</small>0% UP</span><i>VS</i><span className="market-color"><small>MARKET</small>1.50% UP</span></div>
+            <div className="iteration-result"><strong>DECISION · ABSTAIN</strong><span>OUTCOME · DOWN</span><span>STATE · SCORED</span></div>
+          </article>
+          <article>
+            <header><span>Market B</span><b>REAL CONTINUITY EVIDENCE</b></header>
+            <div className="iteration-comparison"><span className="forecast-color"><small>FORECAST</small>50% UP</span><i>VS</i><span className="market-color"><small>MARKET</small>53.25% UP</span></div>
+            <div className="iteration-result"><strong>DECISION · ABSTAIN</strong><span>OUTCOME · UP</span><span>STATE · SCORED</span></div>
+          </article>
         </div>
-        <div className="landing-circuit" aria-label="Accepted Circuit continuity evidence">
-          {[continuityA, continuityB].map((forecast, index) => (
-            <div key={forecast.id}>
-              <header><b>MARKET #{index + 1}</b><span>ACCEPTED SHANNON EVIDENCE</span></header>
-              <div className="circuit-values"><span><MarketNode /> {formatBps(forecast.referenceBps!)}</span><span><ForecastNode locked /> {formatBps(forecast.forecastBps)}</span></div>
-              <div className="policy-chain"><span>FORECAST</span><i /><span>POLICY</span><i /><span>ABSTAIN</span><i /><span>{forecast.outcome}</span></div>
-            </div>
-          ))}
-          <div className="future-iteration">
-            <header><b>FUTURE SLOT</b><span>NO ACCEPTED FORECAST</span></header>
-            <span className="future-node">○</span>
-            <p>No state, action, or result is inferred beyond the accepted snapshot.</p>
+
+        <div className="abstention-explainer">
+          <h3>ABSTENTION IS A DECISION.</h3>
+          <p>The 8-point rule requires a large enough difference before economic action. Market A differed by 1.5 points. Market B differed by 3.25 points. Neither cleared the rule, so the Circuit recorded both Forecasts and did not trade.</p>
+          <p className="literal-rule">8-point rule example: 1.5 &lt; 8, ABSTAIN. 3.25 &lt; 8, ABSTAIN.</p>
+        </div>
+
+        <h3 className="circuit-headline">THE MARKET CHANGES. THE RULE STAYS ACCOUNTABLE.</h3>
+
+        <div className="economic-proof" aria-label="Real Market number one economic execution facts">
+          <header><span>REAL MARKET #1 ECONOMIC EXECUTION</span><b>LOSING TRADE SHOWN IN FULL</b></header>
+          <div className="execution-facts">
+            <EvidenceFact label="Forecast" value="50%" tone="forecast" />
+            <EvidenceFact label="Market" value="35.2%" tone="market" />
+            <EvidenceFact label="Decision" value="BUY UP" />
+            <EvidenceFact label="Limit" value="42%" />
+            <EvidenceFact label="Filled" value="28.1%" />
+            <EvidenceFact label="Outcome" value="DOWN" />
+            <EvidenceFact label="Economic result" value="PNL -281 raw" />
           </div>
+          <p>Forecast 50% · Market 35.2% · BUY UP · Limit 42% · Filled 28.1% · DOWN · PNL -281 raw</p>
         </div>
-        <div className="circuit-actions">
-          <Link className="primary-button" href="/circuits">Explore Circuits</Link>
-          <Link className="text-link" href={`/circuit/${CONTINUITY_ID}`}>Inspect accepted continuity evidence →</Link>
-        </div>
-      </section>
 
-      <section className="landing-scene product-scene" data-scene="9" aria-labelledby="scene-9">
-        <SceneIntro number={9} title={sceneNames[8]} active={6} />
-        <div className="product-shell" aria-label="Prior live instrument preview">
-          <aside>MARKETS<br />OBSERVED</aside>
-          <div>
-            <span><MarketNode /> MARKET</span>
-            <span><ForecastNode /> FORECAST</span>
-            <b>COMMIT → POLICY → RESOLVE → EVIDENCE</b>
-          </div>
-          <aside>DEPTH<br />EXEC<br />PROOF</aside>
+        <div className="recovery-proof" aria-label="Runner restart recovery evidence">
+          <div><span>Runner Restarted</span><strong>YES</strong></div>
+          <div><span>Circuit Recovered 2 iterations</span><strong>2 / 2</strong></div>
+          <div><span>Duplicate Effects 0</span><strong>0</strong></div>
         </div>
-        <div className="scene-copy centered-copy product-copy">
-          <p className="scene-kicker">ENTER THE INSTRUMENT</p>
-          <h2 id="scene-9">REALITY IS STILL UNKNOWN.<br />STATE WHAT YOU BELIEVE.</h2>
-          <p>
-            Enter the live surface when an eligible market exists, inspect Circuit intent, or begin with
-            the accepted Forecast proof. Prior does not invent a live market when none is observed.
-          </p>
-        </div>
-        <div className="final-actions">
-          <Link className="primary-button" href="/live">Enter live market</Link>
-          <Link className="secondary-button" href="/circuits">View Circuits</Link>
-          <Link className="text-link" href={`/forecast/${proof.id}`}>Open accepted Forecast proof →</Link>
+
+        <div className="final-definition">
+          <p>ONE COMMITTED BELIEF IS EVIDENCE</p>
+          <p>ONE PERSISTENT INTENT ACROSS MARKETS IS A CIRCUIT</p>
+          <h3>THAT&apos;S PRIOR</h3>
+          <EnterPriorLink final />
+          <small>Built on DreamDEX Event Contracts on Somnia</small>
         </div>
       </section>
     </div>
