@@ -1,0 +1,69 @@
+{
+  "chainId": 50312,
+  "network": "Somnia Shannon",
+  "circuitId": "0x89da292ff1dafee8ae54b4b73a2bf6dfeee1cce7143b57875e73cd997d527f07",
+  "circuitCreateTx": "0x97f055a081bc3316d778231944d5572800b2de2aa7d791d008afd09f04ec4436",
+  "marketId": "0x0000000000000000000000000000000000000000000000000000000000014aa9",
+  "pool": "0x14474fcb5d9cde95812380373919f09bc15fb036",
+  "market": "0x965ccb13359dee54dea65d9ed511731a9658b293",
+  "forecast": {
+    "trialId": "0x8715447158342b01dc8f17b646f5bd3e36c9727d4b78e85d3a5ded630748e727",
+    "commitTx": "0x62adeaa376dbe6b292fe67e9439fa051361f030f600680a9a1801919698230cc",
+    "probabilityUpBps": 5000,
+    "marketReferenceUpBps": 3520,
+    "referenceValid": true,
+    "tradeTag": 45,
+    "committedBlock": 480886628
+  },
+  "policy": {
+    "decision": "BUY_UP",
+    "minimumMarginBps": 800,
+    "maxUpPriceBps": 4200,
+    "maxPriceRaw": 420000,
+    "quantityRaw": 1000,
+    "orderType": "IOC",
+    "kind": 0,
+    "executableAskBeforeOrderRaw": 300000,
+    "ownerAuthorizationRequired": true
+  },
+  "proposal": {
+    "executionId": "keccak256(circuitId:marketId)",
+    "owner": "0x804c7A511D3ea06651007032F1e009d8717dbCB0",
+    "placementFunction": "placeBinaryOrder",
+    "placementSelector": "0x718c2d4d",
+    "limitPriceRaw": 420000,
+    "quantityRaw": 1000,
+    "userData": 45,
+    "expiryNs": "1788661933000000000"
+  },
+  "order": {
+    "tx": "0x4a33bd44512d808199a83969d30110069e18b930cf7935ac50c757fe0890e94c",
+    "receiptStatus": "0x1",
+    "block": 480887012,
+    "orderId": "73786976294838227648",
+    "owner": "0x804c7A511D3ea06651007032F1e009d8717dbCB0",
+    "marketId": "0x0000000000000000000000000000000000000000000000000000000000014aa9",
+    "pool": "0x14474fcb5d9cde95812380373919f09bc15fb036",
+    "limitPriceRaw": 420000,
+    "quantityRaw": 1000,
+    "userData": 45,
+    "result": "FILLED",
+    "actualFillPriceRaw": 281000,
+    "filledQuantityRaw": 1000,
+    "orderPlacedEventVerified": true,
+    "orderFilledEventVerified": true
+  },
+  "funding": {
+    "approvalTx": "0x0c147d7da590821993483a19ed86460825966529dc7ee052881bc7104c4a0ca2",
+    "allowanceBeforeRaw": 1000000,
+    "allowanceAfterRaw": 999580,
+    "observedPullRaw": 420
+  },
+  "settlement": {
+    "status": "PENDING_MARKET_RESOLUTION",
+    "resolutionTx": null,
+    "redemptionTx": null,
+    "payoutEvidence": null
+  },
+  "classification": "PARTIAL_LIVE_GUIDED_ORDER; NOT_END_TO_END_VERIFIED"
+}

@@ -13,14 +13,14 @@ This file tracks claims and their proof level.
 | RFT can read live onchain top-of-book during commit | UNVERIFIED | M0 read-only book probe to be added | — |
 | RFT can read DreamDEX resolution | UNVERIFIED | M0 read-only resolution probe to be added | — |
 | RFT can bind a DreamDEX order using `userData` | UNVERIFIED | M0 write evidence pending (BLOCKED) | — |
-| RFT contract deployed on Shannon | SHANNON_WRITE_VERIFIED | `deployments/shannon.json`; receipt `0x7bca0f9041eb21f0a8ea120b2204389bfe990927328563f9b4eb36510191e48e` | 2026-09-06 |
+| Corrected RFT deployed on Shannon | SHANNON_WRITE_VERIFIED | `deployments/shannon.json`, `evidence/shannon/guided-execution-and-rft.json`; receipt `0x8828acc998b8fc77c5c2563cc6d10f231f7f31e37de781254ad7e0d0eae923f4` | 2026-09-06 |
 | CircuitRegistry/Executor deployed and executor configured | SHANNON_WRITE_VERIFIED | `deployments/shannon.json`; receipts recorded there | 2026-09-06 |
 | Selector-scoped operator grant/allowance can be written and read back | SHANNON_WRITE_VERIFIED | `deployments/shannon.json`; grant/allowance receipts | 2026-09-06 |
-| `placeBinaryOrderFor` through Prior CircuitExecutor | BLOCKED | live estimate reverted `0x3fb0ba2e` = `OnlyApprovedContracts()`; no order broadcast | 2026-09-06 |
-| Circuit policy is deterministic | UNVERIFIED | M1 pending | — |
-| Circuit authority blocks over-budget execution | UNVERIFIED | M1 pending | — |
-| Circuit Runner can recover after restart without duplicate action | UNVERIFIED | M2 pending | — |
-| One Circuit persists across two live DreamDEX markets | UNVERIFIED | M3 pending (BLOCKED) | — |
+| `placeBinaryOrderFor` through Prior CircuitExecutor | BLOCKED_EXTERNAL | selector `0x5d97c566`, per-pool approval `true`, call reached DreamDEX, reverted `0x3fb0ba2e` = `OnlyApprovedContracts()`; no order broadcast | 2026-09-06 |
+| Guided owner-signed specialized `placeBinaryOrder` proposal and live order | SHANNON_WRITE_VERIFIED / FILLED | `evidence/shannon/guided-order-eth-1h.json`; tx `0x4a33bd44512d808199a83969d30110069e18b930cf7935ac50c757fe0890e94c`; orderId `73786976294838227648`; fill `281000`; userData `45` | 2026-09-06 |
+| Circuit policy is deterministic | LOCAL_VERIFIED | 35 core tests including executable-price ceiling and guided proposal encoding | 2026-09-06 |
+| Circuit Runner can recover after restart without duplicate action | PARTIAL | durable checkpoint + canonical `circuitId × marketId` key and illegal-transition rejection implemented; live restart proof pending | 2026-09-06 |
+| One Circuit persists across two live DreamDEX markets | UNVERIFIED | P1 pending guided live lifecycle | — |
 | Binary Event Contracts use specialized `placeBinaryOrder` / `placeBinaryOrderFor` | SHANNON_READ_VERIFIED | live bytecode of `binaryPoolImpl` 0x48e523c9f22f98548d263f0aD444D732e5202C0E | 2026-09-05 |
 | Generic `placeOrderFor` is unsuitable on BinaryPool | PRIMARY_SOURCE_VERIFIED + SHANNON_READ_VERIFIED | SDK release notes + ABI inspection | 2026-09-05 |
 | DreamDEX supports selector-scoped/per-pool operator grants | SHANNON_READ_VERIFIED | OperatorRegistry impl bytecode | 2026-09-05 |

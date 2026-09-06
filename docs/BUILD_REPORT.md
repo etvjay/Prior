@@ -7,18 +7,18 @@
 - Environment: Linux, Node 22.23.2, pnpm 11.24.0, Foundry/solc 0.8.24
 
 ## Overall status
-- M0: **PARTIAL** — ABI, markets, deployment, allowance and revocation reads/writes verified; binary authority path blocked by DreamDEX `OnlyApprovedContracts()`.
-- RFT: **PARTIAL** — implementation compiles and local scoring passes; deployed RFT instance predates the corrected exact `binaryModule.markets` tuple interface and requires redeployment before live commit.
-- Circuit: **PARTIAL** — corrected registry/executor deployed; local lifecycle/cap tests pass; live order path blocked by DreamDEX allowlist behavior.
-- Authority: **BLOCKED** — selector grant reads true, but BinaryPool rejects `placeBinaryOrderFor` from Prior with `0x3fb0ba2e` (`OnlyApprovedContracts()`).
-- Runner: **PARTIAL** — live discovery, `/health`, `/ready` and typecheck pass; full transaction orchestration not complete.
-- Frontend: **PARTIAL** — all required routes and core interaction shell build; live contract wiring remains.
+- M0: **PARTIAL** — ABI, markets, deployment, allowance and revocation reads/writes verified; autonomous binary authority is **BLOCKED_EXTERNAL**.
+- Guided execution: **SHANNON_WRITE_VERIFIED / FILLED** — owner signed specialized `placeBinaryOrder`; order and fill evidence captured.
+- RFT: **SHANNON_WRITE_VERIFIED_DEPLOYMENT / COMMIT_VERIFIED** — corrected RFT deployed and Forecast commit verified; finalization awaits resolution.
+- Circuit: **PARTIAL** — corrected registry/executor deployed; local lifecycle/cap tests pass; guided state machine and checkpoint recovery primitives added.
+- Runner: **PARTIAL** — discovery/readiness, durable iteration checkpoint, canonical keying, and local restart/idempotency proof pass; full onchain orchestration remains.
+- Frontend: **PARTIAL** — guided authority model and wallet submission component are implemented; live proposal hydration remains.
+- Settlement: **PENDING** — order is filled but market settlement is not finalized yet.
 - Mobile: **PASS** for implemented responsive layout/build coverage; device E2E not run.
-- Live Shannon: **PARTIAL** — chain, RPC, indexer, SDK, ABI, live markets, deployment, operator grants, allowances and revocations verified.
-- E2E: **BLOCKED** — requires resolving DreamDEX approved-contract behavior, redeploying corrected RFT, and running live Forecast/Circuit recovery proof.
+- E2E: **BLOCKED** — requires one live guided order, RFT lifecycle, settlement verification, and two-market recovery proof.
 
 ## Tests
-- Core Vitest: **PASS — 33 tests** (scoring, policy, trade tags).
+- Core Vitest: **PASS — 35 tests** (scoring, policy, trade tags, guided execution).
 - Foundry build: **PASS** (warnings only: block timestamp / bounded cast lint).
 - Foundry tests: **PASS — 4 tests** (RFT scoring parity/void handling; Circuit lifecycle/caps).
 - Core TypeScript typecheck: **PASS**.

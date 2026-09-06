@@ -20,14 +20,13 @@
   `docs/CONTRADICTIONS.md` updated to reflect this session's verified reads and remaining blockers.
 
 ## Not yet verified
-- `setOperatorApprovalForPool(owner, CircuitExecutor, [0x5d97c566], true)` against the live pool — **WRITE VERIFIED then revoked**; the pool rejects the subsequent `placeBinaryOrderFor` call with `OnlyApprovedContracts()`.
-- Tiny IOC binary order placed through `CircuitExecutor` with `userData = canonical tradeTag` — **BLOCKED**: DreamDEX returned `0x3fb0ba2e` (`OnlyApprovedContracts()`); no order broadcast.
-- Allowance of the pool to pull `testUsdc` from owner — **WRITE VERIFIED** at `1,000,000` raw units on the tested pool.
-- RFT contract deployed on Shannon at `0x20534E6D27ab44f2eaF9F2C629908eda63c31aBD`; commit/finalize not yet live-verified.
-- CircuitRegistry deployed at `0xf92609D45f164DaB74dC51Cd59B583DA95e3C460`; corrected CircuitExecutor deployed at `0x2D2991e798Fb69f3AC19A2132932328E709990cF`.
+- `setOperatorApprovalForPool(owner, CircuitExecutor, [0x5d97c566], true)` against the live pool — **WRITE VERIFIED then revoked**; per-pool approval read `true`, but the subsequent `placeBinaryOrderFor` call reached DreamDEX and reverted `0x3fb0ba2e` (`OnlyApprovedContracts()`).
+- Corrected RFT contract deployed at `0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41` — **WRITE VERIFIED**; commit/finalize pending.
+- Guided owner-signature fallback — **IMPLEMENTED_PENDING_LIVE_WRITE**; owner signs specialized `placeBinaryOrder` (`0x718c2d4d`), not generic placement.
+- Tiny IOC autonomous binary order through `CircuitExecutor` — **BLOCKED_EXTERNAL**; no order broadcast.
 
 ## Next gate
-**M0 binary-authority compatibility resolution.** The owner key and funding gates are satisfied. The remaining blocker is DreamDEX's live `OnlyApprovedContracts()` rejection for `placeBinaryOrderFor` from `CircuitExecutor`; this requires the documented system-contract allowlist/approved-contract path or a reviewed guided-execution fallback.
+**P0 settlement and RFT finalization for the filled ETH 1h guided order.** Wait for DreamDEX resolution, read settlement and balances, execute the verified redemption path if required, finalize RFT, and record machine-verifiable payout evidence.
 
 ## Newly canonical in v0.2
 ```text

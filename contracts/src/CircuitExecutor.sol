@@ -11,6 +11,7 @@ contract CircuitExecutor {
   IOperatorPermissionsRegistry public immutable operatorRegistry;
 
   error NotRunner(); error InvalidPoolBinding(); error NotTradingOrExpired(); error LimitExceeded(); error AllowanceInsufficient(); error OperatorNotApproved(); error InvalidKind(); error OrderFailed();
+  // DreamDEX BinaryPool OrderKind: 0 BUY_YES, 1 SELL_YES, 2 BUY_NO, 3 SELL_NO.
   event BinaryOrderExecuted(bytes32 indexed circuitId, bytes32 indexed marketId, address indexed owner, address pool, uint128 orderId, uint64 userData, uint256 price, uint256 quantity);
 
   constructor(address circuits_, address binaryModule_, address operatorRegistry_) {
@@ -29,7 +30,7 @@ contract CircuitExecutor {
     oracleQuestionId; outcomeSlotCount; voidPolicy; collateral; originOperatorId; originVenueId; oracleAdapter; creator; market; yesId; noId; tradingStart;
     if (currentPool != pool) revert InvalidPoolBinding();
     if (expiry <= block.timestamp) revert NotTradingOrExpired();
-    if (kind > 1) revert InvalidKind();
+    if (kind != 0 && kind != 2) revert InvalidKind();
     // Contract-side economic ceiling: price is raw and maxSpend is the caller's
     // bounded reservation, but the CircuitRegistry remains the canonical budget gate.
     if (maxSpend == 0) revert LimitExceeded();

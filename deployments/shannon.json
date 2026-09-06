@@ -4,37 +4,38 @@
   "deployer": "0x804c7A511D3ea06651007032F1e009d8717dbCB0",
   "sdkVersion": "0.29.0",
   "contracts": {
-    "RFTRegistry": "0x20534E6D27ab44f2eaF9F2C629908eda63c31aBD",
+    "RFTRegistry": "0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41",
     "CircuitRegistry": "0xf92609D45f164DaB74dC51Cd59B583DA95e3C460",
     "CircuitExecutor": "0x2D2991e798Fb69f3AC19A2132932328E709990cF",
     "DreamDexAdapter": "0xa2Bf6D3690a47AcCc7D920B48690D879189d0774"
   },
-  "deployTransactions": {
-    "CircuitRegistry": "0x79a04ea2062a77a031bf88fa715f5ab98ee73ef94d7e963639131c0032b6c361",
-    "RFTRegistry": "0x7bca0f9041eb21f0a8ea120b2204389bfe990927328563f9b4eb36510191e48e",
-    "CircuitExecutor": "0x856e99c68423aabf08453620cf43e5ac4e12b5e3c8e2a45bf13e05867749a98b",
-    "DreamDexAdapter": "0xffe314bef2ad357dba8de53c7ac5418a6d5e78542472525758edfad4da6e608f",
-    "setExecutorOldRegistry": "0xcebe3e063a4f70f96aeebaea35cb0240c672d1c0cd6e0564def4bc5b37623b5a1",
-    "setExecutorNewRegistry": "0x1e63c3c8f03f1fa8164eac69af52488606e2d26d872061c345d664ea25f6aa91"
+  "rftDeployment": {
+    "address": "0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41",
+    "transactionHash": "0x8828acc998b8fc77c5c2563cc6d10f231f7f31e37de781254ad7e0d0eae923f4",
+    "blockNumber": 480798917,
+    "chainId": 50312,
+    "binaryModule": "0x3ecC694Cef705358864a646142ac17A90E29e388",
+    "settlement": "0xbF4a49e0Dfd092e5FBE8E5761064C49533e6Ed23",
+    "implementationVersion": "corrected-binaryModule-markets-tuple"
   },
   "authorityExperiment": {
-    "marketId": "0x0000000000000000000000000000000000000000000000000000000000014a16",
-    "pool": "0xa34e33f71c566134ceecdd6869bcc693b3d69c17",
-    "market": "0xd2db77e400af5d5fbcffd6508fa7c8424b372418",
-    "correctPlaceBinaryOrderForSelector": "0x5d97c566",
-    "incorrectPlaceBinaryOrderSelector": "0x718c2d4d",
-    "oldCircuitId": "0xa30bfdcabd474a68276beba6e17e5ad352c241bdd8ce1ae7a1f4a34c31d5931a",
-    "newCircuitId": "0x067ed1718d13a424eb4fcb131dba9594f25ded17288a4e50daed0ebc39736751",
-    "oldPoolGrantWrongSelector": {"tx":"0x0906225393d7b3610848f45664c20ac2d180264134e4f7e37504e9647740bf0c","status":"success","pool":"0x4ba2403bdea1a8df97f9f91c1bd0b02158f106fd"},
-    "oldPoolAllowance": {"tx":"0x2ab5fca23ba05c48b29de6660270194541519006d72f32ecdc96be5f89f6873a","status":"success","amountRaw":"1000000"},
-    "currentPoolGrantWrongSelector": {"tx":"0x136aaab86225524e82bb9a528126e69fcb4263556b8cfb8442ee782b50eeb744","status":"success","pool":"0xa34e33f71c566134ceecdd6869bcc693b3d69c17","selector":"0x718c2d4d"},
-    "currentPoolAllowance": {"tx":"0x5aaa9d7282daa155beffc48ab96801334b53326e790e923f8d115acbe653b218","status":"success","amountRaw":"1000000"},
-    "newExecutorCorrectGrant": {"tx":"0x5f6ce00fb186e63c88de59026fa06de34a860ebae3c530ba1783045b7a8e35ab","status":"success","selector":"0x5d97c566"},
-    "failedOrderPreflight": {"errorSelector":"0x3fb0ba2e","decodedError":"OnlyApprovedContracts()","broadcast":false},
-    "cleanupWrongSelector": {"tx":"0x62275348546d7d2ee2e25256859efaef01cdda2c813fb88013b8664e56d49e75","status":"success","selector":"0x718c2d4d","readback":false},
-    "cleanupNewExecutor": {"tx":"0x943e15045f61d01fab436f79ed54537933a7324e03ca36ae0f32860a7c4e8d8b","status":"success","selector":"0x5d97c566","readback":false},
-    "cleanupOldExecutor": {"tx":"0x5e56da428d079af22621dae7ffab0c3d1fbe1cde4829c99a77951a1d7b1f7107","status":"success","selector":"0x5d97c566","readback":false}
+    "selector": "0x5d97c566",
+    "poolApproval": true,
+    "callReachedDreamDex": true,
+    "revertSelector": "0x3fb0ba2e",
+    "revert": "OnlyApprovedContracts()",
+    "interpretation": "additional DreamDEX contract admission required",
+    "autonomousStatus": "BLOCKED_EXTERNAL"
   },
-  "authorityVerdict": "BLOCKED: DreamDEX BinaryPool rejected placeBinaryOrderFor from CircuitExecutor with OnlyApprovedContracts() despite selector-scoped per-pool operator registry approval. No order broadcast. No autonomous execution claim.",
-  "evidenceClass": "SHANNON_READ_VERIFIED for ABI/binding; SHANNON_WRITE_VERIFIED for deployment/approval/cleanup only; order path not verified"
+  "guidedOrder": {
+    "marketId": "0x0000000000000000000000000000000000000000000000000000000000014aa9",
+    "pool": "0x14474fcb5d9cde95812380373919f09bc15fb036",
+    "tx": "0x4a33bd44512d808199a83969d30110069e18b930cf7935ac50c757fe0890e94c",
+    "orderId": "73786976294838227648",
+    "fillPriceRaw": 281000,
+    "quantityRaw": 1000,
+    "userData": 45,
+    "status": "FILLED"
+  },
+  "evidenceClass": "SHANNON_WRITE_VERIFIED for corrected RFT deployment; GUIDED_ORDER_FILLED; settlement pending market resolution; autonomous order path BLOCKED_EXTERNAL"
 }

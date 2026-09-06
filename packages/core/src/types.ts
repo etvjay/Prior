@@ -89,9 +89,31 @@ export const CircuitStatus = {
 export type CircuitStatus =
   (typeof CircuitStatus)[keyof typeof CircuitStatus];
 
-// ---------------------------------------------------------------------------
-// Records
-// ---------------------------------------------------------------------------
+export const CircuitIterationStatus = {
+  WAITING_FOR_MARKET: "WAITING_FOR_MARKET",
+  MARKET_FOUND: "MARKET_FOUND",
+  WAITING_FOR_FORECAST: "WAITING_FOR_FORECAST",
+  FORECAST_COMMITTING: "FORECAST_COMMITTING",
+  POLICY_EVALUATING: "POLICY_EVALUATING",
+  AWAITING_OWNER_AUTHORIZATION: "AWAITING_OWNER_AUTHORIZATION",
+  EXECUTING: "EXECUTING",
+  ABSTAINED: "ABSTAINED",
+  WAITING_FOR_RESOLUTION: "WAITING_FOR_RESOLUTION",
+  FINALIZING_RFT: "FINALIZING_RFT",
+  ITERATION_COMPLETE: "ITERATION_COMPLETE",
+} as const;
+export type CircuitIterationStatus = (typeof CircuitIterationStatus)[keyof typeof CircuitIterationStatus];
+
+export interface CircuitIteration {
+  readonly circuitId: CircuitId;
+  readonly marketId: MarketId;
+  readonly status: CircuitIterationStatus;
+  readonly forecastTrialId?: TrialId;
+  readonly executionId?: Hex;
+  readonly proposal?: unknown;
+  readonly updatedAt: bigint;
+}
+
 
 /** Captured at commit time. If invalid, `referenceValid` is false and downstream Brier-vs-market is unavailable. */
 export interface MarketReference {

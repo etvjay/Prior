@@ -40,27 +40,13 @@ RESOLVED / superseded by D-011.
 ## C-002 — M0 write evidence blocked by missing owner key
 
 Observed:
-Live Shannon writes for the M0 authority spike (operator grant, collateral allowance, tiny IOC binary order) cannot be performed in this environment because `PRIOR_OWNER_PRIVATE_KEY` is not present.
+Live Shannon writes were initially blocked by missing owner key. The key was subsequently available and deployment, grants, allowance, and cleanup were verified.
 
 Expected:
-`ONESHOT_BUILD_INPUTS.md` §35 allows local/bootstrap work immediately but gates live writes behind the owner-key check.
-
-Sources:
-- `docs/ONESHOT_BUILD_INPUTS.md` §35 (Ready-to-Run Gate)
-- `skills/M0_AUTHORITY_SPIKE.md`
-- `docs/CANONICAL_STATE.md` (this session)
-
-Affected:
-M0 write evidence, M1 deployment, M2 Runner live run, M3 multi-market Circuit live proof.
-
-Risk:
-Hackathon submission cannot prove the full target architecture end-to-end (one unchanged Circuit intent across ≥2 live Event Contracts) without the key.
-
-Decision required:
-User supplies a disposable Shannon-testnet-only `PRIOR_OWNER_PRIVATE_KEY` with STT gas and TestUSDC. The implementation agent will not generate, paste, or accept any non-disposable key.
+M0 write evidence would remain blocked until a disposable key was available.
 
 Status:
-OPEN. Documented. Implementation agent is proceeding with every non-key-dependent slice in parallel (RFT, Circuit, Runner, UI, tests, deployment) so the moment the key is provided the live run can complete.
+SUPERSEDED by verified Shannon writes; autonomous order remains blocked externally by C-006.
 
 ## C-003 — Live binary pool is a BeaconProxy
 
@@ -159,4 +145,4 @@ Decision required:
 Verify DreamDEX's approved-contract/system allowlist path for Event Contract BinaryPools. If Prior cannot be added safely, use the documented guided per-order owner-signature fallback and preserve the non-custodial invariant.
 
 Status:
-OPEN / LIVE BLOCKER. All temporary grants used in the experiment were revoked and read back false.
+OPEN / LIVE BLOCKER. All temporary grants used in the experiment were revoked and read back false. The guided fallback is now live-proven through a filled owner-signed specialized order; settlement/finalization is a separate pending gate.
