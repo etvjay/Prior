@@ -28,21 +28,25 @@ function EnterPriorLink({ final = false }: { final?: boolean }) {
   const router = useRouter();
   const [entering, setEntering] = useState(false);
 
-  useEffect(() => () => document.documentElement.removeAttribute("data-prior-route"), []);
-
   function enter(event: React.MouseEvent<HTMLAnchorElement>) {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     if (entering) return;
     setEntering(true);
-    document.documentElement.setAttribute("data-prior-route", "live");
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.setTimeout(() => router.push("/live"), reduced ? 0 : motion.duration.route);
   }
 
   return (
-    <Link className={`landing-primary${final ? " final-cta" : ""}`} href="/live" onClick={enter} aria-busy={entering}>
-      ENTER PRIOR
+    <Link
+      className={`landing-primary${final ? " final-cta" : ""}`}
+      href="/live"
+      onClick={enter}
+      aria-busy={entering}
+      data-route-transition={entering ? "live" : undefined}
+    >
+      <span className="cta-route-object" aria-hidden="true" />
+      <span>ENTER PRIOR</span>
     </Link>
   );
 }

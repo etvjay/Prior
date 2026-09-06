@@ -24,6 +24,17 @@ const landing = fs.readFileSync(path.join(root, "app/LandingScenes.tsx"), "utf8"
 const page = fs.readFileSync(path.join(root, "app/page.tsx"), "utf8");
 const normalized = landing.replace(/&apos;/g, "'").replace(/\s+/g, " ");
 
+function relativeLuminance(hex) {
+  const channels = hex.match(/[a-f\d]{2}/gi).map((channel) => Number.parseInt(channel, 16) / 255);
+  const [red, green, blue] = channels.map((channel) => channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4);
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+}
+
+function contrastRatio(foreground, background) {
+  const [lighter, darker] = [relativeLuminance(foreground), relativeLuminance(background)].sort((a, b) => b - a);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
 const sceneSequence = [...landing.matchAll(/data-scene="(\d)"/g)].map(([, scene]) => Number(scene));
 assert.deepEqual(sceneSequence, [1, 2, 3, 4, 5, 6, 7, 8, 9], "landing must preserve exactly nine visual scenes in order");
 assert.equal((landing.match(/<h1\b/g) ?? []).length, 1, "landing must keep one hero heading");
@@ -117,13 +128,26 @@ assert.match(css, /IBM Plex Mono/);
 assert.match(landing, /<MarketNode/);
 assert.match(landing, /<ForecastNode/);
 assert.match(css, /\.landing-hero \{[^}]*grid-template-columns:\s*minmax\(0, 1\.2fr\) minmax\(360px, \.8fr\)/s, "restore frozen hero composition");
+assert.match(css, /\.hero-thesis h1 \{[^}]*font-size:\s*clamp\(64px, 6\.2vw, 88px\)[^}]*letter-spacing:\s*-\.035em[^}]*line-height:\s*\.9545/s, "hero must use the frozen 88 / 84 scale");
+assert.match(css, /\.scene-statement h2, \.circuit-question h2 \{[^}]*font-size:\s*clamp\(48px, 4\.5vw, 64px\)[^}]*line-height:\s*\.96875/s, "scene headings must use the frozen 64 / 62 scale");
 assert.match(css, /\.landing-scene \{[^}]*min-height:\s*clamp\(680px, 88svh, 940px\)/s, "restore frozen scene pacing");
+const surface = css.match(/--surface-1:\s*(#[a-f\d]{6})/i)?.[1];
+const mutedAa = css.match(/--text-muted-aa:\s*(#[a-f\d]{6})/i)?.[1];
+assert.ok(surface && mutedAa, "landing AA-muted and surface tokens must exist");
+assert.ok(contrastRatio(mutedAa, surface) >= 4.5, `landing muted token must meet WCAG AA on surface-1, got ${contrastRatio(mutedAa, surface).toFixed(2)}:1`);
+assert.match(css, /\.circuit-iterations header b[^}]*var\(--text-muted-aa\)/s, "NO TRADE must use the AA-muted token");
+assert.match(css, /\.proof-disclosures summary b[^}]*var\(--text-muted-aa\)/s, "disclosure metadata must use the AA-muted token");
 assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
 assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.landing-scene[^}]*opacity:\s*1/);
-assert.match(landing, /data-prior-route/);
+assert.match(landing, /data-route-transition=\{entering \? "live" : undefined\}/);
+assert.match(landing, /className="cta-route-object"/);
 assert.match(landing, /motion\.duration\.route/);
 assert.match(landing, /prefers-reduced-motion/);
-assert.match(css, /html\[data-prior-route="live"\]/);
+assert.doesNotMatch(landing, /data-prior-route/, "route state must stay on the activated CTA");
+assert.doesNotMatch(css, /html\[data-prior-route|data-route-transition[^}]*\.forecast-node/s, "CTA route motion must not move unrelated Forecast nodes");
+assert.match(css, /\.landing-primary\[data-route-transition="live"\] \.cta-route-object \{[^}]*transform:/s, "route motion needs one explicit CTA object");
+assert.match(css, /@media \(hover: hover\) and \(pointer: fine\) \{\s*\.landing-primary:hover \{[^}]*transform:/s, "CTA hover transform must be fine-pointer only");
+assert.equal((css.match(/\.landing-primary:hover\s*\{/g) ?? []).length, 1, "CTA hover transform must exist only once, inside its capability media query");
 assert.match(landing, /aria-label="Prior separates belief, decision, execution, and outcome"/);
 assert.match(landing, /aria-label="Illustrative fixed Circuit standing mandate"/);
 assert.match(landing, /aria-label="Circuit continuity across two real accepted markets"/);
