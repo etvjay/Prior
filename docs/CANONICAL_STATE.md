@@ -1,7 +1,7 @@
 # Canonical State
 
 ## Current phase
-`M3 CONTINUITY PARTIAL/WRITE VERIFIED — same four-window Circuit processed two real BTC 1h markets with immutable intent; Market A finalized, Market B committed; guided abstentions; autonomous path BLOCKED_EXTERNAL; UI/reviews pending`
+`M3 CONTINUITY PARTIAL/WRITE VERIFIED — same four-window Circuit processed two real BTC 5m markets with immutable intent; Market A finalized, Market B committed; guided abstentions; autonomous path BLOCKED_EXTERNAL; UI/reviews pending`
 
 ## Verified implementation
 - M0 ABI / market / operator-registry read evidence captured against live Shannon at 2026-09-05.
@@ -16,7 +16,7 @@
 - Repository bootstrap (monorepo per `ONESHOT_BUILD_INPUTS.md` §18).
 - Pinned `@somnia-chain/markets-sdk@0.29.0` + matching `viem` installed via pnpm.
 - `scripts/m0-sdk-exports.ts` and the ad-hoc live M0 probes that produced the evidence above.
-- Guided execution fallback, effective Circuit status derivation, durable checkpoint recovery, and live continuity evidence for two BTC 1h markets.
+- Guided execution fallback, effective Circuit status derivation, durable checkpoint recovery, and live continuity evidence for two BTC 5m markets.
 - Corrected RFT deployment plus Market #1 full lifecycle evidence.
 
 ## Not yet verified

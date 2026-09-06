@@ -2,8 +2,8 @@
 
 ## Build identity
 - Branch: `main`
-- HEAD SHA: `b5dfaa1fa5c589133473d25c399ba2ad1010c0e9`
-- Parent SHA: `5a3814481c0f84b98073dd9843559b14aeae37f9`
+- HEAD SHA: `921a3a8083392f52f67eb5f2fc6cef000ee7e43d`
+- Parent SHA: `bea25a8274670f4bd9729bf22548d83a075e52a9`
 - Environment: Linux, Node 22.23.2, pnpm 11.24.0, Foundry/solc 0.8.24
 
 ## Overall status
@@ -12,7 +12,7 @@
 - RFT: **SHANNON_WRITE_VERIFIED / FINALIZED** — corrected deployment, commit and score proven.
 - Runner: **SHANNON_WRITE_VERIFIED** — discovery/readiness, durable checkpoint, effective-status logic, and actual two-iteration restart reconstruction pass.
 - Frontend: **PARTIAL** — guided authority model and wallet submission component are implemented; live proposal hydration remains.
-- Circuit continuity: **SHANNON_WRITE_VERIFIED** — new four-window Circuit processed two distinct real BTC 1h markets with the same immutable intent; both policy decisions were explicit ABSTAINs.
+- Circuit continuity: **SHANNON_WRITE_VERIFIED** — new four-window Circuit processed two distinct real BTC 5m markets with the same immutable intent; both policy decisions were explicit ABSTAINs.
 - Runner recovery: **SHANNON_WRITE_VERIFIED** — actual process kill/restart reloaded both chain-derived completed iterations from durable checkpoint; no duplicate trial/order effects.
 - RFT: **SHANNON_WRITE_VERIFIED / FINALIZED for Market #1**; Market A finalized; Market B committed and remains independently inspectable pending resolution.
 - Circuit continuity: **SHANNON_WRITE_VERIFIED** across Market A/B; same four-window immutable intent, distinct markets, two explicit abstentions.
@@ -21,7 +21,7 @@
 - E2E: **PARTIAL** — Market #1 guided Forecast → order → fill → resolution → zero-payout redemption → RFT finalization is verified; the new Circuit continuity proof covers two real markets with explicit abstentions; those new RFTs are not yet resolved/finalized.
 
 ## Tests
-- Core Vitest: **PASS — 39 tests** (scoring, policy, trade tags, guided execution, effective Circuit status).
+- Core Vitest: **PASS — 46 tests** (scoring, policy, trade tags, guided execution, effective Circuit status, fixed-point unit model).
 - Foundry build: **PASS** (warnings only: block timestamp / bounded cast lint).
 - Foundry tests: **PASS — 5 tests** (RFT scoring parity/void handling; Circuit lifecycle/caps; owner-only advance hardening).
 - Core TypeScript typecheck: **PASS**.
