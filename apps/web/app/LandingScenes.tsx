@@ -6,29 +6,22 @@ import { useEffect, useState } from "react";
 import { ForecastNode, MarketNode } from "./components";
 import { motion } from "./lib/motion";
 
-const actLabels = [
-  "MEASURE",
-  "COMMIT",
-  "CAPABILITY",
-  "SPECIALIZE",
-  "HANDOFF",
-  "MANDATE",
-  "BOUND",
-  "LOOP",
-  "CONTINUITY",
-  "PRIOR",
-] as const;
+const flowLabels = ["BELIEF", "MARKET", "YOU", "COMMIT", "REALITY", "EVIDENCE", "MEASURE", "HISTORY", "INTENT"] as const;
 
-function ActIntro({ number, label }: { number: number; label: string }) {
+function SceneIntro({ number, label }: { number: number; label: string }) {
   return (
-    <div className="landing-act-meta" aria-label={`Act ${number} of 10, ${label}`}>
-      <span>{String(number).padStart(2, "0")} / 10</span>
+    <div className="landing-scene-meta" aria-label={`Scene ${number} of 9, ${label}`}>
+      <span>{String(number).padStart(2, "0")} / 09</span>
       <span>{label}</span>
-      <div className="landing-progress" aria-hidden="true">
-        {actLabels.map((item, index) => <i className={index < number ? "is-reached" : ""} key={item} />)}
+      <div className="narrative-progress" aria-hidden="true">
+        {flowLabels.map((item, index) => <i className={index < number ? "is-reached" : ""} key={item} />)}
       </div>
     </div>
   );
+}
+
+function EvidenceFact({ label, value, tone }: { label: string; value: string; tone?: "market" | "forecast" | "down" }) {
+  return <div className={`evidence-fact${tone ? ` ${tone}` : ""}`}><span>{label}</span><strong>{value}</strong></div>;
 }
 
 function EnterPriorLink({ final = false }: { final?: boolean }) {
@@ -54,16 +47,12 @@ function EnterPriorLink({ final = false }: { final?: boolean }) {
   );
 }
 
-function Fact({ label, value, tone }: { label: string; value: string; tone?: "market" | "forecast" | "down" | "up" }) {
-  return <div className={`landing-fact${tone ? ` ${tone}` : ""}`}><span>{label}</span><strong>{value}</strong></div>;
-}
-
 export function LandingScenes() {
   useEffect(() => {
-    const scenes = document.querySelectorAll<HTMLElement>("[data-act]");
+    const scenes = document.querySelectorAll<HTMLElement>("[data-scene]");
     const observer = new IntersectionObserver(
       (entries) => entries.forEach((entry) => entry.target.classList.toggle("in-view", entry.isIntersecting)),
-      { threshold: 0.18 },
+      { threshold: 0.24 },
     );
     scenes.forEach((scene) => observer.observe(scene));
     return () => observer.disconnect();
@@ -71,191 +60,209 @@ export function LandingScenes() {
 
   return (
     <div className="landing-scenes">
-      <section className="landing-act landing-problem in-view" data-act="1" aria-labelledby="act-1">
-        <ActIntro number={1} label="THE MEASUREMENT PROBLEM" />
-        <div className="landing-hero-copy">
+      <section className="landing-scene landing-hero in-view" data-scene="1" aria-labelledby="scene-1">
+        <SceneIntro number={1} label="BELIEF" />
+        <div className="hero-thesis">
           <p className="landing-wordmark" aria-hidden="true">P R I O R</p>
-          <h1 id="act-1">A PROFITABLE TRADE DOES NOT PROVE A GOOD PREDICTION.</h1>
-          <p>And a good prediction can still lose at a bad price.</p>
+          <h1 id="scene-1">COMMIT BEFORE REALITY DOES.</h1>
+          <p className="hero-definition">A profitable trade does not prove a good prediction. A good prediction can still lose at a bad price.</p>
+          <p className="hero-support">PRIOR preserves what was believed before the answer, then keeps judgment separate from the trade.</p>
           <EnterPriorLink />
         </div>
-        <div className="trade-contrast" aria-label="Prediction quality and trading result can disagree">
-          <article>
-            <span>PATH 01</span>
-            <strong>GOOD FORECAST</strong>
-            <strong>BAD ENTRY</strong>
-            <strong>CORRECT RESULT</strong>
-            <b>LOSS</b>
-          </article>
-          <article>
-            <span>PATH 02</span>
-            <strong>BAD FORECAST</strong>
-            <strong>LUCKY ENTRY</strong>
-            <strong>WRONG RESULT</strong>
-            <b>PROFIT</b>
-          </article>
+        <div className="belief-specimen" aria-label="A Forecast exists before an outcome is known">
+          <span>BEFORE THE ANSWER</span>
+          <ForecastNode label="Your uncommitted Forecast" />
+          <b>?</b>
+          <small>ONE PROBABILITY. RECORDED IN TIME.</small>
         </div>
-        <div className="separation-statement">
-          <p>Most histories collapse all of this to PnL.</p>
-          <h2>PRIOR SEPARATES</h2>
-          <div aria-label="Prior separates belief, decision, execution, and outcome">
-            <span>BELIEF</span><i /><span>DECISION</span><i /><span>EXECUTION</span><i /><span>OUTCOME</span>
-          </div>
+        <div className="hero-separation" aria-label="Prior separates belief, decision, execution, and outcome">
+          <span>BELIEF</span><i /><span>DECISION</span><i /><span>EXECUTION</span><i /><span>OUTCOME</span>
         </div>
       </section>
 
-      <section className="landing-act landing-commitment" data-act="2" aria-labelledby="act-2">
-        <ActIntro number={2} label="FORECAST COMMITMENT" />
-        <div className="act-heading">
-          <p>FIRST, KEEP THE BELIEF</p>
-          <h2 id="act-2">THE FORECAST HAS TO EXIST BEFORE THE ANSWER.</h2>
+      <section className="landing-scene object-scene" data-scene="2" aria-labelledby="scene-2">
+        <SceneIntro number={2} label="MARKET" />
+        <div className="scene-statement">
+          <p className="scene-kicker">MARKET VIEW</p>
+          <h2 id="scene-2">The market has a probability.</h2>
+          <p>It is a reference, not proof that the crowd is right.</p>
         </div>
-        <div className="forecast-specimen" aria-label="BTC five minute resolved Forecast example">
-          <header><span>BTC · 5M</span><b>BEFORE RESOLUTION</b></header>
-          <div className="probability-pair">
-            <div><MarketNode label="Market probability" /><span>MARKET</span><strong>◆61%</strong></div>
-            <div><ForecastNode label="Agent forecast" locked /><span>AGENT</span><strong>●72%</strong></div>
-          </div>
-          <div className="resolution-line"><span>RESOLUTION</span><strong>UP</strong><small>THE FORECAST STAYED FIXED</small></div>
-        </div>
-        <p className="single-evidence">ONE RESOLVED FORECAST IS ONE PIECE OF EVIDENCE.</p>
-        <div className="rft-definition">
-          <div><span>NAME THE EVIDENCE OBJECT</span><h3>RESOLVED FORECAST TRIAL</h3><b>RFT</b></div>
-          <p>A Forecast, its market reference, and the result kept together after resolution.</p>
-        </div>
-        <div className="one-vs-history">
-          <div><span>ONE RFT</span><p>One judgment, fixed before one result.</p></div>
-          <div><span>RFT HISTORY</span><p>Many resolved judgments, compared across the conditions that produced them.</p></div>
+        <div className="single-object market-object" aria-label="Market probability, amber diamond, 61 percent">
+          <span>MARKET ◆ 61%</span>
+          <MarketNode label="Market probability" />
         </div>
       </section>
 
-      <section className="landing-act landing-capability" data-act="3" aria-labelledby="act-3">
-        <ActIntro number={3} label="CAPABILITY AND TRAJECTORY" />
-        <div className="act-heading">
-          <p>ILLUSTRATIVE CAPABILITY VIEW · NOT LIVE ANALYTICS</p>
-          <h2 id="act-3">WHAT DOES AGENT ALPHA&apos;S RESOLVED HISTORY REVEAL?</h2>
+      <section className="landing-scene object-scene you-scene" data-scene="3" aria-labelledby="scene-3">
+        <SceneIntro number={3} label="YOU" />
+        <div className="scene-statement">
+          <p className="scene-kicker">YOUR FORECAST</p>
+          <h2 id="scene-3">You have one too.</h2>
+          <p>A Forecast states your probability before resolution.</p>
         </div>
-        <div className="capability-questions" aria-label="Illustrative questions that resolved Forecast history can support">
-          <article><span>ASSET</span><strong>Does its judgment hold up better on BTC or ETH?</strong></article>
-          <article><span>WINDOW</span><strong>Is it better at 5 minutes or 1 hour?</strong></article>
-          <article><span>CONFIDENCE</span><strong>When it says 70% or more, does reality agree often enough?</strong></article>
-          <article><span>EXECUTION</span><strong>Is the Forecast sound even when the entry price is not?</strong></article>
-        </div>
-        <div className="trajectory-note"><ForecastNode locked /><span>ONE RESOLVED POINT</span><i /><span>A SCOPED HISTORY</span><i /><span>A CAPABILITY TRAJECTORY</span></div>
-        <h3 className="act-maxim">DON&apos;T ASK WHETHER AN AGENT IS GOOD. ASK WHAT IT&apos;S GOOD AT.</h3>
-      </section>
-
-      <section className="landing-act landing-specialization" data-act="4" aria-labelledby="act-4">
-        <ActIntro number={4} label="AGENTIC PAYOFF" />
-        <div className="act-heading">
-          <p>ILLUSTRATIVE SPECIALIZATION · NOT A RANKING</p>
-          <h2 id="act-4">NO GENERIC REPUTATION. USE THE RIGHT JUDGMENT FOR THE RIGHT QUESTION.</h2>
-        </div>
-        <div className="agent-lanes" aria-label="Illustrative agent specialization examples">
-          <article><span>ALPHA</span><strong>BTC · 5M</strong><p>Candidate for short-window, high-confidence Forecasts.</p></article>
-          <article><span>BETA</span><strong>ETH · 1H</strong><p>Candidate for longer-window judgment.</p></article>
-          <article><span>GAMMA</span><strong>ENTRY DISCIPLINE</strong><p>Candidate when execution quality matters.</p></article>
-        </div>
-        <div className="enabled-basis">
-          <span>RESOLVED HISTORY CAN BECOME A BASIS FOR</span>
-          <p>CALIBRATION · SPECIALIZATION · COMPARISON · SELECTION · TRUST ALLOCATION · RESEARCH · PROVENANCE</p>
-          <small>These are enabled uses of evidence, not claims that PRIOR ships a universal ranking or routing system.</small>
+        <div className="single-object forecast-object" aria-label="Your Forecast, blue circle, 72 percent">
+          <span>YOU ● 72%</span>
+          <ForecastNode label="Your Forecast probability" />
         </div>
       </section>
 
-      <section className="landing-act landing-handoff" data-act="5" aria-labelledby="act-5">
-        <ActIntro number={5} label="THE HANDOFF" />
-        <div className="handoff-line"><span>RFT</span><i /><span>?</span><i /><span>CIRCUIT</span></div>
-        <h2 id="act-5">NOW YOU KNOW WHO YOU WANT TO LISTEN TO. WHAT SHOULD THEIR FORECAST BE ALLOWED TO DO?</h2>
-      </section>
-
-      <section className="landing-act landing-mandate" data-act="6" aria-labelledby="act-6">
-        <ActIntro number={6} label="CIRCUIT" />
-        <div className="act-heading">
-          <p>FROM EVIDENCE TO BOUNDED ACTION</p>
-          <h2 id="act-6">A CIRCUIT IS A STANDING MANDATE.</h2>
-          <p>It defines whose Forecasts matter, when they matter, and what they may cause. It is not merely a fixed rule.</p>
+      <section className="landing-scene axis-scene" data-scene="4" aria-labelledby="scene-4">
+        <SceneIntro number={4} label="SHARED AXIS" />
+        <div className="scene-statement centered-statement">
+          <p className="scene-kicker">SAME QUESTION. DIFFERENT BELIEF.</p>
+          <h2 id="scene-4">The difference needs a timestamp.</h2>
+          <p>Forecast commitment proves the belief existed before the answer.</p>
         </div>
-        <div className="mandate-panel" aria-label="Illustrative Circuit standing mandate">
-          <header><span>STANDING MANDATE</span><b>ILLUSTRATIVE</b></header>
-          <div className="mandate-tree">
-            <Fact label="WHOSE FORECASTS" value="AGENT ALPHA" tone="forecast" />
-            <Fact label="WHEN" value="BTC · 5M" />
-            <Fact label="CONFIDENCE" value="≥70%" />
-            <Fact label="ACTION CONDITION" value="BUY ONLY 8 POINTS BELOW" tone="market" />
-            <Fact label="PER MARKET" value="$1" />
-            <Fact label="DURATION" value="20 MARKETS" />
-            <Fact label="STOP CONDITION" value="AFTER 2 LOSSES" tone="down" />
-          </div>
-          <p>ALPHA → BTC 5M → CONFIDENCE ≥70% → BUY ONLY 8 POINTS BELOW → $1 / MARKET → 20 MARKETS → STOP AFTER 2 LOSSES</p>
+        <div className="narrative-axis" role="img" aria-label="Shared probability axis from zero to one hundred, Market at 61 and You at 72">
+          <div className="axis-labels"><span>MARKET</span><span>YOU</span></div>
+          <strong>0—◆61—●72—100</strong>
+          <div className="axis-key"><span><MarketNode /> MARKET</span><span><ForecastNode /> FORECAST</span></div>
         </div>
       </section>
 
-      <section className="landing-act landing-bounds" data-act="7" aria-labelledby="act-7">
-        <ActIntro number={7} label="PERSISTENT INTENT" />
-        <div className="act-heading"><p>THE DIFFERENCE IS CONTINUITY</p><h2 id="act-7">ONE DECISION VERSUS A GOVERNED SERIES.</h2></div>
-        <div className="flow-contrast">
-          <article>
-            <span>WITHOUT A CIRCUIT</span>
-            <p>Forecast</p><i /><p>ad hoc decision</p><i /><p>trade or no trade</p><i /><p>context disappears</p>
-          </article>
-          <article>
-            <span>WITH A CIRCUIT</span>
-            <p>standing mandate</p><i /><p>Forecast</p><i /><p>rule evaluation</p><i /><p>bounded action or no action</p><i /><p>evidence remains</p>
-          </article>
+      <section className="landing-scene commit-story" data-scene="5" aria-labelledby="scene-5">
+        <SceneIntro number={5} label="COMMITMENT" />
+        <div className="scene-statement centered-statement">
+          <p className="scene-kicker">MAKE THE TIME BOUNDARY VISIBLE</p>
+          <h2 id="scene-5">COMMIT IT</h2>
+          <p>Before commitment, the probability can change. After confirmation, it cannot be rewritten.</p>
         </div>
-        <div className="mandate-benefits" aria-label="Benefits of a persistent mandate">
-          <span>NO DRIFT</span><span>INSPECTABILITY</span><span>BUDGETS</span><span>BOUNDED AUTHORITY</span><span>COMPARABLE EPISODES</span>
+        <div className="commit-crossing" role="img" aria-label="Commitment boundary, blue Forecast moves from before to after and becomes immutable">
+          <div><span>BEFORE</span><strong>●│</strong><small>EDITABLE</small></div>
+          <i aria-hidden="true" />
+          <div><span>AFTER</span><strong>│●</strong><small>IMMUTABLE</small></div>
+        </div>
+        <p className="settled-note">SAME FORECAST. NEW STATE. THE COMMITTED OBJECT STAYS FIXED.</p>
+      </section>
+
+      <section className="landing-scene reality-story" data-scene="6" aria-labelledby="scene-6">
+        <SceneIntro number={6} label="REALITY" />
+        <div className="scene-statement">
+          <p className="scene-kicker">TIME CONTINUES</p>
+          <h2 id="scene-6">Reality keeps moving.</h2>
+          <p>The market changes. Execution gets its own price. The committed Forecast stays fixed until the outcome resolves.</p>
+          <p className="trade-truth-inline">Belief, decision, execution, and outcome remain separate from PnL.</p>
+        </div>
+        <div className="reality-field" aria-label="Market probability moves after commitment while the Forecast remains fixed, then outcome resolves Up">
+          <div className="moving-market"><span>MARKET</span><MarketNode /><b>61 → 68 → 54</b></div>
+          <div className="fixed-forecast"><span>COMMITTED FORECAST</span><ForecastNode locked /><b>72</b></div>
+          <div className="resolved-outcome"><span>REALITY</span><strong>UP</strong><small>RESOLVED</small></div>
         </div>
       </section>
 
-      <section className="landing-act landing-loop" data-act="8" aria-labelledby="act-8">
-        <ActIntro number={8} label="RFT + CIRCUIT" />
-        <div className="act-heading"><p>THE PRODUCT LOOP</p><h2 id="act-8">MEASURE → LEARN → ALLOCATE TRUST → ACT → MEASURE AGAIN.</h2></div>
-        <div className="loop-diagram" aria-label="Resolved Forecast Trial and Circuit feedback loop">
-          <div className="loop-primary"><span>FIXED RULES</span><i>→</i><span>MARKET</span><i>→</i><span>FORECAST</span><i>→</i><span>DECISION</span><i>→</i><span>RFT</span><i>→</i><span>MORE EVIDENCE</span></div>
-          <div className="loop-secondary"><span>HISTORY</span><i>→</i><span>UNDERSTAND JUDGMENT</span><i>→</i><span>CHOOSE / WEIGHT</span><i>→</i><span>CIRCUIT</span><i>→</i><span>BOUNDED ACTION</span><i>→</i><span>NEW EVIDENCE</span></div>
+      <section className="landing-scene measure-scene" data-scene="7" aria-labelledby="scene-7">
+        <SceneIntro number={7} label="EVIDENCE" />
+        <div className="scene-statement centered-statement">
+          <p className="scene-kicker">BELIEF MEETS OUTCOME</p>
+          <h2 id="scene-7">NOW WE CAN MEASURE JUDGMENT.</h2>
+          <p>One resolved Forecast is one evidence sample.</p>
         </div>
-        <h3 className="act-maxim">MEASURE JUDGMENT. USE IT. MEASURE AGAIN.</h3>
-      </section>
-
-      <section className="landing-act landing-continuity" data-act="9" aria-labelledby="act-9">
-        <ActIntro number={9} label="REAL ACCEPTED CONTINUITY" />
-        <div className="act-heading">
-          <p>REAL ACCEPTED CONTINUITY · ONE UNCHANGED MANDATE</p>
-          <h2 id="act-9">THE RULE CAN REFUSE TO ACT.</h2>
+        <div className="evidence-lock" aria-label="Resolved example comparing a Forecast with the market at commit">
+          <EvidenceFact label="FORECAST" value="72%" tone="forecast" />
+          <EvidenceFact label="MARKET AT COMMIT" value="61%" tone="market" />
+          <EvidenceFact label="OUTCOME" value="UP" />
+          <EvidenceFact label="FORECAST SCORE" value="0.0784" />
+          <EvidenceFact label="MARKET SCORE" value="0.1521" />
+          <p className="literal-facts">FORECAST 72% · MARKET AT COMMIT 61% · OUTCOME UP · FORECAST SCORE 0.0784 · MARKET SCORE 0.1521</p>
         </div>
-        <div className="continuity-markets" aria-label="Two real accepted markets under one unchanged mandate">
-          <article><header><span>MARKET A</span><b>NO TRADE</b></header><div><strong className="forecast-color">● 0%</strong><i>VS</i><strong className="market-color">◆ 1.5%</strong></div><footer><span>RULE · NOT PERMITTED</span><b>OUTCOME · DOWN</b></footer></article>
-          <article><header><span>MARKET B</span><b>NO TRADE</b></header><div><strong className="forecast-color">● 50%</strong><i>VS</i><strong className="market-color">◆ 53.25%</strong></div><footer><span>RULE · NOT PERMITTED</span><b>OUTCOME · UP</b></footer></article>
-        </div>
-        <p className="continuity-explainer">Neither market met the rule that permitted action. Both Forecasts still became evidence. A Circuit is not a gambling bot. It is a mandate that can act only inside its authority.</p>
-        <div className="accepted-execution" aria-label="Separate real accepted Market number one permitted execution facts">
-          <header><span>SEPARATE REAL ACCEPTED EXECUTION</span><b>MARKET #1 · PERMITTED</b></header>
-          <div>
-            <Fact label="FORECAST" value="50%" tone="forecast" />
-            <Fact label="MARKET" value="35.2%" tone="market" />
-            <Fact label="DECISION" value="BUY UP" />
-            <Fact label="LIMIT" value="42%" />
-            <Fact label="FILLED" value="28.1%" />
-            <Fact label="OUTCOME" value="DOWN" tone="down" />
-            <Fact label="ECONOMIC RESULT" value="PNL -281 RAW" tone="down" />
-          </div>
-          <p>50% FORECAST · 35.2% MARKET · BUY UP · LIMIT 42% · FILLED 28.1% · DOWN · PNL -281 RAW</p>
+        <div className="rft-nameplate">
+          <span>NAME THE EVIDENCE OBJECT</span>
+          <strong>RESOLVED FORECAST TRIAL</strong>
+          <b>RFT</b>
+          <p>A Forecast, its market reference, execution record when present, and outcome kept together after resolution.</p>
         </div>
       </section>
 
-      <section className="landing-act landing-close" data-act="10" aria-labelledby="act-10">
-        <ActIntro number={10} label="PRIOR" />
+      <section className="landing-scene history-story" data-scene="8" aria-labelledby="scene-8">
+        <SceneIntro number={8} label="HISTORY" />
+        <div className="scene-statement centered-statement">
+          <p className="scene-kicker">CAPABILITY / TRAJECTORY · NOT LIVE ANALYTICS</p>
+          <h2 id="scene-8">ONE RFT IS EVIDENCE. MANY REVEAL A RECORD.</h2>
+          <p>Repeated RFTs can reveal what judgment is good at, not whether an agent is universally good.</p>
+        </div>
+        <div className="history-trajectory" aria-label="Repeated resolved Forecast Trials form a scoped capability trajectory">
+          <span><ForecastNode locked /><small>BTC · 5M</small></span><i /><span><ForecastNode locked /><small>BTC · 5M</small></span><i /><span><ForecastNode locked /><small>ETH · 1H</small></span><i /><span><ForecastNode locked /><small>BTC · 5M</small></span>
+        </div>
+        <div className="capability-strip">
+          <p><span>CALIBRATION</span>Does confidence hold up?</p>
+          <p><span>SPECIALIZATION</span>Which asset and window fit?</p>
+          <p><span>FORECAST VS EXECUTION</span>Was judgment sound even when entry was not?</p>
+        </div>
+        <p className="capability-note">RFT histories make specialization, comparison, selection, and trust allocation measurable capabilities. These are enabled trajectories, not a live ranking or routing system.</p>
+        <h3 className="handoff-question">Once judgment is measurable, decide what it may cause.</h3>
+      </section>
+
+      <section className="landing-scene circuit-story" data-scene="9" aria-labelledby="scene-9">
+        <SceneIntro number={9} label="PERSISTENT INTENT" />
+        <div className="circuit-question">
+          <p>FROM MEASURED JUDGMENT TO BOUNDED ACTION</p>
+          <h2 id="scene-9">A CIRCUIT IS A STANDING MANDATE.</h2>
+          <p>It defines whose Forecasts matter, when they matter, and what they may cause.</p>
+        </div>
+
+        <div className="fixed-intent" aria-label="Illustrative fixed Circuit standing mandate">
+          <span>FIXED INTENT · ILLUSTRATIVE</span>
+          <strong>AGENT ALPHA · BTC 5M · CONFIDENCE ≥70% · BUY ONLY 8 POINTS BELOW · $1 PER MARKET · 20 MARKETS · STOP AFTER 2 LOSSES</strong>
+          <small>WHO · WHEN · PERMITTED ACTION · BUDGET · DURATION · STOP CONDITION</small>
+        </div>
+
+        <div className="circuit-contrast" aria-label="Without and with a Circuit">
+          <p><span>WITHOUT A CIRCUIT</span>Forecast → ad hoc decision → context disappears</p>
+          <p><span>WITH A CIRCUIT</span>Standing mandate → Forecast → bounded action or abstention → evidence remains</p>
+        </div>
+
+        <div className="judgment-loop" aria-label="RFT history to trust allocation to Circuit to bounded action to new evidence">
+          <span>RFT HISTORY</span><i>→</i><span>TRUST ALLOCATION</span><i>→</i><span>CIRCUIT</span><i>→</i><span>BOUNDED ACTION</span><i>→</i><span>NEW EVIDENCE</span>
+        </div>
+
+        <div className="proof-disclosures">
+          <details>
+            <summary><span>REAL MARKET A / B</span><b>UNCHANGED MANDATE · TWO ABSTENTIONS</b></summary>
+            <div className="circuit-iterations" aria-label="Circuit continuity across two real accepted markets">
+              <article>
+                <header><span>Market A</span><b>NO TRADE</b></header>
+                <div className="iteration-comparison"><span className="forecast-color"><small>FORECAST</small>0% UP</span><i>VS</i><span className="market-color"><small>MARKET</small>1.50% UP</span></div>
+                <div className="iteration-result"><strong>RULE · NOT PERMITTED</strong><span>OUTCOME · DOWN</span><span>STATE · SCORED</span></div>
+              </article>
+              <article>
+                <header><span>Market B</span><b>NO TRADE</b></header>
+                <div className="iteration-comparison"><span className="forecast-color"><small>FORECAST</small>50% UP</span><i>VS</i><span className="market-color"><small>MARKET</small>53.25% UP</span></div>
+                <div className="iteration-result"><strong>RULE · NOT PERMITTED</strong><span>OUTCOME · UP</span><span>STATE · SCORED</span></div>
+              </article>
+            </div>
+            <p>Neither market met the rule that permitted action. Both Forecasts still became evidence. Abstention is a valid decision.</p>
+          </details>
+
+          <details>
+            <summary><span>SEPARATE REAL MARKET #1</span><b>LOSING EXECUTION SHOWN IN FULL</b></summary>
+            <div className="economic-proof" aria-label="Separate real Market number one economic execution facts">
+              <div className="execution-facts">
+                <EvidenceFact label="FORECAST" value="50%" tone="forecast" />
+                <EvidenceFact label="MARKET" value="35.2%" tone="market" />
+                <EvidenceFact label="DECISION" value="BUY UP" />
+                <EvidenceFact label="LIMIT" value="42%" />
+                <EvidenceFact label="FILLED" value="28.1%" />
+                <EvidenceFact label="OUTCOME" value="DOWN" tone="down" />
+                <EvidenceFact label="ECONOMIC RESULT" value="PNL -281 RAW" tone="down" />
+              </div>
+              <p>50% FORECAST · 35.2% MARKET · BUY UP · LIMIT 42% · FILLED 28.1% · DOWN · PNL -281 RAW</p>
+            </div>
+          </details>
+        </div>
+
         <div className="outcome-split">
-          <article><span>FOR TRADERS</span><h2 id="act-10">SEE WHETHER JUDGMENT, ENTRY, EXECUTION, OR OUTCOME DROVE THE RESULT.</h2></article>
-          <article><span>FOR AGENTIC SYSTEMS</span><h2>TURN MEASURED JUDGMENT INTO BOUNDED, INSPECTABLE AUTHORITY.</h2></article>
+          <article><span>FOR TRADERS</span><h3>SEE WHETHER JUDGMENT, ENTRY, EXECUTION, OR OUTCOME DROVE THE RESULT.</h3></article>
+          <article><span>FOR AGENTIC SYSTEMS</span><h3>TURN MEASURED JUDGMENT INTO BOUNDED, INSPECTABLE AUTHORITY.</h3></article>
         </div>
-        <div className="primitive-pair"><p><strong>RFT</strong> MEASURES JUDGMENT.</p><p><strong>CIRCUIT</strong> BOUNDS AUTHORITY.</p></div>
-        <div className="closing-copy">
-          <p>FORECASTS TELL US WHAT SOMEONE BELIEVED.</p>
-          <p>RFTs TELL US HOW THAT JUDGMENT HELD UP.</p>
-          <p>CIRCUITS DEFINE WHAT THAT JUDGMENT IS ALLOWED TO DO NEXT.</p>
+
+        <div className="final-definition">
+          <p><strong>RFT</strong> MEASURES JUDGMENT.</p>
+          <p><strong>CIRCUIT</strong> BOUNDS AUTHORITY.</p>
+          <div className="closing-lines">
+            <p>FORECASTS TELL US WHAT SOMEONE BELIEVED.</p>
+            <p>RFTs TELL US HOW THAT JUDGMENT HELD UP.</p>
+            <p>CIRCUITS DEFINE WHAT THAT JUDGMENT IS ALLOWED TO DO NEXT.</p>
+          </div>
           <h3>PRIOR.</h3>
           <p>MEASURE JUDGMENT. ACT WITH RULES. KEEP THE EVIDENCE.</p>
           <EnterPriorLink final />
