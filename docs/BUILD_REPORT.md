@@ -2,8 +2,8 @@
 
 ## Build identity
 - Branch: `main`
-- HEAD SHA: verified by `git rev-parse HEAD` and remote `refs/heads/main` at handoff
-- Parent SHA: `6b807b59f396132c6816bc9484e2608388e82722`
+- HEAD SHA: `b5dfaa1fa5c589133473d25c399ba2ad1010c0e9`
+- Parent SHA: `5a3814481c0f84b98073dd9843559b14aeae37f9`
 - Environment: Linux, Node 22.23.2, pnpm 11.24.0, Foundry/solc 0.8.24
 
 ## Overall status
