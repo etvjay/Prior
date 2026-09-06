@@ -20,6 +20,6 @@ Scope: Prior continuity milestone. Reviews were independent, read-only, and ran 
 - No review lane established a clean ACCEPT verdict.
 - No unresolved review finding was hidden.
 - Autonomous execution remains `BLOCKED_EXTERNAL` by DreamDEX `OnlyApprovedContracts()`.
-- Continuity evidence is valid for two real markets with committed RFTs and explicit abstention decisions; Market B resolution/finalization remains pending.
+- Continuity evidence is now valid for two real BTC 5m markets with committed and scored RFTs and explicit abstention decisions; no economic execution occurred.
 - Guided proposal source fixes are now verified: raw maximum spend uses `priceRaw × quantityRaw / unitScaleRaw`, quantity and policy spend are bound, and all material signed fields are compared. Core suite: 46 tests passing.
 - Contract-level criticals remain open: `CircuitExecutor.execute` lacks a configured caller boundary and does not enforce exact onchain spend/policy constraints. No autonomous deployment claim is made.

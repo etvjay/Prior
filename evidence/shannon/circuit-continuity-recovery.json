@@ -1,6 +1,6 @@
 {
-  "generatedAt": "1788678354",
-  "block": "481052073",
+  "generatedAt": "1788684357",
+  "block": "481112092",
   "circuitId": "0x15e18e2aecb7d00ca3243181fb2fa38af81b021266e2d0a290eb0c55d2b5f4c1",
   "circuitTransactions": {
     "create": "0xddb7bb6532533fc57b6270c76ca24036389dde5d0d32e731cf9f76ae3b39c01f",
@@ -51,10 +51,11 @@
   },
   "markets": {
     "marketA": {"marketId":"0x0000000000000000000000000000000000000000000000000000000000014d04","pool":"0xd459f27bfd82a0c4ce0c3ebc28cc699d81fd959f","trialId":"0xb467ba8273d0edd06635772d3cbca6ebf5b4d0d481062ae739cd283a5d90145c","forecastBps":0,"referenceUpBps":150,"decision":"ABSTAIN","forecastCommitTx":"0x28d6cfaeee7d757e416da0b3529f5eadb98c26ca502781b6a03552740b1470de","advanceTx":"0x740693bcf5524f0e9c058a66a55d213d83a37ec753e26e387d8589454f10de0d","resolution":"DOWN","rftFinalizationTx":"0xfe04ef056af6dcda4bee997ec8bd1cd0c9427106227222181f8c5aa119c50cb6","rftStatus":"SCORED","forecastBrier":0,"marketBrier":22500,"marketScoreDelta":22500},
-    "marketB": {"marketId":"0x0000000000000000000000000000000000000000000000000000000000014d96","pool":"0xf0981caa193a3d7e028bb8dd404cc1d8629c66e3","trialId":"0x47bed744a34928c40fe3c0807451dcc59696e586dd7324f802f7ffe27198053e","forecastBps":5000,"referenceUpBps":5325,"decision":"ABSTAIN","forecastCommitTx":"0x6090795ecff9f34bb455138ff70321680036bdf92d6278856406a66f2fd0f06b","advanceTx":"0x011f82532c35bac913af869b596c064e66c410f1e8365fffaa9247ae9a2159f3","resolution":"PENDING","rftStatus":"COMMITTED"}
+    "marketB": {"marketId":"0x0000000000000000000000000000000000000000000000000000000000014d96","pool":"0xf0981caa193a3d7e028bb8dd404cc1d8629c66e3","trialId":"0x47bed744a34928c40fe3c0807451dcc59696e586dd7324f802f7ffe27198053e","forecastBps":5000,"referenceUpBps":5325,"decision":"ABSTAIN","spendRaw":0,"forecastCommitTx":"0x6090795ecff9f34bb455138ff70321680036bdf92d6278856406a66f2fd0f06b","advanceTx":"0x011f82532c35bac913af869b596c064e66c410f1e8365fffaa9247ae9a2159f3","resolution":"UP","onchainStatus":4,"onchainStatusName":"Resolved","isResolved":true,"isVoided":false,"settlementFinalized":true,"winningOutcome":0,"expiry":1788681600,"rftFinalizationTx":"0x68a158b227a33be81a6fd14688a1b8eef01aac7e48907e52ea18c479c3051117","rftFinalizationBlock":481100035,"rftFinalizationGasUsed":282366,"rftStatus":"SCORED","forecastBrier":25000000,"marketBrier":21855625,"marketScoreDelta":-3144375}
   },
   "trials": {
     "marketA": "0xb467ba8273d0edd06635772d3cbca6ebf5b4d0d481062ae739cd283a5d90145c",
     "marketB": "0x47bed744a34928c40fe3c0807451dcc59696e586dd7324f802f7ffe27198053e"
-  }
+  },
+  "evidenceClass": "MARKET1_END_TO_END_VERIFIED; CIRCUIT_CONTINUITY_TWO_MARKETS_VERIFIED; both markets SCORED; both decisions ABSTAIN; autonomous path BLOCKED_EXTERNAL"
 }

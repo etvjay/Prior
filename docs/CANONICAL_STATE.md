@@ -1,7 +1,7 @@
 # Canonical State
 
 ## Current phase
-`M3 CONTINUITY PARTIAL/WRITE VERIFIED — same four-window Circuit processed two real BTC 5m markets with immutable intent; Market A finalized, Market B committed; guided abstentions; autonomous path BLOCKED_EXTERNAL; UI/reviews pending`
+`M3 CONTINUITY WRITE VERIFIED — same four-window Circuit processed two real BTC 5m markets with immutable intent; Market A and Market B finalized/scored; guided abstentions; autonomous path BLOCKED_EXTERNAL; UI/reviews pending`
 
 ## Verified implementation
 - M0 ABI / market / operator-registry read evidence captured against live Shannon at 2026-09-05.

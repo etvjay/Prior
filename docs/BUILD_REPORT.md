@@ -2,7 +2,7 @@
 
 ## Build identity
 - Branch: `main`
-- HEAD SHA: `921a3a8083392f52f67eb5f2fc6cef000ee7e43d`
+- HEAD SHA: `0240a05e6ec3fcb35c6243e18c17b135eb0d15a3`
 - Parent SHA: `bea25a8274670f4bd9729bf22548d83a075e52a9`
 - Environment: Linux, Node 22.23.2, pnpm 11.24.0, Foundry/solc 0.8.24
 
@@ -14,11 +14,11 @@
 - Frontend: **PARTIAL** — guided authority model and wallet submission component are implemented; live proposal hydration remains.
 - Circuit continuity: **SHANNON_WRITE_VERIFIED** — new four-window Circuit processed two distinct real BTC 5m markets with the same immutable intent; both policy decisions were explicit ABSTAINs.
 - Runner recovery: **SHANNON_WRITE_VERIFIED** — actual process kill/restart reloaded both chain-derived completed iterations from durable checkpoint; no duplicate trial/order effects.
-- RFT: **SHANNON_WRITE_VERIFIED / FINALIZED for Market #1**; Market A finalized; Market B committed and remains independently inspectable pending resolution.
+- RFT: **SHANNON_WRITE_VERIFIED / FINALIZED for Market #1 and Market B**; Market A and Market B are independently scored.
 - Circuit continuity: **SHANNON_WRITE_VERIFIED** across Market A/B; same four-window immutable intent, distinct markets, two explicit abstentions.
 - Runner recovery: **SHANNON_WRITE_VERIFIED** — actual process kill/restart reloaded both chain-derived completed iterations.
 - Mobile: **PASS** for implemented responsive layout/build coverage; device E2E not run.
-- E2E: **PARTIAL** — Market #1 guided Forecast → order → fill → resolution → zero-payout redemption → RFT finalization is verified; the new Circuit continuity proof covers two real markets with explicit abstentions; those new RFTs are not yet resolved/finalized.
+- E2E: **PARTIAL** — Market #1 guided Forecast → order → fill → resolution → zero-payout redemption → RFT finalization is verified; the new Circuit continuity proof covers two real markets with explicit abstentions and both RFTs are now scored.
 
 ## Tests
 - Core Vitest: **PASS — 46 tests** (scoring, policy, trade tags, guided execution, effective Circuit status, fixed-point unit model).
