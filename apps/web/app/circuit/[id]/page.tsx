@@ -1,22 +1,12 @@
 import { Header } from "../../components";
-import { GuidedAuthorize } from "../../GuidedAuthorize";
+import { CONTINUITY, CONTINUITY_ID, percent, short } from "../../evidence";
 import { CircuitLiveState } from "../CircuitLiveState";
 
+function MarketEvidence({ label, market }: { label: string; market: typeof CONTINUITY.markets.marketA }) {
+  return <article className="iteration"><div className="iteration-head"><span className="eyebrow">{label} · BTC · 5 MIN</span><span className="violet">{market.rftStatus}</span></div><div className="prob-row compact"><div><span className="eyebrow blue">FORECAST</span><strong className="blue">{percent(market.forecastBps)}</strong></div><div><span className="eyebrow amber">REFERENCE</span><strong className="amber">{percent(market.referenceUpBps)}</strong></div><div><span className="eyebrow">DECISION</span><strong>{market.decision}</strong></div></div><div className="proof-grid"><div><span className="eyebrow">Outcome</span><strong className={market.resolution === "UP" ? "up" : "down"}>{market.resolution}</strong></div><div><span className="eyebrow">Forecast score</span><strong>{market.forecastBrier.toLocaleString()}</strong></div><div><span className="eyebrow">Reference score</span><strong>{market.marketBrier.toLocaleString()}</strong></div><div><span className="eyebrow">RFT Δ</span><strong>{market.marketScoreDelta.toLocaleString()}</strong></div></div><div className="mono evidence-line">marketId {short(market.marketId)} · trial {short(market.trialId)}</div></article>;
+}
+
 export default function Circuit({ params }: { params: { id: string } }) {
-  return <><Header /><main className="page"><CircuitLiveState id={params.id} />
-    <div className="eyebrow">Circuit control room · {params.id}</div>
-    <h1>One intent. Many markets.</h1>
-    <section className="notice">
-      <div className="eyebrow">EXECUTION MODE — GUIDED</div>
-      <h2>Owner approval required</h2>
-      <p>When a live proposal exists, the Circuit computes every execution term before owner authorization. This page will not invent Forecast, reference, price, liquidity, decision, or order evidence.</p>
-      <div className="list">
-        <div className="list-row"><span>Proposal state</span><strong>WAITING FOR LIVE PROPOSAL</strong></div>
-        <div className="list-row"><span>Authority</span><strong>OWNER AUTHORIZATION REQUIRED</strong></div>
-      </div>
-      <GuidedAuthorize transaction={null} />
-      <p className="mono">SIGNED → SUBMITTED → FILLED / NO FILL → WAITING FOR RESOLUTION → RFT FINALIZED</p>
-    </section>
-    <div className="notice"><span className="eyebrow">AUTONOMOUS MODE</span><br /><br />Requires DreamDEX executor contract admission. Current live status: BLOCKED_EXTERNAL (`OnlyApprovedContracts()`).</div>
-  </main></>;
+  const canonical = params.id.toLowerCase() === CONTINUITY_ID.toLowerCase();
+  return <><Header/><main className="page"><div className="eyebrow">Circuit continuity · {canonical ? "canonical evidence" : "unknown"}</div><h1>One intent. Many markets.</h1><p className="lede">The same immutable Circuit intent survives a restart. It advances only from reconstructed chain and evidence state.</p><CircuitLiveState id={params.id}/>{canonical && <><section className="circuit-layout"><aside className="notice intent"><div className="eyebrow">Circuit intent</div><h2>LOCKED · ACTIVE</h2><div className="intent-rule"><span>BTC · 5m</span><span>{CONTINUITY.immutableIntent.targetWindows} target markets</span><span>{percent(CONTINUITY.immutableIntent.minMarginBps)} minimum margin</span><span>{CONTINUITY.immutableIntent.maxPerMarket} max / market</span><span>autonomous path BLOCKED_EXTERNAL</span></div></aside><section className="continuity"><div className="eyebrow">Continuity / timeline</div><div className="timeline-line"><span className="done">● Market A</span><span className="done">● Market B</span><span>○ next window</span><span>○ future</span></div><div className="runner"><span className="eyebrow">Runner recovery</span><strong>RECOVERED FROM EMPTY MEMORY</strong><p>Market A and Market B each have one canonical trial keyed by owner × marketId. Both decisions were ABSTAIN; no guided order was created.</p></div></section></section><section className="iterations"><MarketEvidence label="Market A" market={CONTINUITY.markets.marketA}/><MarketEvidence label="Market B" market={CONTINUITY.markets.marketB}/></section></>}</main></>;
 }
