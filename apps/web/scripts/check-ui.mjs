@@ -12,9 +12,7 @@ const routes = [
   "app/history/[address]/page.tsx",
   "app/profile/[address]/page.tsx",
 ];
-for (const route of routes) {
-  assert.equal(fs.existsSync(path.join(root, route)), true, `missing ${route}`);
-}
+for (const route of routes) assert.equal(fs.existsSync(path.join(root, route)), true, `missing ${route}`);
 
 const files = fs
   .readdirSync(path.join(root, "app"), { recursive: true })
@@ -26,119 +24,108 @@ const landing = fs.readFileSync(path.join(root, "app/LandingScenes.tsx"), "utf8"
 const page = fs.readFileSync(path.join(root, "app/page.tsx"), "utf8");
 const normalized = landing.replace(/&apos;/g, "'").replace(/\s+/g, " ");
 
-const sceneSequence = [...landing.matchAll(/data-scene="(\d)"/g)].map(([, scene]) => Number(scene));
-assert.deepEqual(sceneSequence, [1, 2, 3, 4, 5, 6, 7, 8, 9], "landing must contain exactly nine semantic scenes in order");
+const actSequence = [...landing.matchAll(/data-act="(\d+)"/g)].map(([, act]) => Number(act));
+assert.deepEqual(actSequence, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "landing must contain exactly ten acts in order");
 
-for (const exactCopy of [
-  "COMMIT BEFORE REALITY DOES.",
-  "Markets record what happened. PRIOR records what you believed before it happened.",
-  "Forecast live markets. Commit your probability. Let reality score it later.",
+const requiredCopy = [
+  "A PROFITABLE TRADE DOES NOT PROVE A GOOD PREDICTION.",
+  "a good prediction can still lose at a bad price",
+  "GOOD FORECAST", "BAD ENTRY", "CORRECT RESULT", "LOSS",
+  "BAD FORECAST", "LUCKY ENTRY", "WRONG RESULT", "PROFIT",
+  "Most histories collapse all of this to PnL.",
+  "PRIOR SEPARATES", "BELIEF", "DECISION", "EXECUTION", "OUTCOME",
+  "BTC · 5M", "MARKET", "◆61%", "AGENT", "●72%", "RESOLUTION", "UP",
+  "ONE RESOLVED FORECAST IS ONE PIECE OF EVIDENCE.",
+  "RESOLVED FORECAST TRIAL", "RFT HISTORY",
+  "ILLUSTRATIVE CAPABILITY VIEW · NOT LIVE ANALYTICS",
+  "ASSET", "WINDOW", "CONFIDENCE", "EXECUTION",
+  "DON'T ASK WHETHER AN AGENT IS GOOD. ASK WHAT IT'S GOOD AT.",
+  "ILLUSTRATIVE SPECIALIZATION · NOT A RANKING",
+  "ALPHA", "BETA", "GAMMA", "NO GENERIC REPUTATION",
+  "CALIBRATION · SPECIALIZATION · COMPARISON · SELECTION · TRUST ALLOCATION · RESEARCH · PROVENANCE",
+  "not claims that PRIOR ships a universal ranking or routing system",
+  "NOW YOU KNOW WHO YOU WANT TO LISTEN TO. WHAT SHOULD THEIR FORECAST BE ALLOWED TO DO?",
+  "A CIRCUIT IS A STANDING MANDATE.",
+  "whose Forecasts matter, when they matter, and what they may cause",
+  "It is not merely a fixed rule.",
+  "AGENT ALPHA", "CONFIDENCE", "≥70%", "BUY ONLY 8 POINTS BELOW", "$1", "20 MARKETS", "AFTER 2 LOSSES",
+  "WITHOUT A CIRCUIT", "WITH A CIRCUIT", "NO DRIFT", "INSPECTABILITY", "BUDGETS", "BOUNDED AUTHORITY", "COMPARABLE EPISODES",
+  "MEASURE → LEARN → ALLOCATE TRUST → ACT → MEASURE AGAIN.",
+  "FIXED RULES", "MORE EVIDENCE", "HISTORY", "UNDERSTAND JUDGMENT", "CHOOSE / WEIGHT", "BOUNDED ACTION", "NEW EVIDENCE",
+  "MEASURE JUDGMENT. USE IT. MEASURE AGAIN.",
+  "REAL ACCEPTED CONTINUITY · ONE UNCHANGED MANDATE",
+  "MARKET A", "● 0%", "◆ 1.5%", "NO TRADE", "OUTCOME · DOWN",
+  "MARKET B", "● 50%", "◆ 53.25%", "OUTCOME · UP",
+  "Neither market met the rule that permitted action.",
+  "A Circuit is not a gambling bot.",
+  "SEPARATE REAL ACCEPTED EXECUTION", "MARKET #1 · PERMITTED",
+  "50% FORECAST · 35.2% MARKET · BUY UP · LIMIT 42% · FILLED 28.1% · DOWN · PNL -281 RAW",
+  "FOR TRADERS", "FOR AGENTIC SYSTEMS", "RFT", "MEASURES JUDGMENT", "CIRCUIT", "BOUNDS AUTHORITY",
+  "FORECASTS TELL US WHAT SOMEONE BELIEVED.",
+  "RFTs TELL US HOW THAT JUDGMENT HELD UP.",
+  "CIRCUITS DEFINE WHAT THAT JUDGMENT IS ALLOWED TO DO NEXT.",
+  "PRIOR.",
+  "MEASURE JUDGMENT. ACT WITH RULES. KEEP THE EVIDENCE.",
   "ENTER PRIOR",
-  "MARKET ◆ 61%",
-  "The market has a probability.",
-  "YOU ● 72%",
-  "You have one too.",
-  "0—◆61—●72—100",
-  "The difference matters only if we can prove when the belief existed.",
-  "COMMIT IT",
-  "●│",
-  "│●",
-  "NOW WE CAN MEASURE IT",
-  "YOU 72%",
-  "MARKET AT COMMIT 61%",
-  "OUTCOME UP",
-  "FORECAST SCORE 0.0784",
-  "MARKET SCORE 0.1521",
-  "BELIEF",
-  "DECISION",
-  "EXECUTION",
-  "OUTCOME",
-  "Being right is not the same as making a good trade.",
-  "RESOLVED FORECAST TRIAL",
-  "ONE FORECAST IS ONE MOMENT",
-  "WHAT ABOUT THE NEXT MARKET?",
-  "THE MARKET CHANGES. THE RULE STAYS ACCOUNTABLE.",
-  "Market A",
-  "0% UP",
-  "1.50% UP",
-  "Market B",
-  "50% UP",
-  "53.25% UP",
-  "ABSTAIN",
-  "DOWN",
-  "SCORED",
-  "8-point rule",
-  "Forecast 50%",
-  "Market 35.2%",
-  "BUY UP",
-  "Limit 42%",
-  "Filled 28.1%",
-  "PNL -281 raw",
-  "Runner Restarted",
-  "Circuit Recovered 2 iterations",
-  "Duplicate Effects 0",
-  "ONE COMMITTED BELIEF IS EVIDENCE",
-  "ONE PERSISTENT INTENT ACROSS MARKETS IS A CIRCUIT",
-  "THAT'S PRIOR",
-  "Built on DreamDEX Event Contracts on Somnia",
-]) {
-  assert.ok(normalized.includes(exactCopy), `landing missing exact narrative copy: ${exactCopy}`);
-}
+  "DreamDEX Event Contracts on Somnia",
+];
+for (const exactCopy of requiredCopy) assert.ok(normalized.includes(exactCopy), `landing missing required narrative copy: ${exactCopy}`);
 
 const orderedBeats = [
-  "data-scene=\"1\"",
-  "data-scene=\"2\"",
-  "data-scene=\"3\"",
-  "data-scene=\"4\"",
-  "data-scene=\"5\"",
-  "data-scene=\"6\"",
-  "data-scene=\"7\"",
-  "data-scene=\"8\"",
-  "data-scene=\"9\"",
+  "A PROFITABLE TRADE DOES NOT PROVE A GOOD PREDICTION.",
+  "THE FORECAST HAS TO EXIST BEFORE THE ANSWER.",
+  "WHAT DOES AGENT ALPHA'S RESOLVED HISTORY REVEAL?",
+  "NO GENERIC REPUTATION.",
+  "NOW YOU KNOW WHO YOU WANT TO LISTEN TO.",
+  "A CIRCUIT IS A STANDING MANDATE.",
+  "ONE DECISION VERSUS A GOVERNED SERIES.",
+  "MEASURE → LEARN → ALLOCATE TRUST → ACT → MEASURE AGAIN.",
+  "REAL ACCEPTED CONTINUITY",
+  "FORECASTS TELL US WHAT SOMEONE BELIEVED.",
 ];
 let cursor = -1;
 for (const beat of orderedBeats) {
-  const index = landing.indexOf(beat);
-  assert.ok(index > cursor, `narrative beat out of order: ${beat}`);
+  const index = normalized.indexOf(beat);
+  assert.ok(index > cursor, `narrative beat missing or out of order: ${beat}`);
   cursor = index;
 }
 
+const firstConcept = normalized.indexOf("ONE RESOLVED FORECAST IS ONE PIECE OF EVIDENCE.");
 const firstRft = normalized.indexOf("RESOLVED FORECAST TRIAL");
-const evidenceConcept = normalized.indexOf("NOW WE CAN MEASURE IT");
-const firstCircuit = normalized.indexOf("Circuit");
-assert.ok(firstRft > evidenceConcept, "Resolved Forecast Trial must be named only after the evidence concept");
-assert.ok(firstCircuit > firstRft, "Circuit must be introduced only after a Resolved Forecast Trial");
-assert.doesNotMatch(normalized.slice(0, evidenceConcept), /RFT|DreamDEX|Somnia|Brier|protocol architecture|autonomous/i, "landing must not lead with internal jargon");
-assert.doesNotMatch(normalized, /autonomous bot|trades every market|guaranteed|profit|testimonial|AI-powered|live proof/i);
-assert.doesNotMatch(normalized, /AUTONOMOUS PATH/);
-assert.equal((landing.match(/<EnterPriorLink(?:\s+final)?\s*\/>/g) ?? []).length, 2, "only hero and final scene may render ENTER PRIOR");
+const firstCircuitDefinition = normalized.indexOf("A CIRCUIT IS A STANDING MANDATE.");
+const ecosystem = normalized.indexOf("DreamDEX Event Contracts on Somnia");
+assert.ok(firstRft > firstConcept, "RFT must be named only after the evidence concept");
+assert.ok(firstCircuitDefinition > firstRft, "Circuit must follow RFT capability and handoff");
+assert.ok(ecosystem > normalized.indexOf("PRIOR."), "DreamDEX and Somnia belong only at the end");
+assert.doesNotMatch(normalized.slice(0, firstConcept), /\b(?:RFT|DreamDEX|Somnia|Brier|protocol|autonomy)\b/i, "landing must not lead with jargon");
+assert.equal((normalized.match(/DreamDEX/g) ?? []).length, 1, "DreamDEX may appear once, at the end");
+assert.equal((normalized.match(/Somnia/g) ?? []).length, 1, "Somnia may appear once, at the end");
+assert.doesNotMatch(normalized, /\b(?:AI|Brier|KPI|candles|autonomous)\b/i);
+assert.equal((landing.match(/<EnterPriorLink(?:\s+final)?\s*\/>/g) ?? []).length, 2, "only hero and close may render ENTER PRIOR");
 assert.doesNotMatch(page, /PriorHeader/, "landing must not expose dashboard controls before the explanation");
+assert.match(page, /MEASURE → LEARN → ALLOCATE TRUST → ACT → MEASURE AGAIN/);
 
 assert.match(css, /--void:\s*#08070a/);
 assert.match(css, /--background:\s*#0d0b11/);
 assert.match(css, /--surface-1:\s*#121017/);
 assert.match(css, /--border:\s*#30263f/);
-assert.match(css, /--purple:\s*#8b5cf6/);
 assert.match(css, /--forecast:\s*#65c7ff/);
 assert.match(css, /--market:\s*#eab85e/);
 assert.doesNotMatch(css, /gradient/i);
 assert.doesNotMatch(source, /glassmorph|planet-orb|candlestick|crypto graphic/i);
+assert.match(css, /font-family:\s*Geist/);
+assert.match(css, /IBM Plex Mono/);
+assert.match(landing, /<MarketNode/);
+assert.match(landing, /<ForecastNode/);
 assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
-assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.landing-scene[^}]*opacity:\s*1/);
-assert.match(landing, /className="iteration-comparison"[\s\S]*FORECAST[\s\S]*MARKET/, "continuity comparisons must label both semantic values, not rely on color");
-assert.match(css, /\.evidence-fact span \{[^}]*font-size:\s*10px/s, "evidence labels must remain legible");
-assert.match(css, /\.belief-specimen > span[^}]*color:\s*var\(--text-secondary\)/s, "hero specimen labels need readable contrast");
-assert.match(landing, /data-prior-route/, "ENTER PRIOR must expose a semantic route-transition state");
-assert.match(landing, /motion\.duration\.route/, "the /live transition must use the canonical route duration token");
-assert.match(landing, /prefers-reduced-motion/, "the /live transition must become immediate in reduced motion");
-assert.match(css, /html\[data-prior-route="live"\]/, "route transition must have a visible settled state");
-assert.match(css, /\.commit-crossing/);
-assert.match(css, /\.moving-market/);
-assert.match(css, /\.evidence-lock/);
-assert.match(css, /\.circuit-iterations/);
-assert.match(landing, /aria-label="Shared probability axis/);
-assert.match(landing, /aria-label="Commitment boundary/);
-assert.match(landing, /aria-label="Circuit continuity/);
+assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.landing-act[^}]*opacity:\s*1/);
+assert.match(landing, /data-prior-route/);
+assert.match(landing, /motion\.duration\.route/);
+assert.match(landing, /prefers-reduced-motion/);
+assert.match(css, /html\[data-prior-route="live"\]/);
+assert.match(landing, /aria-label="Prior separates belief, decision, execution, and outcome"/);
+assert.match(landing, /aria-label="Illustrative Circuit standing mandate"/);
+assert.match(landing, /aria-label="Two real accepted markets under one unchanged mandate"/);
 
 assert.match(css, /grid-template-columns:\s*240px minmax\(0, 1fr\) auto/);
 assert.match(css, /\.context-trigger-rail \{ width: 56px/);
@@ -150,4 +137,4 @@ assert.match(source, /eth_getTransactionReceipt/);
 assert.match(source, /marketState!=="TRADING"/);
 assert.match(source, /userRequested:armed/);
 
-console.log(`UI contract PASS: ${routes.length} routes, 9 ordered landing scenes, narrative, truth, reduced motion, geometry, ARIA, write gates`);
+console.log(`UI contract PASS: ${routes.length} routes, 10 ordered landing acts, thesis, mandate, continuity, reduced motion, geometry, ARIA, write gates`);

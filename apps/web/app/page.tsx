@@ -6,7 +6,7 @@ export default function LandingPage() {
     <>
       <header className="landing-topbar">
         <Link className="wordmark" href="/" aria-label="PRIOR home">PRIOR</Link>
-        <span>BELIEF → COMMITMENT → REALITY → EVIDENCE → PERSISTENT INTENT</span>
+        <span>MEASURE → LEARN → ALLOCATE TRUST → ACT → MEASURE AGAIN</span>
       </header>
       <main id="main"><LandingScenes /></main>
     </>
