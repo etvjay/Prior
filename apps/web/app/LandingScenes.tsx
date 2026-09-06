@@ -129,7 +129,7 @@ export function LandingScenes() {
       <section className="landing-scene narrative-scene market-scene" data-scene="2" aria-labelledby="scene-2">
         <SceneIntro number={2} title={sceneNames[1]} active={1} />
         <div className="scene-copy">
-          <p className="scene-kicker">01 · OBSERVE</p>
+          <p className="scene-kicker">OBSERVE</p>
           <h2 id="scene-2">THE MARKET<br />HAS A VIEW.</h2>
           <p>
             Market is the external reference: the probability implied by the DreamDEX market when a
@@ -147,7 +147,7 @@ export function LandingScenes() {
       <section className="landing-scene narrative-scene forecast-scene" data-scene="3" aria-labelledby="scene-3">
         <SceneIntro number={3} title={sceneNames[2]} active={1} />
         <div className="scene-copy">
-          <p className="scene-kicker">02 · FORM A BELIEF</p>
+          <p className="scene-kicker">FORM A BELIEF</p>
           <h2 id="scene-3">SO DO YOU.</h2>
           <p>
             Forecast is your probability for the same outcome. The blue circle stays distinct from the
@@ -165,7 +165,7 @@ export function LandingScenes() {
       <section className="landing-scene field-scene" data-scene="4" aria-labelledby="scene-4">
         <SceneIntro number={4} title={sceneNames[3]} active={1} />
         <div className="scene-copy wide-copy">
-          <p className="scene-kicker">03 · COMPARE</p>
+          <p className="scene-kicker">COMPARE</p>
           <h2 id="scene-4">SAME QUESTION.<br />DIFFERENT BELIEF.</h2>
           <p>
             Both values occupy one probability field. Market remains the external reference. Forecast
@@ -181,7 +181,7 @@ export function LandingScenes() {
       <section className="landing-scene commit-scene" data-scene="5" aria-labelledby="scene-5">
         <SceneIntro number={5} title={sceneNames[4]} active={2} />
         <div className="scene-copy centered-copy">
-          <p className="scene-kicker">04 · COMMIT</p>
+          <p className="scene-kicker">COMMIT</p>
           <h2 id="scene-5">ONCE COMMITTED,<br />IT CANNOT BE REWRITTEN.</h2>
           <p>
             Commitment makes the Forecast immutable before resolution. A wallet request is not a commit,
@@ -192,13 +192,14 @@ export function LandingScenes() {
           <span>EDITABLE</span>
           <div className="commit-rail"><i className="commit-boundary-line" /><ForecastNode label="Committed Forecast" locked /></div>
           <span>IMMUTABLE</span>
+          <p className="commit-causal-line">DRAFT → WALLET → RECEIPT OK → IMMUTABLE</p>
         </div>
       </section>
 
       <section className="landing-scene narrative-scene reality-scene" data-scene="6" aria-labelledby="scene-6">
         <SceneIntro number={6} title={sceneNames[5]} active={4} />
         <div className="scene-copy">
-          <p className="scene-kicker">05 · RESOLVE</p>
+          <p className="scene-kicker">RESOLVE</p>
           <h2 id="scene-6">REALITY ARRIVES.<br />BELIEF STAYS PUT.</h2>
           <p>
             DreamDEX supplies the finalized outcome. The committed Forecast no longer moves. Resolution
@@ -216,7 +217,7 @@ export function LandingScenes() {
       <section className="landing-scene evidence-scene" data-scene="7" aria-labelledby="scene-7">
         <SceneIntro number={7} title={sceneNames[6]} active={5} />
         <div className="scene-copy wide-copy">
-          <p className="scene-kicker">06 · RETAIN PROOF</p>
+          <p className="scene-kicker">RETAIN PROOF</p>
           <h2 id="scene-7">EVIDENCE IS WHAT<br />THE CHAIN OBSERVED.</h2>
           <p>
             Evidence is the observed chain and RFT result, not a marketing claim. This Market #1 specimen
@@ -224,8 +225,8 @@ export function LandingScenes() {
           </p>
         </div>
         <div className="evidence-equation" aria-label="Market #1 accepted evidence values">
-          <span>Forecast <b>{formatBps(proof.forecastBps)}</b></span>
-          <span>Market at commit <b>{formatBps(proof.referenceBps!)}</b></span>
+          <span>Forecast <b className="forecast-color">{formatBps(proof.forecastBps)}</b></span>
+          <span>Market at commit <b className="market-color">{formatBps(proof.referenceBps!)}</b></span>
           <span>Outcome <b>{proof.outcome}</b></span>
           <span>Brier <b>{score(proof.forecastBrier)}</b></span>
         </div>
@@ -238,7 +239,7 @@ export function LandingScenes() {
       <section className="landing-scene circuit-scene" data-scene="8" aria-labelledby="scene-8">
         <SceneIntro number={8} title={sceneNames[7]} active={6} />
         <div className="scene-copy wide-copy">
-          <p className="scene-kicker">07 · CONTINUE INTENT</p>
+          <p className="scene-kicker">CONTINUE INTENT</p>
           <h2 id="scene-8">RULES STAY FIXED.<br />MARKETS CHANGE.</h2>
           <p>
             Policy decides BUY or ABSTAIN under constraints. Circuit is persistent intent across changing
@@ -282,7 +283,7 @@ export function LandingScenes() {
           <aside>DEPTH<br />EXEC<br />PROOF</aside>
         </div>
         <div className="scene-copy centered-copy product-copy">
-          <p className="scene-kicker">08 · ENTER THE INSTRUMENT</p>
+          <p className="scene-kicker">ENTER THE INSTRUMENT</p>
           <h2 id="scene-9">REALITY IS STILL UNKNOWN.<br />STATE WHAT YOU BELIEVE.</h2>
           <p>
             Enter the live surface when an eligible market exists, inspect Circuit intent, or begin with
