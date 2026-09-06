@@ -1,0 +1,2 @@
+import {Header} from "../../components";
+export default function Profile({params}:{params:{address:string}}){return <><Header/><main className="page"><div className="eyebrow">Profile · {params.address}</div><h1>Scoped capability.</h1><div className="notice">No profile evidence yet. Prior reports performance by market class, horizon, and sample size — never as a universal reputation score.</div></main></>}

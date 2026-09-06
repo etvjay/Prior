@@ -67,3 +67,18 @@ canonical state update
 ```
 
 No feature is considered implemented because it exists in a mock, static UI, README, screenshot, or local-only code path.
+
+## Current implementation
+
+This repository contains the current Prior implementation slices:
+
+- `packages/core`: shared types, deterministic Brier scoring, executable-price Circuit policy, and trade-tag packing.
+- `packages/dreamdex`: pinned `@somnia-chain/markets-sdk@0.29.0` adapter, Shannon discovery, canonical `marketId → pool` binding reads, and SDK executable-book quoting.
+- `contracts`: `RFTRegistry`, `CircuitRegistry`, `CircuitExecutor`, `DreamDexAdapter`, and deterministic Foundry tests.
+- `apps/runner`: restart-safe-oriented liveness skeleton with `/health`, `/ready`, and `/runtime`; no owner key custody.
+- `apps/web`: Prior landing, Live, Forecast, Circuits, Circuit, History, and Profile routes with the frozen dark evidence-instrument visual system.
+- `evidence/shannon`: machine-readable M0 read evidence from live Shannon.
+
+### Evidence boundary
+
+M0 read-only integration is verified against Shannon chain `50312`, including the exact pinned SDK, live Event Contract discovery, the specialized `placeBinaryOrderFor` selector (`0x718c2d4d`), and selector-scoped per-pool operator-registry bytecode. M0 write evidence, deployment, and live multi-market execution remain blocked until a disposable Shannon-only `PRIOR_OWNER_PRIVATE_KEY` with STT is supplied. No mock or local result is presented as live proof.

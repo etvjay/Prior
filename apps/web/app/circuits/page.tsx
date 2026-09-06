@@ -1,0 +1,2 @@
+import Link from "next/link";import {Header} from "../components";
+export default function Circuits(){return <><Header/><main className="page"><div className="eyebrow">Persistent intent</div><h1>Circuits</h1><div className="notice">No Circuits yet.<br/><br/>Set your rules once and let them run across markets.<br/><br/><Link className="primary" href="/circuit/demo">View control room</Link></div></main></>}

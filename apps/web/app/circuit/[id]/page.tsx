@@ -1,0 +1,2 @@
+import {Header} from "../../components";
+export default function Circuit({params}:{params:{id:string}}){return <><Header/><main className="page"><div className="eyebrow">Circuit control room · {params.id}</div><h1>One intent. Many markets.</h1><div className="notice"><span className="eyebrow">UNAUTHORIZED</span><br/><br/>No active Circuit exists in this environment. Owner authority, budget, market scope, and Runner state are intentionally not fabricated.<br/><br/><span className="mono">FORECAST → POLICY → MARKET → DECISION → ORDER → RESULT</span></div></main></>}
