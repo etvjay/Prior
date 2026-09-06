@@ -27,6 +27,7 @@ import {
   ActionIntent,
   assertBps,
 } from "./types.js";
+import { actualCollateralCostRaw, asQuantityRaw, asUnitScaleRaw, priceRawFromProbabilityBps } from "./units.js";
 
 export type PolicyDecision =
   | { kind: "BUY_UP"; maxUpPriceBps: Bps; requestedQuantityRaw: bigint; worstCaseSpendRaw: bigint }
@@ -177,8 +178,10 @@ function finalize(args: {
   // where bestAskBps is the per-share probability in bps, quantityRaw is the
   // count of outcome-token shares, and oneCollateralRaw is the par value of
   // one share in raw USDC (e.g. 1_000_000 = $1.00).
-  const num = BigInt(args.bestAskBps) * args.quantityRaw * args.oneCollateralRaw;
-  const worstCaseSpendRaw = num / BigInt(BPS_MAX);
+  const fillPriceRaw = priceRawFromProbabilityBps(args.bestAskBps, asUnitScaleRaw(args.oneCollateralRaw));
+  const quantityRaw = asQuantityRaw(args.quantityRaw);
+  const unitScaleRaw = asUnitScaleRaw(args.oneCollateralRaw);
+  const worstCaseSpendRaw = actualCollateralCostRaw(fillPriceRaw, quantityRaw, unitScaleRaw);
   if (args.kind === "BUY_UP") {
     return {
       kind: "BUY_UP",

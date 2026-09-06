@@ -3,6 +3,7 @@ import type { Address, Hex } from "viem";
 import { encodeFunctionData, keccak256, parseAbi, stringToHex } from "viem";
 import type { CircuitId, MarketId, TradeTag } from "./types.js";
 import type { PolicyDecision } from "./policy.js";
+import { maxCollateralSpendRaw, asPriceRaw, asQuantityRaw, asUnitScaleRaw, type CollateralRaw, type PriceRaw, type QuantityRaw } from "./units.js";
 
 export const BINARY_ORDER_TYPE = 2 as const; // Immediate-or-Cancel
 export const DEFAULT_SELF_MATCHING_OPTION = 0 as const;
@@ -22,9 +23,9 @@ export interface GuidedExecutionProposal {
   readonly side: "UP" | "DOWN";
   /** DreamDEX OrderKind: 0 BUY_YES / 2 BUY_NO. */
   readonly kind: typeof BUY_YES_KIND | typeof BUY_NO_KIND;
-  readonly quantity: bigint;
-  readonly maximumSpend: bigint;
-  readonly limitPrice: bigint;
+  readonly quantity: QuantityRaw;
+  readonly maximumSpend: CollateralRaw;
+  readonly limitPrice: PriceRaw;
   readonly limitPriceBps: number;
   readonly orderType: typeof BINARY_ORDER_TYPE;
   readonly selfMatchingOption: number;
@@ -62,13 +63,14 @@ export function buildGuidedProposal(args: {
   if (args.oneCollateralRaw <= 0n) throw new Error("collateral unit must be positive");
   if (args.expiresAtNs <= args.createdAt * 1_000_000_000n) throw new Error("order expiry must be future");
   if (args.quantity !== args.policy.requestedQuantityRaw) throw new Error("policy quantity mismatch");
-  const limitPrice = BigInt(limitPriceBps) * args.oneCollateralRaw / 10_000n;
-  const maximumSpend = limitPrice * args.quantity;
+  const limitPrice = asPriceRaw(BigInt(limitPriceBps) * args.oneCollateralRaw / 10_000n);
+  const quantity = asQuantityRaw(args.quantity);
+  const maximumSpend = maxCollateralSpendRaw(limitPrice, quantity, asUnitScaleRaw(args.oneCollateralRaw));
   if (args.policy.worstCaseSpendRaw > maximumSpend) throw new Error("policy spend exceeds ceiling");
   return {
     executionId: executionIdentity(args.circuitId, args.marketId), circuitId: args.circuitId,
     marketId: args.marketId, pool: args.pool, owner: args.owner, side: isUp ? "UP" : "DOWN",
-    kind: isUp ? BUY_YES_KIND : BUY_NO_KIND, quantity: args.quantity, maximumSpend,
+    kind: isUp ? BUY_YES_KIND : BUY_NO_KIND, quantity, maximumSpend,
     limitPrice, limitPriceBps, orderType: BINARY_ORDER_TYPE,
     selfMatchingOption: DEFAULT_SELF_MATCHING_OPTION,
     builder: "0x0000000000000000000000000000000000000000" as Address,

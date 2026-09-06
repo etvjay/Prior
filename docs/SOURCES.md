@@ -4,8 +4,17 @@ Primary sources are preferred for protocol implementation.
 
 ## DreamDEX
 
-- Event Contracts developer surface  
-  https://app.dreamdex.io/docs/developers/event-contracts
+- Official Event Contracts docs
+  https://docs.dreamdex.io/developers/event-contracts
+
+- Official DreamDEX Bot Kit
+  https://github.com/somnia-chain/dreamdex-bot-kit
+
+- Official hackathon starter template
+  https://github.com/IronicDeGawd/ec-dreamdex-hackathon-template
+
+- Dream Bot Builder (reference tooling only)
+  https://dreambot-builder.vercel.app/
 
 - Market structure & lifecycle  
   https://app.dreamdex.io/docs/developers/event-contracts/market-structure

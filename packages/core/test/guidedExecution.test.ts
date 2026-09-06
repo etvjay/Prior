@@ -13,10 +13,10 @@ const base = {
 
 describe("guided owner authorization", () => {
   it("derives a fixed Up IOC proposal and specialized placeBinaryOrder calldata", () => {
-    const proposal = buildGuidedProposal({ ...base, policy: { kind: "BUY_UP", maxUpPriceBps: 6400, requestedQuantityRaw: 10n, worstCaseSpendRaw: 6_300_000n } });
+    const proposal = buildGuidedProposal({ ...base, policy: { kind: "BUY_UP", maxUpPriceBps: 6400, requestedQuantityRaw: 10n, worstCaseSpendRaw: 6n } });
     expect(proposal.kind).toBe(BUY_YES_KIND);
     expect(proposal.limitPrice).toBe(640_000n);
-    expect(proposal.maximumSpend).toBe(6_400_000n);
+    expect(proposal.maximumSpend).toBe(6n);
     expect(proposal.orderType).toBe(2);
     const tx = buildOwnerSignedBinaryOrder(proposal);
     expect(tx.to).toBe(base.pool);
@@ -24,16 +24,16 @@ describe("guided owner authorization", () => {
   });
 
   it("rejects a quantity that differs from the policy output", () => {
-    expect(() => buildGuidedProposal({ ...base, quantity: 11n, policy: { kind: "BUY_UP", maxUpPriceBps: 6400, requestedQuantityRaw: 10n, worstCaseSpendRaw: 6_300_000n } })).toThrow("policy quantity mismatch");
+    expect(() => buildGuidedProposal({ ...base, quantity: 11n, policy: { kind: "BUY_UP", maxUpPriceBps: 6400, requestedQuantityRaw: 10n, worstCaseSpendRaw: 6n } })).toThrow("policy quantity mismatch");
   });
 
   it("rejects mutation of signed execution fields", () => {
-    const proposal = buildGuidedProposal({ ...base, policy: { kind: "BUY_UP", maxUpPriceBps: 6400, requestedQuantityRaw: 10n, worstCaseSpendRaw: 6_300_000n } });
+    const proposal = buildGuidedProposal({ ...base, policy: { kind: "BUY_UP", maxUpPriceBps: 6400, requestedQuantityRaw: 10n, worstCaseSpendRaw: 6n } });
     expect(() => assertProposalImmutable({ ...proposal, limitPriceBps: 6300 }, proposal)).toThrow("limitPriceBps");
   });
 
   it("maps Down to BUY_NO and keeps proposal identity stable", () => {
-    const proposal = buildGuidedProposal({ ...base, policy: { kind: "BUY_DOWN", maxDownPriceBps: 6100, requestedQuantityRaw: 10n, worstCaseSpendRaw: 6_000_000n } });
+    const proposal = buildGuidedProposal({ ...base, policy: { kind: "BUY_DOWN", maxDownPriceBps: 6100, requestedQuantityRaw: 10n, worstCaseSpendRaw: 6n } });
     expect(proposal.kind).toBe(BUY_NO_KIND);
     expect(proposal.side).toBe("DOWN");
     expect(proposal.executionId).toBe(executionIdentity(base.circuitId, base.marketId));

@@ -37,7 +37,7 @@ const baseArgs = {
   runtime,
   marketClassInScope: true,
   marketStatus: 2 /* Trading */,
-  requestedQuantityRaw: 1n, // 1 outcome-token share (1e-6 USDC at par)
+  requestedQuantityRaw: 1_000n, // 1,000 quantity units; 1,000,000 is one collateral raw at par
   oneCollateralRaw: 1_000_000n, // 1.00 USDC per share (par)
   alreadyExecuted: false,
 };
@@ -54,7 +54,7 @@ describe("Circuit policy — executable-price rule (EXECUTION_POLICY.md §Up/Dow
     expect(r.kind).toBe("BUY_UP");
     if (r.kind === "BUY_UP") {
       expect(r.maxUpPriceBps).toBe(6400);
-      expect(r.worstCaseSpendRaw).toBe(630_000n); // 0.63 * 1.00 USDC
+      expect(r.worstCaseSpendRaw).toBe(630n); // 0.63 * 1000 / 1_000_000 raw collateral units
     }
   });
 
@@ -83,7 +83,7 @@ describe("Circuit policy — executable-price rule (EXECUTION_POLICY.md §Up/Dow
     expect(r.kind).toBe("BUY_DOWN");
     if (r.kind === "BUY_DOWN") {
       expect(r.maxDownPriceBps).toBe(6100);
-      expect(r.worstCaseSpendRaw).toBe(600_000n);
+      expect(r.worstCaseSpendRaw).toBe(600n);
     }
   });
 
