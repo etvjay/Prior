@@ -7,15 +7,15 @@
 - Environment: Linux, Node 22.23.2, pnpm 11.24.0, Foundry/solc 0.8.24
 
 ## Overall status
-- M0: **PARTIAL** — read-only Shannon integration verified; write gate blocked by missing owner key.
-- RFT: **PARTIAL** — registry and scoring implementation compile; no Shannon deployment/commit/finalization.
-- Circuit: **PARTIAL** — bounded state/policy/executor implementation and local tests; no live authority proof.
-- Authority: **BLOCKED** — no disposable `PRIOR_OWNER_PRIVATE_KEY` for operator grant, allowance, or order.
-- Runner: **PARTIAL** — live discovery/health works; durable canonical reconciliation and transaction orchestration remain.
-- Frontend: **PARTIAL** — all required routes and core interaction shell build; contract wiring remains.
+- M0: **PARTIAL** — ABI, markets, deployment, allowance and revocation reads/writes verified; binary authority path blocked by DreamDEX `OnlyApprovedContracts()`.
+- RFT: **PARTIAL** — implementation compiles and local scoring passes; deployed RFT instance predates the corrected exact `binaryModule.markets` tuple interface and requires redeployment before live commit.
+- Circuit: **PARTIAL** — corrected registry/executor deployed; local lifecycle/cap tests pass; live order path blocked by DreamDEX allowlist behavior.
+- Authority: **BLOCKED** — selector grant reads true, but BinaryPool rejects `placeBinaryOrderFor` from Prior with `0x3fb0ba2e` (`OnlyApprovedContracts()`).
+- Runner: **PARTIAL** — live discovery, `/health`, `/ready` and typecheck pass; full transaction orchestration not complete.
+- Frontend: **PARTIAL** — all required routes and core interaction shell build; live contract wiring remains.
 - Mobile: **PASS** for implemented responsive layout/build coverage; device E2E not run.
-- Live Shannon: **PARTIAL** — chain 50312/RPC/indexer/SDK/ABI/live markets verified read-only.
-- E2E: **BLOCKED** — requires owner key and deployed addresses.
+- Live Shannon: **PARTIAL** — chain, RPC, indexer, SDK, ABI, live markets, deployment, operator grants, allowances and revocations verified.
+- E2E: **BLOCKED** — requires resolving DreamDEX approved-contract behavior, redeploying corrected RFT, and running live Forecast/Circuit recovery proof.
 
 ## Tests
 - Core Vitest: **PASS — 33 tests** (scoring, policy, trade tags).
@@ -34,7 +34,7 @@
 - Chain: Shannon `50312`.
 - RPC: `https://dream-rpc.somnia.network`.
 - Indexer: `https://dev.smk.somnia.host/v1/graphql`.
-- `placeBinaryOrderFor`: `0x718c2d4d`, payable, exact ABI captured.
+- `placeBinaryOrderFor`: `0x5d97c566`, payable, exact ABI captured.
 - `setOperatorApprovalForPool`: `0x7bbc67e6`, exact ABI/selector captured.
 - Live sample marketId: `0x0000000000000000000000000000000000000000000000000000000000014934`.
 - Live sample market: `0x16c6e449cde5ffbe1f70c759c2da1c13598f7bb9`.

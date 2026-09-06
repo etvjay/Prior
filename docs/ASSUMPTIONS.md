@@ -15,6 +15,6 @@ Assumptions are not facts. Each must be verified, revised, or retired.
 | A-008 | A Runner can reconstruct sufficient state from chain/DreamDEX after restart | Runtime persistence model must change | runner recovery test |
 | A-009 | Agent Forecasts can be safely attributed with signed structured data | automatic forecast relay needs alternative identity scheme | signature spike |
 
-| A-010 | BinaryPool `placeBinaryOrderFor` uses the shared operator registry in a way Prior can grant to CircuitExecutor | Guided execution fallback required | M0 ABI + Shannon operator test |
+| A-010 | BinaryPool `placeBinaryOrderFor` uses the shared operator registry in a way Prior can grant to CircuitExecutor | **FALSE on current Shannon path**: selector grant reads true but pool rejects with `OnlyApprovedContracts()`; guided execution or approved-contract integration required | M0 authority experiment, C-006 |
 | A-011 | Relevant binary pool set can be enumerated/pre-authorized for a bounded Circuit | Circuit may pause when a new unapproved pool appears | M0 pool discovery + recycle tests |
 | A-012 | Binary auto-pull/worst-case requirement can be enforced onchain for Circuit spend caps | Executor needs verified custom cost math | M0 pool read/ABI inspection |

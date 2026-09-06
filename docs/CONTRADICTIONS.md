@@ -90,7 +90,9 @@ RESOLVED — recorded in `CANONICAL_STATE.md` and `EVIDENCE_LEDGER.md`.
 ## C-004 — `placeBinaryOrderFor` is `payable`
 
 Observed:
-The pinned SDK ABI and the live `binaryPoolImpl` bytecode both show `placeBinaryOrderFor` with `stateMutability: payable` (selector `0x718c2d4d`). `placeBinaryOrder` is also payable (selector `0x5d97c566`).
+The pinned SDK ABI and the live `binaryPoolImpl` bytecode show `placeBinaryOrderFor` with `stateMutability: payable` (selector `0x5d97c566`). `placeBinaryOrder` is also payable (selector `0x718c2d4d`).
+
+Additional correction: an earlier evidence-generation pass mislabeled the two overloaded ABI entries in `m0-binary-abi.json`; the artifact and executor constant have now been regenerated/corrected from the named SDK entries.
 
 Expected:
 The Solidity wrapper in `CircuitExecutor` must declare its outer `execute(...)` (or a private helper) `payable` and forward `msg.value` unchanged. Even if the order cost is zero, the function must be payable to compile and to match the on-chain selector dispatch.
@@ -133,5 +135,28 @@ Medium. Without tick/lot the executor cannot construct a valid `price`/`quantity
 Decision required:
 Implement a read-only script that calls the onchain view functions from `binaryModuleReadAbi` (and falls back to binaryPoolImpl direct views) to record tick/lot for at least one live Trading pool. Save as `evidence/shannon/m0-pool-config.json`.
 
+## C-006 — Live `placeBinaryOrderFor` rejected by `OnlyApprovedContracts()`
+
+Observed:
+After deploying corrected Prior contracts, granting `placeBinaryOrderFor` (`0x5d97c566`) per-pool operator approval, and setting a 1 USDC collateral allowance, a fresh `eth_estimateGas`/raw pool simulation from `CircuitExecutor` reverted with `0x3fb0ba2e`, decoded from DreamDEX's official error documentation as `OnlyApprovedContracts()`.
+
+Expected:
+The control-plane target architecture expected selector-scoped per-pool operator approval to authorize `CircuitExecutor`.
+
+Sources:
+- Live Shannon preflight against pool `0xa34e33f71c566134ceecdd6869bcc693b3d69c17`.
+- `https://app.dreamdex.io/docs/developers/contracts/errors`.
+- `https://app.dreamdex.io/docs/trading/spot/operators`.
+- `deployments/shannon.json`.
+
+Affected:
+CINV-016, M0 authority spike, autonomous Circuit execution.
+
+Risk:
+High. Selector-scoped approval is writable/readable but is insufficient for the live BinaryPool `...For` path. No economic order was broadcast.
+
+Decision required:
+Verify DreamDEX's approved-contract/system allowlist path for Event Contract BinaryPools. If Prior cannot be added safely, use the documented guided per-order owner-signature fallback and preserve the non-custodial invariant.
+
 Status:
-OPEN. To be closed in this same session before any M0 write attempt.
+OPEN / LIVE BLOCKER. All temporary grants used in the experiment were revoked and read back false.

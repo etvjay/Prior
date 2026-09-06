@@ -1,0 +1,40 @@
+{
+  "chainId": 50312,
+  "network": "Somnia Shannon",
+  "deployer": "0x804c7A511D3ea06651007032F1e009d8717dbCB0",
+  "sdkVersion": "0.29.0",
+  "contracts": {
+    "RFTRegistry": "0x20534E6D27ab44f2eaF9F2C629908eda63c31aBD",
+    "CircuitRegistry": "0xf92609D45f164DaB74dC51Cd59B583DA95e3C460",
+    "CircuitExecutor": "0x2D2991e798Fb69f3AC19A2132932328E709990cF",
+    "DreamDexAdapter": "0xa2Bf6D3690a47AcCc7D920B48690D879189d0774"
+  },
+  "deployTransactions": {
+    "CircuitRegistry": "0x79a04ea2062a77a031bf88fa715f5ab98ee73ef94d7e963639131c0032b6c361",
+    "RFTRegistry": "0x7bca0f9041eb21f0a8ea120b2204389bfe990927328563f9b4eb36510191e48e",
+    "CircuitExecutor": "0x856e99c68423aabf08453620cf43e5ac4e12b5e3c8e2a45bf13e05867749a98b",
+    "DreamDexAdapter": "0xffe314bef2ad357dba8de53c7ac5418a6d5e78542472525758edfad4da6e608f",
+    "setExecutorOldRegistry": "0xcebe3e063a4f70f96aeebaea35cb0240c672d1c0cd6e0564def4bc5b37623b5a1",
+    "setExecutorNewRegistry": "0x1e63c3c8f03f1fa8164eac69af52488606e2d26d872061c345d664ea25f6aa91"
+  },
+  "authorityExperiment": {
+    "marketId": "0x0000000000000000000000000000000000000000000000000000000000014a16",
+    "pool": "0xa34e33f71c566134ceecdd6869bcc693b3d69c17",
+    "market": "0xd2db77e400af5d5fbcffd6508fa7c8424b372418",
+    "correctPlaceBinaryOrderForSelector": "0x5d97c566",
+    "incorrectPlaceBinaryOrderSelector": "0x718c2d4d",
+    "oldCircuitId": "0xa30bfdcabd474a68276beba6e17e5ad352c241bdd8ce1ae7a1f4a34c31d5931a",
+    "newCircuitId": "0x067ed1718d13a424eb4fcb131dba9594f25ded17288a4e50daed0ebc39736751",
+    "oldPoolGrantWrongSelector": {"tx":"0x0906225393d7b3610848f45664c20ac2d180264134e4f7e37504e9647740bf0c","status":"success","pool":"0x4ba2403bdea1a8df97f9f91c1bd0b02158f106fd"},
+    "oldPoolAllowance": {"tx":"0x2ab5fca23ba05c48b29de6660270194541519006d72f32ecdc96be5f89f6873a","status":"success","amountRaw":"1000000"},
+    "currentPoolGrantWrongSelector": {"tx":"0x136aaab86225524e82bb9a528126e69fcb4263556b8cfb8442ee782b50eeb744","status":"success","pool":"0xa34e33f71c566134ceecdd6869bcc693b3d69c17","selector":"0x718c2d4d"},
+    "currentPoolAllowance": {"tx":"0x5aaa9d7282daa155beffc48ab96801334b53326e790e923f8d115acbe653b218","status":"success","amountRaw":"1000000"},
+    "newExecutorCorrectGrant": {"tx":"0x5f6ce00fb186e63c88de59026fa06de34a860ebae3c530ba1783045b7a8e35ab","status":"success","selector":"0x5d97c566"},
+    "failedOrderPreflight": {"errorSelector":"0x3fb0ba2e","decodedError":"OnlyApprovedContracts()","broadcast":false},
+    "cleanupWrongSelector": {"tx":"0x62275348546d7d2ee2e25256859efaef01cdda2c813fb88013b8664e56d49e75","status":"success","selector":"0x718c2d4d","readback":false},
+    "cleanupNewExecutor": {"tx":"0x943e15045f61d01fab436f79ed54537933a7324e03ca36ae0f32860a7c4e8d8b","status":"success","selector":"0x5d97c566","readback":false},
+    "cleanupOldExecutor": {"tx":"0x5e56da428d079af22621dae7ffab0c3d1fbe1cde4829c99a77951a1d7b1f7107","status":"success","selector":"0x5d97c566","readback":false}
+  },
+  "authorityVerdict": "BLOCKED: DreamDEX BinaryPool rejected placeBinaryOrderFor from CircuitExecutor with OnlyApprovedContracts() despite selector-scoped per-pool operator registry approval. No order broadcast. No autonomous execution claim.",
+  "evidenceClass": "SHANNON_READ_VERIFIED for ABI/binding; SHANNON_WRITE_VERIFIED for deployment/approval/cleanup only; order path not verified"
+}

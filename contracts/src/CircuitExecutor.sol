@@ -5,7 +5,7 @@ import {CircuitRegistry} from "./CircuitRegistry.sol";
 import {IDreamDexMarketReader, IBinaryPool, IOperatorPermissionsRegistry, IERC20Minimal} from "./interfaces/IDreamDex.sol";
 
 contract CircuitExecutor {
-  bytes4 public constant PLACE_BINARY_ORDER_FOR_SELECTOR = 0x718c2d4d;
+  bytes4 public constant PLACE_BINARY_ORDER_FOR_SELECTOR = 0x5d97c566;
   CircuitRegistry public immutable circuits;
   IDreamDexMarketReader public immutable binaryModule;
   IOperatorPermissionsRegistry public immutable operatorRegistry;

@@ -81,4 +81,4 @@ This repository contains the current Prior implementation slices:
 
 ### Evidence boundary
 
-M0 read-only integration is verified against Shannon chain `50312`, including the exact pinned SDK, live Event Contract discovery, the specialized `placeBinaryOrderFor` selector (`0x718c2d4d`), and selector-scoped per-pool operator-registry bytecode. M0 write evidence, deployment, and live multi-market execution remain blocked until a disposable Shannon-only `PRIOR_OWNER_PRIVATE_KEY` with STT is supplied. No mock or local result is presented as live proof.
+M0 read-only integration is verified against Shannon chain `50312`, including the exact pinned SDK, live Event Contract discovery, the specialized `placeBinaryOrderFor` selector (`0x5d97c566`), and selector-scoped per-pool operator-registry bytecode. M0 write evidence, deployment, and live multi-market execution remain blocked until a disposable Shannon-only `PRIOR_OWNER_PRIVATE_KEY` with STT is supplied. No mock or local result is presented as live proof.

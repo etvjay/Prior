@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-05T23:28:51.262Z",
+  "timestamp": "2026-09-06T01:40:24.594Z",
   "sdkVersion": "0.29.0",
   "abiExports": [
     "binaryPoolWriteAbi",
@@ -11,120 +11,120 @@
     "operatorRegistryWriteAbi",
     "orderBookEventsAbi"
   ],
-  "placeBinaryOrderFor": [
-    {
-      "abiName": "binaryPoolWriteAbi",
-      "type": "function",
-      "inputs": [
-        {
-          "type": "uint8",
-          "name": "kind"
-        },
-        {
-          "type": "uint256",
-          "name": "price"
-        },
-        {
-          "type": "uint256",
-          "name": "quantity"
-        },
-        {
-          "type": "uint64",
-          "name": "expireTimestampNs"
-        },
-        {
-          "type": "uint8",
-          "name": "orderType"
-        },
-        {
-          "type": "uint8",
-          "name": "selfMatchingOption"
-        },
-        {
-          "type": "address",
-          "name": "builder"
-        },
-        {
-          "type": "uint96",
-          "name": "builderFeeBpsTimes1k"
-        },
-        {
-          "type": "uint64",
-          "name": "userData"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "bool",
-          "name": "success"
-        },
-        {
-          "type": "uint128",
-          "name": "id"
-        }
-      ],
-      "stateMutability": "payable",
-      "selector": "0x718c2d4d"
-    },
-    {
-      "abiName": "binaryPoolWriteAbi",
-      "type": "function",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "owner"
-        },
-        {
-          "type": "uint8",
-          "name": "kind"
-        },
-        {
-          "type": "uint256",
-          "name": "price"
-        },
-        {
-          "type": "uint256",
-          "name": "quantity"
-        },
-        {
-          "type": "uint64",
-          "name": "expireTimestampNs"
-        },
-        {
-          "type": "uint8",
-          "name": "orderType"
-        },
-        {
-          "type": "uint8",
-          "name": "selfMatchingOption"
-        },
-        {
-          "type": "address",
-          "name": "builder"
-        },
-        {
-          "type": "uint96",
-          "name": "builderFeeBpsTimes1k"
-        },
-        {
-          "type": "uint64",
-          "name": "userData"
-        }
-      ],
-      "outputs": [
-        {
-          "type": "bool",
-          "name": "success"
-        },
-        {
-          "type": "uint128",
-          "name": "id"
-        }
-      ],
-      "stateMutability": "payable",
-      "selector": "0x5d97c566"
-    }
-  ],
+  "placeBinaryOrder": {
+    "abiName": "binaryPoolWriteAbi",
+    "name": "placeBinaryOrder",
+    "type": "function",
+    "inputs": [
+      {
+        "type": "uint8",
+        "name": "kind"
+      },
+      {
+        "type": "uint256",
+        "name": "price"
+      },
+      {
+        "type": "uint256",
+        "name": "quantity"
+      },
+      {
+        "type": "uint64",
+        "name": "expireTimestampNs"
+      },
+      {
+        "type": "uint8",
+        "name": "orderType"
+      },
+      {
+        "type": "uint8",
+        "name": "selfMatchingOption"
+      },
+      {
+        "type": "address",
+        "name": "builder"
+      },
+      {
+        "type": "uint96",
+        "name": "builderFeeBpsTimes1k"
+      },
+      {
+        "type": "uint64",
+        "name": "userData"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "success"
+      },
+      {
+        "type": "uint128",
+        "name": "id"
+      }
+    ],
+    "stateMutability": "payable",
+    "selector": "0x718c2d4d"
+  },
+  "placeBinaryOrderFor": {
+    "abiName": "binaryPoolWriteAbi",
+    "name": "placeBinaryOrderFor",
+    "type": "function",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "owner"
+      },
+      {
+        "type": "uint8",
+        "name": "kind"
+      },
+      {
+        "type": "uint256",
+        "name": "price"
+      },
+      {
+        "type": "uint256",
+        "name": "quantity"
+      },
+      {
+        "type": "uint64",
+        "name": "expireTimestampNs"
+      },
+      {
+        "type": "uint8",
+        "name": "orderType"
+      },
+      {
+        "type": "uint8",
+        "name": "selfMatchingOption"
+      },
+      {
+        "type": "address",
+        "name": "builder"
+      },
+      {
+        "type": "uint96",
+        "name": "builderFeeBpsTimes1k"
+      },
+      {
+        "type": "uint64",
+        "name": "userData"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "success"
+      },
+      {
+        "type": "uint128",
+        "name": "id"
+      }
+    ],
+    "stateMutability": "payable",
+    "selector": "0x5d97c566"
+  },
   "operatorFunctions": [
     {
       "abiName": "operatorRegistryWriteAbi",

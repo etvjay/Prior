@@ -7,14 +7,16 @@ This file tracks claims and their proof level.
 | RFT product/protocol documents exist | DESIGN_ONLY | repository docs | 2026-09-05 |
 | RFT can discover live DreamDEX Event Contracts | SHANNON_READ_VERIFIED | `evidence/shannon/m0-market-discovery.json`, `m0-markets-raw.json` | 2026-09-05 |
 | RFT can capture one market's identity/status/expiry/pool | SHANNON_READ_VERIFIED | `evidence/shannon/m0-market-14934.json` | 2026-09-05 |
-| `placeBinaryOrderFor` ABI selector is `0x718c2d4d` and lives in `binaryPoolImpl` | SHANNON_READ_VERIFIED | `evidence/shannon/m0-binary-abi.json`, `m0-binary-impl-code.hex` | 2026-09-05 |
+| `placeBinaryOrderFor` ABI selector is `0x5d97c566` and lives in `binaryPoolImpl` | SHANNON_READ_VERIFIED | `evidence/shannon/m0-binary-abi.json`, `m0-binary-impl-code.hex` | 2026-09-05 |
 | `setOperatorApprovalForPool` selector is `0x7bbc67e6` and lives in OperatorRegistry implementation `0x9707acee9c39fea71564a1b0c840f97f784c22f7` | SHANNON_READ_VERIFIED | `evidence/shannon/m0-binary-abi.json`, `m0-opregistry-impl-code.hex` | 2026-09-05 |
 | Live BinaryPool is BeaconProxy via `binaryPoolBeacon` → `binaryPoolImpl` | SHANNON_READ_VERIFIED | `evidence/shannon/m0-binary-impl-code.hex` (beacon slot match) | 2026-09-05 |
 | RFT can read live onchain top-of-book during commit | UNVERIFIED | M0 read-only book probe to be added | — |
 | RFT can read DreamDEX resolution | UNVERIFIED | M0 read-only resolution probe to be added | — |
 | RFT can bind a DreamDEX order using `userData` | UNVERIFIED | M0 write evidence pending (BLOCKED) | — |
-| RFT contract deployed on Shannon | UNVERIFIED | M1 pending (BLOCKED) | — |
-| Live commit → resolve → score works | UNVERIFIED | M2/M3 pending (BLOCKED) | — |
+| RFT contract deployed on Shannon | SHANNON_WRITE_VERIFIED | `deployments/shannon.json`; receipt `0x7bca0f9041eb21f0a8ea120b2204389bfe990927328563f9b4eb36510191e48e` | 2026-09-06 |
+| CircuitRegistry/Executor deployed and executor configured | SHANNON_WRITE_VERIFIED | `deployments/shannon.json`; receipts recorded there | 2026-09-06 |
+| Selector-scoped operator grant/allowance can be written and read back | SHANNON_WRITE_VERIFIED | `deployments/shannon.json`; grant/allowance receipts | 2026-09-06 |
+| `placeBinaryOrderFor` through Prior CircuitExecutor | BLOCKED | live estimate reverted `0x3fb0ba2e` = `OnlyApprovedContracts()`; no order broadcast | 2026-09-06 |
 | Circuit policy is deterministic | UNVERIFIED | M1 pending | — |
 | Circuit authority blocks over-budget execution | UNVERIFIED | M1 pending | — |
 | Circuit Runner can recover after restart without duplicate action | UNVERIFIED | M2 pending | — |

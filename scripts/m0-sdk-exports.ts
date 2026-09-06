@@ -61,6 +61,7 @@ const abiNames = [
 // Locate placeBinaryOrderFor in every ABI
 const placeBinaryMatches: Array<{
   abiName: string;
+  name: string;
   inputs: any[];
   outputs?: any[];
   stateMutability?: string;
@@ -75,6 +76,7 @@ for (const name of abiNames) {
       const selector = toFunctionSelector(item as any);
       placeBinaryMatches.push({
         abiName: name,
+        name: item.name,
         type: item.type,
         inputs: item.inputs,
         outputs: item.outputs,
@@ -158,7 +160,8 @@ writeFileSync(
       timestamp: out.timestamp,
       sdkVersion,
       abiExports: abiNames,
-      placeBinaryOrderFor: placeBinaryMatches,
+      placeBinaryOrder: placeBinaryMatches.find((m) => m.name === "placeBinaryOrder"),
+      placeBinaryOrderFor: placeBinaryMatches.find((m) => m.name === "placeBinaryOrderFor"),
       operatorFunctions: operatorMatches,
       abiHashes: out.abiHashes,
     },
@@ -172,7 +175,8 @@ console.log("sdkVersion =", sdkVersion);
 console.log("exports (root,", exportNames.length, "):", exportNames.slice(0, 12).join(", "), "...");
 console.log("chains:", chainExports.join(", "));
 console.log("abiExports:", abiNames.join(", "));
-console.log("placeBinaryOrderFor matches:", placeBinaryMatches.length);
+console.log("placeBinaryOrder matches:", placeBinaryMatches.filter((m) => m.name === "placeBinaryOrder").length);
+console.log("placeBinaryOrderFor matches:", placeBinaryMatches.filter((m) => m.name === "placeBinaryOrderFor").length);
 for (const m of placeBinaryMatches) {
   console.log("  ", m.abiName, m.type, m.selector);
 }

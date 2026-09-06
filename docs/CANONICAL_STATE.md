@@ -1,7 +1,7 @@
 # Canonical State
 
 ## Current phase
-`M0 READ PASS / M0 WRITE BLOCKED / RFT + CIRCUIT + UI IN PROGRESS`
+`M0 READ PASS / M0 WRITE PARTIAL — deployment + approvals verified; binary execution BLOCKED / RFT + CIRCUIT + UI IN PROGRESS`
 
 ## Verified implementation
 - M0 ABI / market / operator-registry read evidence captured against live Shannon at 2026-09-05.
@@ -20,21 +20,14 @@
   `docs/CONTRADICTIONS.md` updated to reflect this session's verified reads and remaining blockers.
 
 ## Not yet verified
-- `setOperatorApprovalForPool(owner, CircuitExecutor, [0x718c2d4d], true)` against the live pool — **BLOCKED**: no `PRIOR_OWNER_PRIVATE_KEY`.
-- Tiny IOC binary order placed through `CircuitExecutor` with `userData = canonical tradeTag` — **BLOCKED**.
-- Allowance of the pool to pull `testUsdc` from owner — **BLOCKED**.
-- RFT contract deployment, commit, finalize — **BLOCKED**.
-- Multi-market Circuit live proof — **BLOCKED**.
-- Frontend live read of a real committed RFT — **BLOCKED**.
+- `setOperatorApprovalForPool(owner, CircuitExecutor, [0x5d97c566], true)` against the live pool — **WRITE VERIFIED then revoked**; the pool rejects the subsequent `placeBinaryOrderFor` call with `OnlyApprovedContracts()`.
+- Tiny IOC binary order placed through `CircuitExecutor` with `userData = canonical tradeTag` — **BLOCKED**: DreamDEX returned `0x3fb0ba2e` (`OnlyApprovedContracts()`); no order broadcast.
+- Allowance of the pool to pull `testUsdc` from owner — **WRITE VERIFIED** at `1,000,000` raw units on the tested pool.
+- RFT contract deployed on Shannon at `0x20534E6D27ab44f2eaF9F2C629908eda63c31aBD`; commit/finalize not yet live-verified.
+- CircuitRegistry deployed at `0xf92609D45f164DaB74dC51Cd59B583DA95e3C460`; corrected CircuitExecutor deployed at `0x2D2991e798Fb69f3AC19A2132932328E709990cF`.
 
 ## Next gate
-**M0 write evidence.** Resumes the moment a disposable Shannon-testnet-only
-`PRIOR_OWNER_PRIVATE_KEY` is provided with STT gas.
-
-The implementation agent is not authorized to invent this key. All non-key-dependent
-slices (RFT, Circuit, Runner, frontend, design, tests, deployment scripts) are being
-built in parallel so the moment a key is provided, M0 writes and Phase 5–7 can complete
-end-to-end against the live testnet.
+**M0 binary-authority compatibility resolution.** The owner key and funding gates are satisfied. The remaining blocker is DreamDEX's live `OnlyApprovedContracts()` rejection for `placeBinaryOrderFor` from `CircuitExecutor`; this requires the documented system-contract allowlist/approved-contract path or a reviewed guided-execution fallback.
 
 ## Newly canonical in v0.2
 ```text
@@ -84,8 +77,8 @@ Somnia native session transactions are separate session accounts, not delegated 
 This session's M0 read additionally proves, against live bytecode on Shannon:
 ```text
 binaryPoolImpl (0x48e523c9f22f98548d263f0aD444D732e5202C0E) contains:
-  - placeBinaryOrderFor (0x718c2d4d)  payable
-  - placeBinaryOrder   (0x5d97c566)  payable
+  - placeBinaryOrder (0x718c2d4d)  payable
+  - placeBinaryOrderFor (0x5d97c566)  payable
 OperatorPermissionsRegistry proxy 0x15C7e8CE38F021c5b45d098AaD788f63090bF20A
   - EIP-1967 implementation 0x9707acee9c39fea71564a1b0c840f97f784c22f7
   - contains setOperatorApprovalForPool (0x7bbc67e6)

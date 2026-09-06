@@ -10,10 +10,10 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 mkdir -p "$ROOT/deployments"
 cd "$ROOT/contracts"
 
-rft=$(forge create --rpc-url "$SHANNON_RPC_HTTP" --private-key "$PRIOR_DEPLOYER_PRIVATE_KEY" src/RFTRegistry.sol:RFTRegistry --constructor-args "$DREAMDEX_BINARY_MODULE" "$DREAMDEX_BINARY_SETTLEMENT" --json | tee /tmp/prior-rft.json | jq -r .deployedTo)
-circuit=$(forge create --rpc-url "$SHANNON_RPC_HTTP" --private-key "$PRIOR_DEPLOYER_PRIVATE_KEY" src/CircuitRegistry.sol:CircuitRegistry --json | tee /tmp/prior-circuit.json | jq -r .deployedTo)
-executor=$(forge create --rpc-url "$SHANNON_RPC_HTTP" --private-key "$PRIOR_DEPLOYER_PRIVATE_KEY" src/CircuitExecutor.sol:CircuitExecutor --constructor-args "$circuit" "$DREAMDEX_BINARY_MODULE" "$DREAMDEX_OPERATOR_PERMISSIONS_REGISTRY" --json | tee /tmp/prior-executor.json | jq -r .deployedTo)
-adapter=$(forge create --rpc-url "$SHANNON_RPC_HTTP" --private-key "$PRIOR_DEPLOYER_PRIVATE_KEY" src/DreamDexAdapter.sol:DreamDexAdapter --constructor-args "$DREAMDEX_BINARY_MODULE" --json | tee /tmp/prior-adapter.json | jq -r .deployedTo)
+rft=$(forge create --broadcast --rpc-url "$SHANNON_RPC_HTTP" --private-key "$PRIOR_DEPLOYER_PRIVATE_KEY" src/RFTRegistry.sol:RFTRegistry --constructor-args "$DREAMDEX_BINARY_MODULE" "$DREAMDEX_BINARY_SETTLEMENT" --json | tee /tmp/prior-rft.json | jq -r .deployedTo)
+circuit=$(forge create --broadcast --rpc-url "$SHANNON_RPC_HTTP" --private-key "$PRIOR_DEPLOYER_PRIVATE_KEY" src/CircuitRegistry.sol:CircuitRegistry --json | tee /tmp/prior-circuit.json | jq -r .deployedTo)
+executor=$(forge create --broadcast --rpc-url "$SHANNON_RPC_HTTP" --private-key "$PRIOR_DEPLOYER_PRIVATE_KEY" src/CircuitExecutor.sol:CircuitExecutor --constructor-args "$circuit" "$DREAMDEX_BINARY_MODULE" "$DREAMDEX_OPERATOR_PERMISSIONS_REGISTRY" --json | tee /tmp/prior-executor.json | jq -r .deployedTo)
+adapter=$(forge create --broadcast --rpc-url "$SHANNON_RPC_HTTP" --private-key "$PRIOR_DEPLOYER_PRIVATE_KEY" src/DreamDexAdapter.sol:DreamDexAdapter --constructor-args "$DREAMDEX_BINARY_MODULE" --json | tee /tmp/prior-adapter.json | jq -r .deployedTo)
 cast send --rpc-url "$SHANNON_RPC_HTTP" --private-key "$PRIOR_DEPLOYER_PRIVATE_KEY" "$circuit" "setExecutor(address)" "$executor" >/tmp/prior-set-executor.json
 
 cat > "$ROOT/deployments/shannon.json" <<JSON

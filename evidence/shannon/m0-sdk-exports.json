@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-05T23:28:51.262Z",
+  "timestamp": "2026-09-06T01:40:24.594Z",
   "sdkVersion": "0.29.0",
   "nodeVersion": "v22.23.2",
   "packagePath": "/home/ubuntu/Prior/node_modules/@somnia-chain/markets-sdk",
@@ -241,6 +241,7 @@
   "placeBinaryMatches": [
     {
       "abiName": "binaryPoolWriteAbi",
+      "name": "placeBinaryOrder",
       "type": "function",
       "inputs": [
         {
@@ -295,6 +296,7 @@
     },
     {
       "abiName": "binaryPoolWriteAbi",
+      "name": "placeBinaryOrderFor",
       "type": "function",
       "inputs": [
         {
