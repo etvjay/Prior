@@ -8,7 +8,27 @@ const files = fs.readdirSync(path.join(root,"app"),{recursive:true}).filter(name
 const source = files.map(file=>fs.readFileSync(file,"utf8")).join("\n");
 const css = fs.readFileSync(path.join(root,"app/globals.css"),"utf8");
 const landing = fs.readFileSync(path.join(root,"app/LandingScenes.tsx"),"utf8");
-assert.equal((landing.match(/data-scene=/g)??[]).length,9,"landing must contain exactly nine major scenes");
+const sceneSequence = [...landing.matchAll(/data-scene="(\d)"/g)].map(([, scene]) => Number(scene));
+assert.deepEqual(sceneSequence, [1, 2, 3, 4, 5, 6, 7, 8, 9], "landing must preserve the nine canonical scenes in order");
+const normalizedLanding = landing.replace(/\s+/g, " ");
+for (const explanation of [
+  "external reference",
+  "your probability",
+  "immutable before resolution",
+  "decides BUY or ABSTAIN under constraints",
+  "persistent intent across changing markets",
+  "observed chain and RFT result",
+]) assert.match(normalizedLanding, new RegExp(explanation, "i"), `landing must explain: ${explanation}`);
+assert.match(normalizedLanding,/MARKET #1/);
+assert.match(normalizedLanding,/ACCEPTED SHANNON EVIDENCE/);
+assert.match(normalizedLanding,/AUTONOMOUS PATH[^<]*BLOCKED_EXTERNAL/);
+assert.match(landing,/href="\/live"/);
+assert.match(landing,/href="\/circuits"/);
+assert.match(landing,/href=\{`\/forecast\/\$\{proof\.id\}`\}/);
+assert.doesNotMatch(landing,/live proof|autonomous success|autonomously executed/i);
+assert.doesNotMatch(css,/\.landing-scene\.in-view\s*>\s*\*:not\(\.scene-index\)/,"landing motion must not be a generic reveal-only animation");
+assert.match(css,/\.scene-flow-line/);
+assert.match(css,/@media \(prefers-reduced-motion: reduce\)[\s\S]*\.landing-scene > \*[^}]*opacity:\s*1/);
 assert.match(css,/grid-template-columns:\s*240px minmax\(0, 1fr\) auto/);
 assert.match(css,/\.context-trigger-rail \{ width: 56px/);
 assert.match(css,/grid-template-columns:\s*260px minmax\(0, 1fr\) 300px/);
