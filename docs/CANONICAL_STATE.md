@@ -127,6 +127,32 @@ The workflow and evidence ceiling are documented in `docs/FORECAST_PROVIDER_WORK
 
 The next gate is an external attributable Forecast submission through a real provider/agent integration, with independent readback. This remains distinct from a later onchain Forecast commitment and receipt gate.
 
+## M4.3 first-party external Forecast agent
+
+M4.3 is implemented in three transport-separated packages: the JSON-only
+`packages/forecast-protocol`, the external HTTP-only `packages/forecast-agent`,
+and the Layer-3 `packages/forecast-provider-server` adapter. The agent has no
+`@prior/core` import. The server is the only bridge that parses the wire DTO,
+checks the frozen v1 fixture signature domain, invokes the existing
+`ForecastProviderWorkflow`, and exposes readback.
+
+The separate-process fixture demo proves provider/session/signer attribution,
+request identity, exact replay idempotency, provider A/B independence on the
+same validation path, and an explicit `REJECTED_AUTHORITY` execution attempt.
+The machine-readable artifact is `evidence/external-forecast-agent.json`.
+
+```text
+external protocol/auth/attribution: END_TO_END_VERIFIED
+forecasting intelligence quality: NOT_CLAIMED
+fixture signature cryptographic assurance: NOT_CLAIMED
+live DreamDEX/market reference: BLOCKED_EXTERNAL
+onchain commitment/receipt/RFT: BLOCKED_EXTERNAL
+execution authority: false
+```
+
+The implementation ceiling is `X2_EXTERNAL_FIXTURE_ONLY`; it is not onchain
+evidence and does not promote M4.3 to a live commitment milestone.
+
 ```text
 docs/VISUAL_LANGUAGE.md
 docs/SCREEN_GEOMETRY.md

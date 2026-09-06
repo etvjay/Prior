@@ -25,6 +25,7 @@ This file tracks claims and their proof level.
 | Somnia native session transaction account is separate key/account | PRIMARY_SOURCE_VERIFIED | Somnia Markets Native RPC docs | 2026-09-05 |
 | CircuitExecutor can place Binary order for owner on Shannon | UNVERIFIED | M0 write pending (BLOCKED) | — |
 | Owner collateral auto-pulls correctly through CircuitExecutor | UNVERIFIED | M0 write pending (BLOCKED) | — |
+| First-party external Forecast agent protocol/auth/attribution path | END_TO_END_VERIFIED (fixture path) | `evidence/external-forecast-agent.json`, `docs/FORECAST_PROVIDER_PROTOCOL.md`, package tests, separate-process demo | 2026-09-06 |
 
 ## Evidence rules
 - A screenshot alone does not prove contract behavior.

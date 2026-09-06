@@ -135,3 +135,29 @@ onchain Forecast commitment and receipt gate.
 No MCP, marketplace, ranking, consensus, auto-capital escalation, new Circuit,
 contract change, wallet signing, RPC call, live write, or autonomous DreamDEX
 execution is part of M4.2.
+
+## M4.3 external first-party agent boundary
+
+M4.3 freezes the transport contract in `docs/FORECAST_PROVIDER_PROTOCOL.md` and
+adds three separate local packages:
+
+- `packages/forecast-protocol` contains only JSON DTO parsing, deterministic
+  request/signature-domain helpers, and fixture metadata;
+- `packages/forecast-agent` is an external HTTP-only process with separate
+  `ForecastProviderClient`, vendor-neutral `ForecastStrategy`, and
+  `ForecastSigner` ports; it has no `@prior/core` dependency;
+- `packages/forecast-provider-server` is the Layer-3 adapter and the only
+  transport-to-`ForecastProviderWorkflow` bridge.
+
+The separate-process demo runs fixture providers A and B through the same HTTP
+and core validation path, reads both accepted records back, proves exact replay
+idempotency, rejects a tampered signature domain, and returns
+`REJECTED_AUTHORITY` for an execution request. Its artifact is
+`evidence/external-forecast-agent.json`.
+
+The external fixture/authentication/attribution path is `END_TO_END_VERIFIED`
+with an `X2_EXTERNAL_FIXTURE_ONLY` ceiling. The deterministic strategy is
+`INTEGRATION_FIXTURE` and forecasting intelligence is `NOT_CLAIMED`. The
+fixture digest is explicitly not production cryptographic verification. Live
+DreamDEX market-reference, funded signer, onchain commitment, receipt, and RFT
+fields remain `BLOCKED_EXTERNAL` and are stored as `null`, not backfilled.

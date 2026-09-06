@@ -1,0 +1,178 @@
+{
+  "milestone": "M4.3",
+  "status": "EXTERNAL_FIXTURE_PATH_VERIFIED_WITH_LIVE_GATES_BLOCKED",
+  "classification": "END_TO_END_VERIFIED",
+  "evidenceCeiling": "X2_EXTERNAL_FIXTURE_ONLY",
+  "protocolVersion": "1",
+  "agentIdentity": {
+    "agentId": "0x1111111111111111111111111111111111111111111111111111111111111111",
+    "label": "FIXTURE_FORECASTER_IDENTITY",
+    "sourceType": "AGENT",
+    "classification": "FIXTURE_NOT_REAL"
+  },
+  "forecastAddress": "0x1111111111111111111111111111111111111111",
+  "forecastAddressLabel": "FIXTURE_ADDRESS_NOT_REAL_WALLET",
+  "providerIdentity": {
+    "providerId": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "displayName": "Fixture Provider A",
+    "source": "INTEGRATION_FIXTURE",
+    "sourceVersion": "provider-a/v1"
+  },
+  "providerSessionIdentity": {
+    "sessionId": "fixture-session-a-v1",
+    "transportPrincipal": {
+      "transport": "HTTP",
+      "principalId": "fixture-provider:A"
+    }
+  },
+  "circuitId": "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "marketId": "0x3333333333333333333333333333333333333333333333333333333333333333",
+  "requestId": "0x0d42a1ce2e595a1ddf41d64b28765c42e94b7950fb3f738eb44cb7d5c6bb3916",
+  "requestTimestamps": {
+    "opensAt": "200",
+    "expiresAt": "500",
+    "forecastDeadline": "400",
+    "nonce": "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1"
+  },
+  "marketReference": null,
+  "marketReferenceStatus": "BLOCKED_EXTERNAL",
+  "probabilityUpBps": 6200,
+  "generationTimestamp": "201",
+  "submissionTimestamp": "260",
+  "commitTx": null,
+  "commitBlock": null,
+  "commitmentStatus": "BLOCKED_EXTERNAL",
+  "sourceType": "AGENT",
+  "sourceVersion": "INTEGRATION_FIXTURE/v1",
+  "circuitDecision": {
+    "value": null,
+    "status": "UNAVAILABLE_NOT_EVALUATED"
+  },
+  "executionAuthority": false,
+  "unauthorizedExecutionAttempt": {
+    "protocolVersion": "1",
+    "status": "REJECTED_AUTHORITY",
+    "reasonCode": "REJECTED_AUTHORITY",
+    "executionAuthority": false,
+    "requestId": "0x0d42a1ce2e595a1ddf41d64b28765c42e94b7950fb3f738eb44cb7d5c6bb3916",
+    "marketId": "0x3333333333333333333333333333333333333333333333333333333333333333",
+    "message": "Forecast Provider transport and Forecast authority do not grant execution authority"
+  },
+  "rftTrialId": null,
+  "rftStatus": "BLOCKED_EXTERNAL",
+  "providerIndependence": [
+    {
+      "key": "A",
+      "providerIdentity": {
+        "providerId": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "displayName": "Fixture Provider A",
+        "source": "INTEGRATION_FIXTURE",
+        "sourceVersion": "provider-a/v1"
+      },
+      "providerSessionIdentity": {
+        "sessionId": "fixture-session-a-v1",
+        "transportPrincipal": {
+          "transport": "HTTP",
+          "principalId": "fixture-provider:A"
+        }
+      },
+      "requestId": "0x0d42a1ce2e595a1ddf41d64b28765c42e94b7950fb3f738eb44cb7d5c6bb3916",
+      "forecaster": "0x1111111111111111111111111111111111111111111111111111111111111111",
+      "forecastAddress": "0x1111111111111111111111111111111111111111",
+      "probabilityUpBps": 6200,
+      "generatedAt": "201",
+      "submittedAt": "260",
+      "replaySubmissionId": "0x1094b40aa40fc4895bd251ca5879113d534bdd6225845fd40c3cd437e0e982e1",
+      "readbackSubmissionId": "0x1094b40aa40fc4895bd251ca5879113d534bdd6225845fd40c3cd437e0e982e1",
+      "classification": "END_TO_END_VERIFIED"
+    },
+    {
+      "key": "B",
+      "providerIdentity": {
+        "providerId": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "displayName": "Fixture Provider B",
+        "source": "INTEGRATION_FIXTURE",
+        "sourceVersion": "provider-b/v1"
+      },
+      "providerSessionIdentity": {
+        "sessionId": "fixture-session-b-v1",
+        "transportPrincipal": {
+          "transport": "HTTP",
+          "principalId": "fixture-provider:B"
+        }
+      },
+      "requestId": "0x8f9d83e4b0b617a1ee5a783d47a1be36861af19267ea6eb902f8760f6b97b072",
+      "forecaster": "0x2222222222222222222222222222222222222222222222222222222222222222",
+      "forecastAddress": "0x2222222222222222222222222222222222222222",
+      "probabilityUpBps": 3800,
+      "generatedAt": "201",
+      "submittedAt": "260",
+      "replaySubmissionId": "0xbb89fe44d4bdd9ee3d92bcef203bbe349f6af9ef7301bc42978050c1ff194df5",
+      "readbackSubmissionId": "0xbb89fe44d4bdd9ee3d92bcef203bbe349f6af9ef7301bc42978050c1ff194df5",
+      "classification": "END_TO_END_VERIFIED"
+    }
+  ],
+  "gates": {
+    "A": {
+      "status": "PASS",
+      "classification": "END_TO_END_VERIFIED",
+      "detail": "separate agent/server HTTP request and response"
+    },
+    "B": {
+      "status": "PASS",
+      "classification": "END_TO_END_VERIFIED",
+      "detail": "protocol request identity and marketId binding parsed at server"
+    },
+    "C": {
+      "status": "PASS",
+      "classification": "END_TO_END_VERIFIED",
+      "detail": "provider/session/signer attribution plus core readback"
+    },
+    "D": {
+      "status": "NOT_CLAIMED",
+      "classification": "NOT_CLAIMED",
+      "detail": "deterministic strategy is an integration fixture, not intelligence evidence"
+    },
+    "E": {
+      "status": "BLOCKED_EXTERNAL",
+      "classification": "BLOCKED_EXTERNAL",
+      "detail": "no live DreamDEX market reference asserted by this demo"
+    },
+    "F": {
+      "status": "BLOCKED_EXTERNAL",
+      "classification": "BLOCKED_EXTERNAL",
+      "detail": "no funded wallet/signing key and no onchain Forecast commitment"
+    },
+    "G": {
+      "status": "PASS",
+      "classification": "END_TO_END_VERIFIED",
+      "detail": "exact replay is idempotent and tampered sign material is rejected"
+    },
+    "H": {
+      "status": "PASS",
+      "classification": "END_TO_END_VERIFIED",
+      "detail": "execution request returns REJECTED_AUTHORITY"
+    }
+  },
+  "live": {
+    "marketDiscovery": null,
+    "eligibleMarket": null,
+    "commitTx": null,
+    "commitBlock": null,
+    "chainId": null
+  },
+  "demo": {
+    "transport": "HTTP localhost",
+    "separateProcesses": true,
+    "server": "packages/forecast-provider-server/src/server.ts",
+    "agent": "packages/forecast-agent/src/main.ts",
+    "tamperedSignature": {
+      "status": 422,
+      "code": "SIGNATURE_DOMAIN_MISMATCH"
+    },
+    "serverReadyLineObserved": true
+  },
+  "redactions": [
+    "No secret values read or printed; no private key/RPC credential included."
+  ]
+}

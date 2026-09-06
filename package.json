@@ -4,6 +4,9 @@
   "private": true,
   "scripts": {
     "test": "pnpm --filter @prior/core test",
+    "test:forecast": "pnpm --filter @prior/forecast-protocol test && pnpm --filter @prior/forecast-agent test && pnpm --filter @prior/forecast-provider-server test",
+    "typecheck:forecast": "pnpm --filter @prior/forecast-protocol typecheck && pnpm --filter @prior/forecast-agent typecheck && pnpm --filter @prior/forecast-provider-server typecheck",
+    "demo:external-forecast": "tsx scripts/run-external-forecast-demo.ts",
     "build:contracts": "forge build --root contracts",
     "m0:sdk": "tsx scripts/m0-sdk-exports.ts",
     "m0:markets": "tsx scripts/m0-discover-markets.ts",
@@ -11,6 +14,7 @@
     "build:web": "pnpm --filter @prior/web build"
   },
   "dependencies": {
+    "@prior/forecast-protocol": "workspace:*",
     "@somnia-chain/markets-sdk": "0.29.0",
     "viem": "2.21.45"
   },
