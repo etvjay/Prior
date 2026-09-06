@@ -51,7 +51,7 @@ contract CircuitRegistry {
     emit ExecutionReserved(id, marketId, spend); return true;
   }
 
-  function advance(bytes32 id, bytes32 marketId, bool missed, bool abstained, bool loss) external {
+  function advance(bytes32 id, bytes32 marketId, bool missed, bool abstained, bool loss) external onlyOwner(id) {
     Runtime storage r = runtime[id]; Intent memory i = intents[id];
     if (r.status != Status.ACTIVE && r.status != Status.PAUSED) revert InvalidState();
     r.completed += 1; if (missed) r.missed += 1; if (abstained) r.abstained += 1;

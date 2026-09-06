@@ -1,7 +1,7 @@
 # Canonical State
 
 ## Current phase
-`M0 READ PASS / M0 WRITE PARTIAL — deployment + approvals verified; binary execution BLOCKED / RFT + CIRCUIT + UI IN PROGRESS`
+`M3 CONTINUITY PARTIAL/WRITE VERIFIED — same four-window Circuit processed two real BTC 1h markets with immutable intent; Market A finalized, Market B committed; guided abstentions; autonomous path BLOCKED_EXTERNAL; UI/reviews pending`
 
 ## Verified implementation
 - M0 ABI / market / operator-registry read evidence captured against live Shannon at 2026-09-05.
@@ -16,17 +16,18 @@
 - Repository bootstrap (monorepo per `ONESHOT_BUILD_INPUTS.md` §18).
 - Pinned `@somnia-chain/markets-sdk@0.29.0` + matching `viem` installed via pnpm.
 - `scripts/m0-sdk-exports.ts` and the ad-hoc live M0 probes that produced the evidence above.
-- `docs/CANONICAL_STATE.md`, `docs/EVIDENCE_LEDGER.md`, `docs/ASSUMPTIONS.md`,
-  `docs/CONTRADICTIONS.md` updated to reflect this session's verified reads and remaining blockers.
+- Guided execution fallback, effective Circuit status derivation, durable checkpoint recovery, and live continuity evidence for two BTC 1h markets.
+- Corrected RFT deployment plus Market #1 full lifecycle evidence.
 
 ## Not yet verified
 - `setOperatorApprovalForPool(owner, CircuitExecutor, [0x5d97c566], true)` against the live pool — **WRITE VERIFIED then revoked**; per-pool approval read `true`, but the subsequent `placeBinaryOrderFor` call reached DreamDEX and reverted `0x3fb0ba2e` (`OnlyApprovedContracts()`).
 - Corrected RFT contract deployed at `0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41` — **WRITE VERIFIED**; Market #1 committed, resolved, redeemed (zero payout), and finalized.
 - Market #1 guided order — **END_TO_END_VERIFIED** for a losing position: owner approval, fill, resolution, zero-payout redemption, and RFT score all read back.
-- Existing Circuit `0x89da292ff1dafee8ae54b4b73a2bf6dfeee1cce7143b57875e73cd997d527f07` — **BLOCKED for Market #2**: immutable `targetWindows=1` and expired `expiresAt=1788664800`.
+- Existing Circuit `0x89da292ff1dafee8ae54b4b73a2bf6dfeee1cce7143b57875e73cd997d527f07` — **BLOCKED_BY_IMMUTABLE_INTENT** for further markets; it expired correctly after one window.
+- New continuity Circuit `0x15e18e2aecb7d00ca3243181fb2fa38af81b021266e2d0a290eb0c55d2b5f4c1` — **SHANNON_WRITE_VERIFIED** across Market A `0x14d04` and Market B `0x14d96`; same intent, two committed RFTs, both policy ABSTAIN.
 
 ## Next gate
-**P0 create a new multi-window Circuit for the two-market proof.** The existing requested Circuit is immutable, one-window, and expired; do not claim Market #2 under it.
+**Next gate:** Market B resolution/finalization and then extend the same four-window Circuit to additional eligible windows if the expiry budget permits. Browser E2E and review gates remain open.
 
 ## Newly canonical in v0.2
 ```text

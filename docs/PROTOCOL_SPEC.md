@@ -71,6 +71,32 @@ struct Trial {
 
 Exact storage layout remains implementation-controlled until ABI verification confirms all external normalization requirements.
 
+## Authority and execution modes
+
+The target autonomous architecture remains:
+
+```text
+Circuit → CircuitExecutor → DreamDEX BinaryPool.placeBinaryOrderFor(owner, ...)
+```
+
+Status: **BLOCKED_EXTERNAL**. Live Shannon proved that selector `0x5d97c566` can be granted and read back `true`, but DreamDEX still rejects the call with `0x3fb0ba2e` (`OnlyApprovedContracts()`), requiring additional DreamDEX contract admission.
+
+The live guided architecture is:
+
+```text
+Circuit → Forecast → deterministic CircuitPolicy → bounded exact proposal
+        → owner authorization → BinaryPool.placeBinaryOrder → DreamDEX
+```
+
+Status: **END_TO_END_VERIFIED** for Market #1. Guided execution is not discretionary manual trading: the Circuit computes side, price ceiling, quantity, order type, market, expiry, and identity before authorization. The owner may approve or reject that exact proposal, but cannot choose a different action inside the approval step.
+
+RFT does not custody funds. DreamDEX remains the authority for order execution, matching, resolution, settlement, and redemption. Forecast quality, policy quality, execution quality, and PnL remain separate evidence dimensions.
+
+## Circuit effective status
+
+Stored runtime status and effective status are distinct. A stored `ACTIVE` runtime whose immutable `expiresAt` is at or before the current block timestamp has effective status `EXPIRED`; UI and Runner must use effective status and must not present it as operational.
+
+
 ## Trial ID
 
 For v0.1:

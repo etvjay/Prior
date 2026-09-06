@@ -169,4 +169,4 @@ Decision:
 Preserve Market #1 as verified. Do not process Market #2 under this expired one-window Circuit. Create a new multi-window Circuit only as a separate future proof.
 
 Status:
-BLOCKED_EXTERNAL_BY_IMMUTABLE_INTENT.
+BLOCKED_BY_IMMUTABLE_INTENT.

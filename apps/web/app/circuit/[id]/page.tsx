@@ -1,21 +1,18 @@
 import { Header } from "../../components";
 import { GuidedAuthorize } from "../../GuidedAuthorize";
+import { CircuitLiveState } from "../CircuitLiveState";
 
 export default function Circuit({ params }: { params: { id: string } }) {
-  return <><Header /><main className="page">
+  return <><Header /><main className="page"><CircuitLiveState id={params.id} />
     <div className="eyebrow">Circuit control room · {params.id}</div>
     <h1>One intent. Many markets.</h1>
     <section className="notice">
       <div className="eyebrow">EXECUTION MODE — GUIDED</div>
       <h2>Owner approval required</h2>
-      <p>The Circuit derives the complete action. Your signature authorizes only this exact proposal; it cannot change the market, side, price, quantity, or expiry.</p>
+      <p>When a live proposal exists, the Circuit computes every execution term before owner authorization. This page will not invent Forecast, reference, price, liquidity, decision, or order evidence.</p>
       <div className="list">
-        <div className="list-row"><span>Forecast</span><strong>72% Up</strong></div>
-        <div className="list-row"><span>Minimum margin</span><strong>8 points</strong></div>
-        <div className="list-row"><span>Max permitted price</span><strong>64%</strong></div>
-        <div className="list-row"><span>Current executable price</span><strong>63%</strong></div>
-        <div className="list-row"><span>Decision</span><strong>BUY UP · IOC</strong></div>
-        <div className="list-row"><span>Authority</span><strong>OWNER APPROVAL REQUIRED</strong></div>
+        <div className="list-row"><span>Proposal state</span><strong>WAITING FOR LIVE PROPOSAL</strong></div>
+        <div className="list-row"><span>Authority</span><strong>OWNER AUTHORIZATION REQUIRED</strong></div>
       </div>
       <GuidedAuthorize transaction={null} />
       <p className="mono">SIGNED → SUBMITTED → FILLED / NO FILL → WAITING FOR RESOLUTION → RFT FINALIZED</p>

@@ -1,0 +1,60 @@
+{
+  "generatedAt": "1788678354",
+  "block": "481052073",
+  "circuitId": "0x15e18e2aecb7d00ca3243181fb2fa38af81b021266e2d0a290eb0c55d2b5f4c1",
+  "circuitTransactions": {
+    "create": "0xddb7bb6532533fc57b6270c76ca24036389dde5d0d32e731cf9f76ae3b39c01f",
+    "authorize": "0x0ade3b44d75757b8441035ebf14ea449bf543a9396f23c088972e6979268d418",
+    "activate": "0x11bab0de48d993950e2873e96f5a0b2e1fc65f8dafb921c7148cbc1a096dcfef"
+  },
+  "restart": {
+    "killPoint": "after Market A Forecast commit and Circuit advancement",
+    "emptyInMemoryRestart": true,
+    "sources": [
+      "CircuitRegistry.intents/runtime",
+      "RFTRegistry.trialFor/getTrial",
+      "DreamDEX market/pool reads",
+      "receipts"
+    ],
+    "reconstructed": {
+      "effectiveStatus": 2,
+      "effectiveStatusName": "ACTIVE",
+      "storedStatus": 2,
+      "completed": 2,
+      "abstained": 2,
+      "marketA": "0x0000000000000000000000000000000000000000000000000000000000014d04",
+      "marketB": "0x0000000000000000000000000000000000000000000000000000000000014d96",
+      "trialA": "0xb467ba8273d0edd06635772d3cbca6ebf5b4d0d481062ae739cd283a5d90145c",
+      "trialB": "0x47bed744a34928c40fe3c0807451dcc59696e586dd7324f802f7ffe27198053e"
+    },
+    "duplicates": {
+      "forecastA": false,
+      "forecastB": false,
+      "proposalA": false,
+      "proposalB": false,
+      "orderA": false,
+      "orderB": false
+    },
+    "reconciliation": "Market A/B each have one canonical trial keyed by owner × marketId; no guided order because policy abstained"
+  },
+  "immutableIntent": {
+    "owner": "0x804c7A511D3ea06651007032F1e009d8717dbCB0",
+    "forecaster": "0x804c7A511D3ea06651007032F1e009d8717dbCB0",
+    "marketClass": 1,
+    "targetWindows": 4,
+    "totalBudget": "4000000",
+    "maxPerMarket": "1000000",
+    "minMarginBps": 800,
+    "startsAt": "1788677704",
+    "expiresAt": "1788764074",
+    "allowedActionsBitmap": "3"
+  },
+  "markets": {
+    "marketA": {"marketId":"0x0000000000000000000000000000000000000000000000000000000000014d04","pool":"0xd459f27bfd82a0c4ce0c3ebc28cc699d81fd959f","trialId":"0xb467ba8273d0edd06635772d3cbca6ebf5b4d0d481062ae739cd283a5d90145c","forecastBps":0,"referenceUpBps":150,"decision":"ABSTAIN","forecastCommitTx":"0x28d6cfaeee7d757e416da0b3529f5eadb98c26ca502781b6a03552740b1470de","advanceTx":"0x740693bcf5524f0e9c058a66a55d213d83a37ec753e26e387d8589454f10de0d","resolution":"DOWN","rftFinalizationTx":"0xfe04ef056af6dcda4bee997ec8bd1cd0c9427106227222181f8c5aa119c50cb6","rftStatus":"SCORED","forecastBrier":0,"marketBrier":22500,"marketScoreDelta":22500},
+    "marketB": {"marketId":"0x0000000000000000000000000000000000000000000000000000000000014d96","pool":"0xf0981caa193a3d7e028bb8dd404cc1d8629c66e3","trialId":"0x47bed744a34928c40fe3c0807451dcc59696e586dd7324f802f7ffe27198053e","forecastBps":5000,"referenceUpBps":5325,"decision":"ABSTAIN","forecastCommitTx":"0x6090795ecff9f34bb455138ff70321680036bdf92d6278856406a66f2fd0f06b","advanceTx":"0x011f82532c35bac913af869b596c064e66c410f1e8365fffaa9247ae9a2159f3","resolution":"PENDING","rftStatus":"COMMITTED"}
+  },
+  "trials": {
+    "marketA": "0xb467ba8273d0edd06635772d3cbca6ebf5b4d0d481062ae739cd283a5d90145c",
+    "marketB": "0x47bed744a34928c40fe3c0807451dcc59696e586dd7324f802f7ffe27198053e"
+  }
+}

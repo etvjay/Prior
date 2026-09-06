@@ -48,5 +48,17 @@
     "actualCostRaw": 281,
     "pnlRaw": -281
   },
-  "evidenceClass": "MARKET1_END_TO_END_VERIFIED; autonomous path BLOCKED_EXTERNAL; requested same-Circuit Market2 proof BLOCKED_EXTERNAL_BY_IMMUTABLE_INTENT"
+  "continuityCircuit": {
+    "circuitId": "0x15e18e2aecb7d00ca3243181fb2fa38af81b021266e2d0a290eb0c55d2b5f4c1",
+    "createTx": "0xddb7bb6532533fc57b6270c76ca24036389dde5d0d32e731cf9f76ae3b39c01f",
+    "authorizeTx": "0x0ade3b44d75757b8441035ebf14ea449bf543a9396f23c088972e6979268d418",
+    "activateTx": "0x11bab0de48d993950e2873e96f5a0b2e1fc65f8dafb921c7148cbc1a096dcfef",
+    "targetWindows": 4,
+    "totalBudgetRaw": 4000000,
+    "maxPerMarketRaw": 1000000,
+    "minMarginBps": 800,
+    "marketsProcessed": 2,
+    "decisions": ["ABSTAIN", "ABSTAIN"]
+  },
+  "evidenceClass": "MARKET1_END_TO_END_VERIFIED; CIRCUIT_CONTINUITY_TWO_MARKETS_VERIFIED; autonomous path BLOCKED_EXTERNAL; Market B RFT pending resolution"
 }
