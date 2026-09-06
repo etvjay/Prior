@@ -75,6 +75,8 @@ A `ForecastSubmission` contains only an attributable signed probability:
 
 ```text
 marketId
+circuitId?            optional domain linkage to the request
+policyHash?           optional policy-snapshot linkage
 forecaster: AgentId
 forecasterAddress: Address
 probabilityUpBps: [0, 10000]
@@ -85,7 +87,7 @@ sourceVersion
 signature
 ```
 
-There is deliberately no chain-of-thought, reasoning, rationale, prompt, or private model trace. A model version can identify the source artifact, but it does not prove the truth of model reasoning.
+There is deliberately no chain-of-thought, reasoning, rationale, prompt, or private model trace. A model version can identify the source artifact, but it does not prove the truth of model reasoning. M4.2 validates the optional circuit and policy links when a provider emits them.
 
 Submission validation checks:
 
@@ -267,6 +269,6 @@ Natural language is never executable authority. A parser or model can propose a 
 
 ## 11. Evidence boundary
 
-M4.1 proves local domain behavior through `packages/core/test/mandate.test.ts`, the core TypeScript typecheck, deterministic hashing, validators, and the formatter. It does not prove a new onchain registry, live external-agent submission, a live API, an MCP implementation, or autonomous DreamDEX execution.
+M4.1 and M4.2 prove local domain behavior through `packages/core` tests, the core TypeScript typecheck, deterministic hashing, validators, the formatter, provider identity linkage, immutable records, and idempotent replay. M4.2 does not prove a new onchain registry, an external-agent submission, a live API, cryptographic signature verification, an onchain Forecast, an MCP implementation, or autonomous DreamDEX execution.
 
-The next bounded action is to build the first Forecast Provider/domain workflow and prove one external agent can submit an attributable Forecast into PRIOR, unless a blocking architecture defect is found. That work should use this signed typed boundary and record the correct evidence class before any broader integration is attempted.
+The next bounded action is an external attributable Forecast submission through a real provider/agent integration, with independent readback. That gate remains separate from a later onchain Forecast commitment and receipt gate.

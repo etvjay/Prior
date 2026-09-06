@@ -117,7 +117,15 @@ The M4.1 authority boundary is documented in:
 - `docs/MANDATE_SPEC.md`
 - `docs/AGENT_AUTHORITY_MODEL.md`
 
-The highest-priority next action is to build the first Forecast Provider/domain workflow and prove one external agent can submit an attributable Forecast into PRIOR, unless a blocking architecture defect is found.
+## M4.2 Forecast Provider/domain workflow
+
+M4.2 is implemented locally in `packages/core` with a typed Forecast Provider identity and transport principal, scoped request acceptance, provider response validation, immutable attributable submission records, deterministic identities, and replay-safe idempotency. The implementation is `UNIT_VERIFIED` / local domain behavior only. It makes no external network write and does not claim cryptographic, onchain, or external-agent evidence.
+
+The workflow and evidence ceiling are documented in `docs/FORECAST_PROVIDER_WORKFLOW.md`. The minimal additive refinement is optional `circuitId` and `policyHash` linkage on `ForecastSubmission`, with stronger validation for non-empty signature metadata.
+
+## Next bounded evidence gate
+
+The next gate is an external attributable Forecast submission through a real provider/agent integration, with independent readback. This remains distinct from a later onchain Forecast commitment and receipt gate.
 
 ```text
 docs/VISUAL_LANGUAGE.md

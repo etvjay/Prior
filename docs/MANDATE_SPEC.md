@@ -197,6 +197,8 @@ A `ForecastSubmission` is only an attributable signed probability:
 
 ```text
 marketId
+circuitId?            optional domain linkage to the request
+policyHash?           optional policy-snapshot linkage
 forecaster            AgentId
 forecasterAddress     Address
 probabilityUpBps      integer [0, 10000]
@@ -207,7 +209,7 @@ sourceVersion
 signature
 ```
 
-It has no chain-of-thought, reasoning, rationale, prompt, or explanation field. The source version is metadata for attribution, not a claim that the model's internal reasoning is true. The signer, source type, market, probability, and validity interval are validated against the request, policy, principal roster, and optional binding.
+It has no chain-of-thought, reasoning, rationale, prompt, or explanation field. The source version is metadata for attribution, not a claim that the model's internal reasoning is true. The signer, source type, market, probability, and validity interval are validated against the request, policy, principal roster, and optional binding. M4.2 validates the optional circuit and policy links when a provider emits them.
 
 ### AuthorizedAction
 

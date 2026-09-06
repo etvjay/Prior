@@ -402,6 +402,10 @@ export interface ForecastRequest {
 /** A signed probability only. This object deliberately has no reasoning field. */
 export interface ForecastSubmission {
   readonly marketId: MarketId;
+  /** Optional domain binding emitted by a provider; M4.2 validates it when present. */
+  readonly circuitId?: CircuitId;
+  /** Optional policy snapshot binding emitted by a provider; M4.2 validates it when present. */
+  readonly policyHash?: PolicyHash;
   readonly forecaster: AgentId;
   readonly forecasterAddress: Address;
   readonly probabilityUpBps: Bps;
@@ -410,6 +414,65 @@ export interface ForecastSubmission {
   readonly sourceType: AgentSourceType;
   readonly sourceVersion: string;
   readonly signature: Hex;
+}
+
+/** Typed identity for a Forecast-producing domain adapter, not a wallet. */
+export type ForecastProviderId = Hex;
+export type ForecastSubmissionId = Hex;
+export type ForecastIdempotencyKey = Hex;
+
+export interface ForecastProviderIdentity {
+  readonly providerId: ForecastProviderId;
+  readonly displayName: string;
+  /** Human-readable adapter/source identifier, not an authentication secret. */
+  readonly source: string;
+  readonly sourceVersion: string;
+}
+
+/** The response boundary between a provider adapter and the local workflow. */
+export interface ForecastProviderResponse {
+  readonly requestId: ForecastId;
+  readonly providerId: ForecastProviderId;
+  readonly submission: ForecastSubmission;
+}
+
+/** A provider has transport identity and forecast output, but no execution fields. */
+export interface ForecastProvider {
+  readonly identity: ForecastProviderIdentity;
+  readonly apiPrincipal: AuthenticatedApiPrincipal;
+  readonly getForecast: (request: ForecastRequest) => ForecastProviderResponse;
+}
+
+/** Immutable local acceptance of a scoped request under one policy snapshot. */
+export interface AcceptedForecastRequest {
+  readonly requestId: ForecastId;
+  readonly iterationId: IterationId;
+  readonly request: ForecastRequest;
+  readonly mandateId: MandateId;
+  readonly policyHash: PolicyHash;
+  readonly acceptedAt: bigint;
+}
+
+/** Immutable local record. `chainCommitment` is deliberately not a receipt. */
+export interface ForecastSubmissionRecord {
+  readonly submissionId: ForecastSubmissionId;
+  readonly idempotencyKey: ForecastIdempotencyKey;
+  readonly requestId: ForecastId;
+  readonly iterationId: IterationId;
+  readonly circuitId: CircuitId;
+  readonly marketId: MarketId;
+  readonly forecaster: AgentId;
+  readonly forecasterAddress: Address;
+  readonly mandateId: MandateId;
+  readonly bindingId: BindingId;
+  readonly policyHash: PolicyHash;
+  readonly provider: ForecastProviderIdentity;
+  /** Transport authentication evidence, not Forecast or capital authority. */
+  readonly apiPrincipal: AuthenticatedApiPrincipal;
+  readonly request: ForecastRequest;
+  readonly submission: ForecastSubmission;
+  readonly acceptedAt: bigint;
+  readonly chainCommitment: "NOT_SUBMITTED";
 }
 
 export interface AuthorizedAction {

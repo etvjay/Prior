@@ -703,6 +703,14 @@ export function validateForecastSubmission(
   const forbiddenField = hasForbiddenForecastField(submission);
   if (forbiddenField) fail(`ForecastSubmission cannot contain ${forbiddenField}`);
   assertHex(submission.marketId, "submission.marketId", BYTE_LENGTHS.id);
+  if (submission.circuitId !== undefined) {
+    assertHex(submission.circuitId, "submission.circuitId", BYTE_LENGTHS.id);
+    if (!sameId(submission.circuitId, request.circuitId)) fail("ForecastSubmission circuitId does not match request");
+  }
+  if (submission.policyHash !== undefined) {
+    assertHex(submission.policyHash, "submission.policyHash", BYTE_LENGTHS.id);
+    if (!sameId(submission.policyHash, mandatePolicyHash(policy))) fail("ForecastSubmission policy hash does not match policy");
+  }
   assertHex(submission.forecaster, "submission.forecaster", BYTE_LENGTHS.id);
   assertAddress(submission.forecasterAddress, "submission.forecasterAddress");
   assertBpsValue(submission.probabilityUpBps, "submission.probabilityUpBps");
@@ -711,6 +719,7 @@ export function validateForecastSubmission(
   assertKnown(submission.sourceType, SOURCE_VALUES, "submission.sourceType");
   if (typeof submission.sourceVersion !== "string" || submission.sourceVersion.trim() === "") fail("submission.sourceVersion must be non-empty");
   assertHex(submission.signature, "submission.signature");
+  if (submission.signature === "0x") fail("submission.signature must contain signature bytes");
   if (!sameId(submission.marketId, request.marketId)) fail("ForecastSubmission marketId does not match request");
   if (submission.generatedAt < request.opensAt) fail("ForecastSubmission generated before market opens");
   if (submission.generatedAt >= request.expiresAt) fail("ForecastSubmission generated after market expiry");

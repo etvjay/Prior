@@ -6,3 +6,4 @@ export * from "./guidedExecution.js";
 export * from "./circuitStatus.js";
 export * from "./tradeTag.js";
 export * from "./mandate.js";
+export * from "./forecastProvider.js";
