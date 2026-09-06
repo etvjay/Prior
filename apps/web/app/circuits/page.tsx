@@ -1,2 +1,8 @@
-import Link from "next/link";import {Header} from "../components";
-export default function Circuits(){return <><Header/><main className="page"><div className="eyebrow">Persistent intent</div><h1>Circuits</h1><div className="notice">One verified Circuit continuity record.<br/><br/>Set your rules once and let them run across markets.<br/><br/><Link className="primary" href="/circuit/0x15e18e2aecb7d00ca3243181fb2fa38af81b021266e2d0a290eb0c55d2b5f4c1">View control room</Link></div></main></>}
+import Link from "next/link";
+import { CONTINUITY, CONTINUITY_ID, short } from "../evidence";
+import { PriorHeader } from "../components";
+import { CircuitBuilder } from "./CircuitBuilder";
+
+export default function CircuitsPage() {
+  return <><PriorHeader/><main id="main" className="page-shell"><header className="page-heading"><span className="instrument-label">PERSISTENT EXECUTION INTENT</span><h1>CIRCUITS</h1><p>Rules stay fixed. Markets change. Every iteration remains evidence.</p></header><section className="circuit-groups"><div className="group-label">ACTIVE AT ACCEPTED SNAPSHOT</div><article className="circuit-row"><div><span>BTC · 5m</span><h2>CIRCUIT 04</h2><small className="mono">{short(CONTINUITY_ID)}</small></div><div><strong>{CONTINUITY.restart.reconstructed.completed} / {CONTINUITY.immutableIntent.targetWindows}</strong><span>markets processed</span></div><div><strong>2</strong><span>policy abstentions</span></div><div className="micro-timeline" aria-label="Two resolved, two future at accepted snapshot"><i className="resolved">✓</i><i className="resolved">✓</i><i>○</i><i>○</i></div><div><span className="blocked">AUTONOMOUS PATH BLOCKED_EXTERNAL</span><Link className="secondary-button" href={`/circuit/${CONTINUITY_ID}`}>OPEN</Link></div></article><div className="group-label">PAUSED</div><p className="empty-row">No paused Circuits in accepted evidence.</p><div className="group-label">COMPLETE</div><p className="empty-row">No completed multi-market Circuits in accepted evidence.</p></section><CircuitBuilder/></main></>;
+}

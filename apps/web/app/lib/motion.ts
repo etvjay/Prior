@@ -1,0 +1,2 @@
+export const motion = { duration: { instant:80, micro:160, control:240, panel:380, focus:480, route:560, commit:680, resolution:880 }, ease: { direct:"cubic-bezier(.2,.7,.2,1)", state:"cubic-bezier(.22,1,.36,1)", finality:"cubic-bezier(.16,1,.3,1)" }, shared: { market:"prior-market", forecast:"prior-forecast", circuitNode:"prior-circuit-node", identity:"prior-identity" } } as const;
+export const sceneNames = ["PRIOR","MARKET","YOU","SHARED SPACE","COMMIT","REALITY","EVIDENCE","CIRCUIT","PRODUCT"] as const;

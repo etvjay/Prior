@@ -1,7 +1,6 @@
-import Link from "next/link";
-import { Header } from "./components";
-import { CONTINUITY_ID, MARKET_ONE, percent, short } from "./evidence";
+import { LandingScenes } from "./LandingScenes";
+import { PriorHeader } from "./components";
 
-export default function Home() {
-  return <><Header/><main><section className="hero"><div><div className="eyebrow">Somnia Shannon · evidence instrument</div><h1>Commit before<br/>reality does.</h1><p>Forecast live markets. Lock what you believe. Let the result prove it.</p><div className="actions"><Link className="primary" href="/live">Enter live market</Link><Link className="secondary" href={`/circuit/${CONTINUITY_ID}`}>See continuity evidence</Link></div></div><div className="specimen"><div className="spec-title"><span className="eyebrow">Accepted Market #1 proof</span><span className="mono">BTC · 5 MIN</span></div><div className="prob-row"><div><div className="eyebrow amber">REFERENCE</div><div className="prob amber">{percent(MARKET_ONE.rft.marketReferenceBps)}</div><div className="eyebrow">◆ MARKET AT COMMIT</div></div><div><div className="eyebrow blue">FORECAST</div><div className="prob blue">{percent(MARKET_ONE.rft.forecastBps)}</div><div className="eyebrow">● COMMITTED</div></div></div><div className="track"/><div className="evidence-line mono">{MARKET_ONE.rft.status} · {MARKET_ONE.rft.outcome} · {short(MARKET_ONE.marketId)}</div><Link className="primary" href="/live">Inspect proof</Link><div className="timeline"><span>FORECAST</span><span>COMMIT</span><span>RESOLVE</span><span>EVIDENCE</span></div></div></section><section className="section"><div className="eyebrow">The missing evidence</div><h2>Trade history says what you bought. Prior preserves what you believed.</h2><div className="sequence"><div><strong>01</strong>Market has a view.</div><div><strong>02</strong>You form a different belief.</div><div><strong>03</strong>Commitment becomes immutable.</div><div><strong>04</strong>Resolution becomes evidence.</div></div></section></main></>;
+export default function LandingPage() {
+  return <><PriorHeader/><main id="main"><LandingScenes/></main></>;
 }
