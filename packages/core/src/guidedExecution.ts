@@ -61,8 +61,10 @@ export function buildGuidedProposal(args: {
   if (args.quantity <= 0n) throw new Error("quantity must be positive");
   if (args.oneCollateralRaw <= 0n) throw new Error("collateral unit must be positive");
   if (args.expiresAtNs <= args.createdAt * 1_000_000_000n) throw new Error("order expiry must be future");
+  if (args.quantity !== args.policy.requestedQuantityRaw) throw new Error("policy quantity mismatch");
   const limitPrice = BigInt(limitPriceBps) * args.oneCollateralRaw / 10_000n;
-  const maximumSpend = limitPrice * args.quantity / args.oneCollateralRaw;
+  const maximumSpend = limitPrice * args.quantity;
+  if (args.policy.worstCaseSpendRaw > maximumSpend) throw new Error("policy spend exceeds ceiling");
   return {
     executionId: executionIdentity(args.circuitId, args.marketId), circuitId: args.circuitId,
     marketId: args.marketId, pool: args.pool, owner: args.owner, side: isUp ? "UP" : "DOWN",
@@ -78,7 +80,11 @@ export function buildGuidedProposal(args: {
 }
 
 export function assertProposalImmutable(proposal: GuidedExecutionProposal, expected: GuidedExecutionProposal): void {
-  const fields: Array<keyof GuidedExecutionProposal> = ["executionId", "circuitId", "marketId", "pool", "owner", "side", "kind", "quantity", "maximumSpend", "limitPrice", "orderType", "userData", "forecastTrialId", "policyResult", "expiresAtNs"];
+  const fields: Array<keyof GuidedExecutionProposal> = [
+    "executionId", "circuitId", "marketId", "pool", "owner", "side", "kind", "quantity", "maximumSpend",
+    "limitPrice", "limitPriceBps", "orderType", "selfMatchingOption", "builder", "builderFeeBpsTimes1k", "userData",
+    "forecastTrialId", "forecastProbabilityUpBps", "marketReferenceUpBps", "minimumMarginBps", "policyResult", "expiresAtNs", "createdAt",
+  ];
   for (const field of fields) if (proposal[field] !== expected[field]) throw new Error(`proposal mutation: ${String(field)}`);
 }
 
