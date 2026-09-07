@@ -10,7 +10,7 @@
     "observedHeadTimestamp": "1788772064"
   },
   "sourceIdentity": {
-    "repositoryHead": "02a986eaf1d0c80bd032bf38ea551e5a3f92f345",
+    "repositoryHead": "f2f9e4803c9db87aa803df84dfaff342196a09db",
     "pinnedContractSourceBuildCommit": "41e1b30edf9c4ed1c7826d8f4090260792a98f20",
     "contractDiffSincePinned": "NONE",
     "compiler": "solc 0.8.24",

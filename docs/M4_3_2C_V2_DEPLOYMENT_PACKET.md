@@ -6,7 +6,7 @@ This packet is pre-broadcast. Do not deploy until the funding gate is separately
 
 ## Source identity
 
-- Repository HEAD: `02a986eaf1d0c80bd032bf38ea551e5a3f92f345`
+- Repository HEAD: `f2f9e4803c9db87aa803df84dfaff342196a09db`
 - Pinned tested/compiled contract source: `41e1b30edf9c4ed1c7826d8f4090260792a98f20`
 - Contract diff since pinned source: `NONE`
 - Compiler/build: `solc 0.8.24`, `optimizer=true,runs=200,via_ir=true,bytecode_hash=none,cbor_metadata=false`
