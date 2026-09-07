@@ -4,6 +4,8 @@ Status: frozen for M4.3. This is a narrow external Forecast transport protocol. 
 
 The M4.3 implementation proves the external fixture path at `END_TO_END_VERIFIED` when the separate agent and server processes complete the HTTP exchange and the server reads the accepted record back through the core workflow. The fixture strategy and signer remain `NOT_CLAIMED` for forecasting intelligence and production cryptographic assurance. Live DreamDEX discovery, commitment, receipts, and RFT evidence remain `BLOCKED_EXTERNAL` unless independently observed.
 
+A production-shaped `EIP712_V2` signer and recovery path is available locally for M4.3.2 prerequisite testing. Its local tests prove typed-data signing and expected-address recovery only. They do not change the historical fixture evidence classification, prove a live provider exchange, prove an onchain commitment, or authorize any network write.
+
 ## 1. Boundary and responsibilities
 
 ```text
@@ -15,7 +17,7 @@ external Forecast agent
                                 ▼
 Prior provider HTTP boundary
   ├─ parse/validate protocol v1 DTOs
-  ├─ verify the declared v1 signature scheme
+  ├─ verify the declared signature scheme (`FIXTURE_KECCAK_V1` or `EIP712_V2`)
   ├─ map the DTO to typed core objects
   └─ invoke ForecastProviderWorkflow exactly once as the core bridge
 ```
@@ -181,6 +183,43 @@ This is a deterministic fixture digest. It is labeled `fixture signature` and `F
 
 Changing any of `protocolVersion`, `marketId`, `circuitId`, `forecaster`, `probabilityUpBps`, `generatedAt`, `validUntil`, or `nonce` changes the fixture digest or is rejected as an unsupported domain. The server recomputes the v1 fixture digest before invoking core validation.
 
+### 6.1 Production-shaped EIP-712 v2 signer
+
+`EIP712_V2` is an available cryptographic signer/verification path for the same protocol-v1 submission DTO. It is vendor-neutral at the `ForecastSigner` port and uses the Ethereum typed-data account interface.
+
+The fixed EIP-712 domain is:
+
+```text
+name:              PRIOR Forecast
+version:           2
+chainId:           50312
+verifyingContract: 0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41
+primaryType:       ForecastSubmission
+```
+
+The `ForecastSubmission` type contains exactly these fields, in this order:
+
+```text
+protocolVersion   string
+requestId         bytes32
+marketId          bytes32
+circuitId         bytes32
+forecaster        bytes32
+forecasterAddress address
+probabilityUpBps  uint16
+generatedAt       uint64
+validUntil        uint64
+nonce             bytes32
+sourceType        string
+sourceVersion     string
+```
+
+Wire timestamp strings are converted to uint64 typed-data values after validation. No provider display text, session identifier, rationale, execution parameter, or other field is included in this EIP-712 struct. The agent uses viem `account.signTypedData`; the provider server recovers the typed-data address and compares it with the issued request's expected `forecasterAddress` before core validation.
+
+The local runtime selector is fail-closed: `PRIOR_FORECAST_SIGNER_MODE=live` requires either `PRIOR_FORECASTER_PRIVATE_KEY_PATH` or `PRIOR_FORECASTER_PRIVATE_KEY`. The key is read only at runtime and is never printed. With no explicit live mode, the demo continues to use `FIXTURE_KECCAK_V1`. This selector and signer path do not perform an RPC call or authorize a chain write.
+
+The EIP-712 path is cryptographically meaningful, but its current evidence ceiling is local deterministic signing/recovery tests. It must not be substituted into the historical fixture artifact or represented as live M4.3.2 evidence until a separately authorized external run is observed.
+
 ## 7. Timestamps and deadline rules
 
 All times are Unix seconds represented as decimal strings on the wire.
@@ -231,7 +270,8 @@ Error responses are JSON with `protocolVersion`, `code`, and a redacted human-re
 | `CIRCUIT_ID_MISMATCH` / `MARKET_ID_MISMATCH` | Domain identity does not match the request. |
 | `FORECASTER_ID_MISMATCH` / `FORECASTER_ADDRESS_MISMATCH` | Signer attribution does not match the request. |
 | `NONCE_MISMATCH` | Replay/signing nonce does not match the request. |
-| `SIGNATURE_DOMAIN_MISMATCH` | The declared fixture signature does not recompute from v1 sign material. |
+| `SIGNATURE_DOMAIN_MISMATCH` | The declared signature does not validate against its selected domain. |
+| `SIGNATURE_RECOVERY_MISMATCH` | Recovered EIP-712 address does not match the expected forecaster address. |
 | `INVALID_SUBMISSION_WINDOW` | Core time/deadline validation failed. |
 | `CONFLICTING_DUPLICATE` | An immutable forecaster/market record already exists with different content. |
 | `REJECTED_AUTHORITY` | The caller attempted an execution operation outside Forecast authority. |

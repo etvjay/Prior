@@ -4,7 +4,37 @@ export const FORECAST_PROTOCOL_VERSION = "1" as const;
 export type ForecastProtocolVersion = typeof FORECAST_PROTOCOL_VERSION;
 
 export const SIGNATURE_SCHEME = "FIXTURE_KECCAK_V1" as const;
-export type SignatureScheme = typeof SIGNATURE_SCHEME;
+export const EIP712_SIGNATURE_SCHEME = "EIP712_V2" as const;
+export type SignatureScheme = typeof SIGNATURE_SCHEME | typeof EIP712_SIGNATURE_SCHEME;
+
+export const RFT_REGISTRY_V1_ADDRESS = "0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41" as Address;
+export const EIP712_PRIMARY_TYPE = "ForecastSubmission" as const;
+export const EIP712_DOMAIN = {
+  name: "PRIOR Forecast",
+  version: "2",
+  chainId: 50312,
+  verifyingContract: RFT_REGISTRY_V1_ADDRESS,
+} as const;
+export const EIP712_FORECAST_SUBMISSION_TYPES = {
+  ForecastSubmission: [
+    { name: "protocolVersion", type: "string" },
+    { name: "requestId", type: "bytes32" },
+    { name: "marketId", type: "bytes32" },
+    { name: "circuitId", type: "bytes32" },
+    { name: "forecaster", type: "bytes32" },
+    { name: "forecasterAddress", type: "address" },
+    { name: "probabilityUpBps", type: "uint16" },
+    { name: "generatedAt", type: "uint64" },
+    { name: "validUntil", type: "uint64" },
+    { name: "nonce", type: "bytes32" },
+    { name: "sourceType", type: "string" },
+    { name: "sourceVersion", type: "string" },
+  ],
+} as const;
+
+export type SignatureVerification =
+  | "FIXTURE_RECOMPUTED_NOT_PRODUCTION_CRYPTOGRAPHIC_VERIFICATION"
+  | "EIP712_RECOVERED_PRODUCTION_CRYPTOGRAPHIC_VERIFICATION";
 
 export type WireHex = Hex;
 export type WireAddress = Address;
@@ -87,7 +117,7 @@ export interface ForecastSubmissionAcceptedWire {
   readonly submittedAt: string;
   readonly chainCommitment: "NOT_SUBMITTED";
   readonly signatureScheme: SignatureScheme;
-  readonly signatureVerification: "FIXTURE_RECOMPUTED_NOT_PRODUCTION_CRYPTOGRAPHIC_VERIFICATION";
+  readonly signatureVerification: SignatureVerification;
   readonly transportPrincipal: WireTransportPrincipal;
 }
 
@@ -110,6 +140,21 @@ export interface ForecastSignMaterial {
   readonly generatedAt: string;
   readonly validUntil: string;
   readonly nonce: WireHex;
+}
+
+export interface ForecastSubmissionSignMaterial {
+  readonly protocolVersion: ForecastProtocolVersion;
+  readonly requestId: WireHex;
+  readonly marketId: WireHex;
+  readonly circuitId: WireHex;
+  readonly forecaster: WireHex;
+  readonly forecasterAddress: WireAddress;
+  readonly probabilityUpBps: number;
+  readonly generatedAt: string;
+  readonly validUntil: string;
+  readonly nonce: WireHex;
+  readonly sourceType: WireSourceType;
+  readonly sourceVersion: string;
 }
 
 export interface FixtureProviderProfile {
@@ -247,6 +292,12 @@ function timestampField(value: unknown, field: string): string {
   return timestamp;
 }
 
+function uint64TimestampField(value: unknown, field: string): bigint {
+  const timestamp = BigInt(timestampField(value, field));
+  if (timestamp > (1n << 64n) - 1n) fail("INVALID_WIRE", `${field} exceeds uint64`);
+  return timestamp;
+}
+
 function protocolVersionField(value: unknown, field: string): ForecastProtocolVersion {
   if (value !== FORECAST_PROTOCOL_VERSION) fail("UNSUPPORTED_PROTOCOL_VERSION", `${field} must be protocol v1`, 400);
   return FORECAST_PROTOCOL_VERSION;
@@ -376,6 +427,44 @@ export function canonicalSignMaterial(material: ForecastSignMaterial): string {
     validUntil,
     nonce,
   });
+}
+
+export type Eip712ForecastSubmissionMessage = {
+  readonly protocolVersion: ForecastProtocolVersion;
+  readonly requestId: WireHex;
+  readonly marketId: WireHex;
+  readonly circuitId: WireHex;
+  readonly forecaster: WireHex;
+  readonly forecasterAddress: WireAddress;
+  readonly probabilityUpBps: number;
+  readonly generatedAt: bigint;
+  readonly validUntil: bigint;
+  readonly nonce: WireHex;
+  readonly sourceType: WireSourceType;
+  readonly sourceVersion: string;
+};
+
+export function eip712TypedDataForSubmission(material: ForecastSubmissionSignMaterial) {
+  const message: Eip712ForecastSubmissionMessage = {
+    protocolVersion: protocolVersionField(material.protocolVersion, "submission.protocolVersion"),
+    requestId: hexField(material.requestId, "submission.requestId", 32),
+    marketId: hexField(material.marketId, "submission.marketId", 32),
+    circuitId: hexField(material.circuitId, "submission.circuitId", 32),
+    forecaster: hexField(material.forecaster, "submission.forecaster", 32),
+    forecasterAddress: addressField(material.forecasterAddress, "submission.forecasterAddress"),
+    probabilityUpBps: bpsField(material.probabilityUpBps, "submission.probabilityUpBps"),
+    generatedAt: uint64TimestampField(material.generatedAt, "submission.generatedAt"),
+    validUntil: uint64TimestampField(material.validUntil, "submission.validUntil"),
+    nonce: hexField(material.nonce, "submission.nonce", 32),
+    sourceType: sourceTypeField(material.sourceType, "submission.sourceType"),
+    sourceVersion: stringField(material.sourceVersion, "submission.sourceVersion"),
+  };
+  return {
+    domain: EIP712_DOMAIN,
+    types: EIP712_FORECAST_SUBMISSION_TYPES,
+    primaryType: EIP712_PRIMARY_TYPE,
+    message,
+  } as const;
 }
 
 /** Deterministic fixture digest only. It is not a wallet signature. */
@@ -553,8 +642,10 @@ export function parseForecastSubmissionWire(value: unknown): ForecastSubmissionW
   const nonce = hexField(object.nonce, "submission.nonce", 32);
   const sourceType = sourceTypeField(object.sourceType, "submission.sourceType");
   const sourceVersion = stringField(object.sourceVersion, "submission.sourceVersion");
-  if (object.signatureScheme !== SIGNATURE_SCHEME) fail("UNSUPPORTED_SIGNATURE_SCHEME", "only the v1 fixture scheme is enabled", 422);
-  const signatureScheme = SIGNATURE_SCHEME;
+  if (object.signatureScheme !== SIGNATURE_SCHEME && object.signatureScheme !== EIP712_SIGNATURE_SCHEME) {
+    fail("UNSUPPORTED_SIGNATURE_SCHEME", "signature scheme is unsupported", 422);
+  }
+  const signatureScheme = object.signatureScheme;
   const signature = hexField(object.signature, "submission.signature");
   if (signature === "0x") fail("INVALID_SIGNATURE", "submission.signature must contain bytes", 422);
   return Object.freeze({
@@ -607,12 +698,19 @@ export function parseForecastSubmissionAcceptedWire(value: unknown): ForecastSub
   const protocolVersion = protocolVersionField(object.protocolVersion, "accepted.protocolVersion");
   if (object.status !== "ACCEPTED") fail("INVALID_WIRE", "accepted.status must be ACCEPTED");
   const status = "ACCEPTED" as const;
-  const signatureVerification = object.signatureVerification;
-  if (signatureVerification !== "FIXTURE_RECOMPUTED_NOT_PRODUCTION_CRYPTOGRAPHIC_VERIFICATION") {
-    fail("INVALID_WIRE", "accepted.signatureVerification is not the frozen fixture label");
-  }
   if (object.chainCommitment !== "NOT_SUBMITTED") fail("INVALID_WIRE", "accepted.chainCommitment must be NOT_SUBMITTED");
-  if (object.signatureScheme !== SIGNATURE_SCHEME) fail("INVALID_WIRE", "accepted.signatureScheme is unsupported");
+  if (object.signatureScheme !== SIGNATURE_SCHEME && object.signatureScheme !== EIP712_SIGNATURE_SCHEME) {
+    fail("INVALID_WIRE", "accepted.signatureScheme is unsupported");
+  }
+  const signatureScheme = object.signatureScheme;
+  const rawSignatureVerification = object.signatureVerification;
+  if (
+    (signatureScheme === SIGNATURE_SCHEME && rawSignatureVerification !== "FIXTURE_RECOMPUTED_NOT_PRODUCTION_CRYPTOGRAPHIC_VERIFICATION") ||
+    (signatureScheme === EIP712_SIGNATURE_SCHEME && rawSignatureVerification !== "EIP712_RECOVERED_PRODUCTION_CRYPTOGRAPHIC_VERIFICATION")
+  ) {
+    fail("INVALID_WIRE", "accepted.signatureVerification does not match the signature scheme");
+  }
+  const signatureVerification = rawSignatureVerification as SignatureVerification;
   return Object.freeze({
     protocolVersion,
     status,
@@ -630,7 +728,7 @@ export function parseForecastSubmissionAcceptedWire(value: unknown): ForecastSub
     validUntil: timestampField(object.validUntil, "accepted.validUntil"),
     submittedAt: timestampField(object.submittedAt, "accepted.submittedAt"),
     chainCommitment: "NOT_SUBMITTED",
-    signatureScheme: SIGNATURE_SCHEME,
+    signatureScheme,
     signatureVerification,
     transportPrincipal: transportPrincipal(object.transportPrincipal, "accepted.transportPrincipal"),
   });
@@ -668,6 +766,23 @@ export function materialForSubmission(submission: ForecastSubmissionWire): Forec
     generatedAt: submission.generatedAt,
     validUntil: submission.validUntil,
     nonce: submission.nonce,
+  };
+}
+
+export function eip712MaterialForSubmission(submission: ForecastSubmissionWire): ForecastSubmissionSignMaterial {
+  return {
+    protocolVersion: submission.protocolVersion,
+    requestId: submission.requestId,
+    marketId: submission.marketId,
+    circuitId: submission.circuitId,
+    forecaster: submission.forecaster,
+    forecasterAddress: submission.forecasterAddress,
+    probabilityUpBps: submission.probabilityUpBps,
+    generatedAt: submission.generatedAt,
+    validUntil: submission.validUntil,
+    nonce: submission.nonce,
+    sourceType: submission.sourceType,
+    sourceVersion: submission.sourceVersion,
   };
 }
 

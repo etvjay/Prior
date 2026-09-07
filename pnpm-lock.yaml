@@ -112,6 +112,9 @@ importers:
       '@prior/forecast-protocol':
         specifier: workspace:*
         version: link:../forecast-protocol
+      viem:
+        specifier: 2.21.45
+        version: 2.21.45(typescript@5.7.2)
     devDependencies:
       '@types/node':
         specifier: 22.10.5
@@ -147,6 +150,9 @@ importers:
       '@prior/forecast-protocol':
         specifier: workspace:*
         version: link:../forecast-protocol
+      viem:
+        specifier: 2.21.45
+        version: 2.21.45(typescript@5.7.2)
     devDependencies:
       '@types/node':
         specifier: 22.10.5

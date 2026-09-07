@@ -1,5 +1,6 @@
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from "node:http";
 import { URL } from "node:url";
+import { recoverTypedDataAddress } from "viem";
 import {
   AgentSourceType,
   ApiTransport,
@@ -25,9 +26,12 @@ import {
   FIXTURE_MARKET_ID,
   FIXTURE_PROVIDER_A,
   FIXTURE_PROVIDER_B,
+  EIP712_SIGNATURE_SCHEME,
   WireProtocolError,
   assertSubmissionMatchesRequest,
   createFixtureForecastRequest,
+  eip712MaterialForSubmission,
+  eip712TypedDataForSubmission,
   fixtureSignature,
   materialForSubmission,
   parseForecastSubmissionWire,
@@ -38,17 +42,35 @@ import {
   type ForecastRequestWire,
   type ForecastSubmissionAcceptedWire,
   type ForecastSubmissionWire,
+  type SignatureScheme,
+  type SignatureVerification,
   type WireProviderIdentity,
 } from "@prior/forecast-protocol";
 
 const ACCEPTED_AT = 220n;
 const RECORDED_AT = 260n;
 
+interface AcceptedSignatureMetadata {
+  readonly signatureScheme: SignatureScheme;
+  readonly signatureVerification: SignatureVerification;
+}
+
+const FIXTURE_SIGNATURE_METADATA: AcceptedSignatureMetadata = Object.freeze({
+  signatureScheme: "FIXTURE_KECCAK_V1",
+  signatureVerification: "FIXTURE_RECOMPUTED_NOT_PRODUCTION_CRYPTOGRAPHIC_VERIFICATION",
+});
+
+const EIP712_SIGNATURE_METADATA: AcceptedSignatureMetadata = Object.freeze({
+  signatureScheme: EIP712_SIGNATURE_SCHEME,
+  signatureVerification: "EIP712_RECOVERED_PRODUCTION_CRYPTOGRAPHIC_VERIFICATION",
+});
+
 export interface ForecastProviderServerOptions {
   readonly host?: string;
   readonly port?: number;
   readonly acceptedAt?: bigint;
   readonly recordedAt?: bigint;
+  readonly profiles?: readonly FixtureProviderProfile[];
 }
 
 export interface FixtureProviderContext {
@@ -150,8 +172,13 @@ function bindingIdFor(profile: FixtureProviderProfile): `0x${string}` {
   return profile.key === "A" ? (`0x${"6".repeat(64)}` as `0x${string}`) : (`0x${"7".repeat(64)}` as `0x${string}`);
 }
 
-function createContext(profile: FixtureProviderProfile, acceptedAt: bigint, recordedAt: bigint): FixtureProviderContext {
-  const principals = [profilePrincipal(FIXTURE_PROVIDER_A), profilePrincipal(FIXTURE_PROVIDER_B)];
+function createContext(
+  profile: FixtureProviderProfile,
+  acceptedAt: bigint,
+  recordedAt: bigint,
+  profiles: readonly FixtureProviderProfile[],
+): FixtureProviderContext {
+  const principals = profiles.map(profilePrincipal);
   const policy = fixturePolicy(principals);
   const request = createFixtureForecastRequest(profile);
   const coreRequest = toCoreRequest(request);
@@ -184,11 +211,9 @@ function createContext(profile: FixtureProviderProfile, acceptedAt: bigint, reco
 export function createFixtureProviderContexts(
   acceptedAt = ACCEPTED_AT,
   recordedAt = RECORDED_AT,
+  profiles: readonly FixtureProviderProfile[] = [FIXTURE_PROVIDER_A, FIXTURE_PROVIDER_B],
 ): readonly FixtureProviderContext[] {
-  return Object.freeze([
-    createContext(FIXTURE_PROVIDER_A, acceptedAt, recordedAt),
-    createContext(FIXTURE_PROVIDER_B, acceptedAt, recordedAt),
-  ]);
+  return Object.freeze(profiles.map((profile) => createContext(profile, acceptedAt, recordedAt, profiles)));
 }
 
 function providerContext(contexts: readonly FixtureProviderContext[], provider: WireProviderIdentity): FixtureProviderContext | undefined {
@@ -198,6 +223,7 @@ function providerContext(contexts: readonly FixtureProviderContext[], provider: 
 function serializeAccepted(
   context: FixtureProviderContext,
   record: ReturnType<ForecastProviderWorkflow["recordProviderResponse"]>,
+  signatureMetadata: AcceptedSignatureMetadata = FIXTURE_SIGNATURE_METADATA,
 ): ForecastSubmissionAcceptedWire {
   return {
     protocolVersion: "1",
@@ -216,8 +242,8 @@ function serializeAccepted(
     validUntil: record.submission.validUntil.toString(10),
     submittedAt: record.acceptedAt.toString(10),
     chainCommitment: "NOT_SUBMITTED",
-    signatureScheme: "FIXTURE_KECCAK_V1",
-    signatureVerification: "FIXTURE_RECOMPUTED_NOT_PRODUCTION_CRYPTOGRAPHIC_VERIFICATION",
+    signatureScheme: signatureMetadata.signatureScheme,
+    signatureVerification: signatureMetadata.signatureVerification,
     transportPrincipal: {
       transport: record.apiPrincipal.transport,
       principalId: record.apiPrincipal.principalId,
@@ -263,6 +289,7 @@ async function handleRequest(
   response: ServerResponse,
   contexts: readonly FixtureProviderContext[],
   recordedAt: bigint,
+  signatureMetadata: Map<string, AcceptedSignatureMetadata>,
 ): Promise<void> {
   const url = new URL(request.url ?? "/", "http://127.0.0.1");
   try {
@@ -295,9 +322,29 @@ async function handleRequest(
       if (!sameProviderIdentity(context.request.provider, parsed.provider)) {
         throw new WireProtocolError("PROVIDER_IDENTITY_MISMATCH", "provider attribution does not match the issued request");
       }
-      const expectedSignature = fixtureSignature(materialForSubmission(parsed));
-      if (!sameId(expectedSignature, parsed.signature)) {
-        throw new WireProtocolError("SIGNATURE_DOMAIN_MISMATCH", "fixture signature does not match the frozen sign material");
+      let acceptedSignatureMetadata: AcceptedSignatureMetadata;
+      if (parsed.signatureScheme === "FIXTURE_KECCAK_V1") {
+        const expectedSignature = fixtureSignature(materialForSubmission(parsed));
+        if (!sameId(expectedSignature, parsed.signature)) {
+          throw new WireProtocolError("SIGNATURE_DOMAIN_MISMATCH", "fixture signature does not match the frozen sign material");
+        }
+        acceptedSignatureMetadata = FIXTURE_SIGNATURE_METADATA;
+      } else if (parsed.signatureScheme === EIP712_SIGNATURE_SCHEME) {
+        let recoveredAddress: string;
+        try {
+          recoveredAddress = await recoverTypedDataAddress({
+            ...eip712TypedDataForSubmission(eip712MaterialForSubmission(parsed)),
+            signature: parsed.signature,
+          });
+        } catch {
+          throw new WireProtocolError("SIGNATURE_DOMAIN_MISMATCH", "EIP-712 signature could not be recovered");
+        }
+        if (!sameId(recoveredAddress, context.request.forecasterAddress) || !sameId(recoveredAddress, parsed.forecasterAddress)) {
+          throw new WireProtocolError("SIGNATURE_RECOVERY_MISMATCH", "EIP-712 signer does not match the expected forecaster address");
+        }
+        acceptedSignatureMetadata = EIP712_SIGNATURE_METADATA;
+      } else {
+        throw new WireProtocolError("UNSUPPORTED_SIGNATURE_SCHEME", "signature scheme is unsupported");
       }
 
       const submission: ForecastSubmission = {
@@ -319,7 +366,8 @@ async function handleRequest(
         submission,
       };
       const record = context.workflow.recordProviderResponse(context.coreRequest, context.provider, providerResponse, recordedAt);
-      json(response, 200, serializeAccepted(context, record));
+      signatureMetadata.set(record.submissionId, acceptedSignatureMetadata);
+      json(response, 200, serializeAccepted(context, record, acceptedSignatureMetadata));
       return;
     }
 
@@ -328,7 +376,7 @@ async function handleRequest(
       for (const context of contexts) {
         const record = context.workflow.getSubmission(submissionId as `0x${string}`);
         if (record !== undefined) {
-          json(response, 200, serializeAccepted(context, record));
+          json(response, 200, serializeAccepted(context, record, signatureMetadata.get(record.submissionId)));
           return;
         }
       }
@@ -366,9 +414,10 @@ export async function createForecastProviderServer(options: ForecastProviderServ
   const port = options.port ?? 8791;
   const acceptedAt = options.acceptedAt ?? ACCEPTED_AT;
   const recordedAt = options.recordedAt ?? RECORDED_AT;
-  const contexts = createFixtureProviderContexts(acceptedAt, recordedAt);
+  const contexts = createFixtureProviderContexts(acceptedAt, recordedAt, options.profiles);
+  const signatureMetadata = new Map<string, AcceptedSignatureMetadata>();
   const server = createServer((request, response) => {
-    void handleRequest(request, response, contexts, recordedAt);
+    void handleRequest(request, response, contexts, recordedAt, signatureMetadata);
   });
   await new Promise<void>((resolve, reject) => {
     const onError = (error: Error) => {

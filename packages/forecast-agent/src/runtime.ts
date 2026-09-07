@@ -2,7 +2,7 @@ import {
   assertSubmissionMatchesRequest,
   sameProviderIdentity,
   type ForecastRequestWire,
-  type ForecastSignMaterial,
+  type ForecastSubmissionSignMaterial,
   type ForecastSubmissionAcceptedWire,
   type ForecastSubmissionWire,
   type UnauthorizedExecutionResponseWire,
@@ -33,15 +33,19 @@ export async function runExternalForecastAgent(
   }
 
   const strategyOutput = await strategy.forecast(request);
-  const signMaterial: ForecastSignMaterial = {
+  const signMaterial: ForecastSubmissionSignMaterial = {
     protocolVersion: request.protocolVersion,
+    requestId: request.requestId,
     marketId: request.marketId,
     circuitId: request.circuitId,
     forecaster: request.forecaster,
+    forecasterAddress: request.forecasterAddress,
     probabilityUpBps: strategyOutput.probabilityUpBps,
     generatedAt: strategyOutput.generatedAt,
     validUntil: strategyOutput.validUntil,
     nonce: request.nonce,
+    sourceType: strategyOutput.sourceType,
+    sourceVersion: strategyOutput.sourceVersion,
   };
   const signerOutput = await signer.sign(signMaterial);
   if (signerOutput.forecasterAddress.toLowerCase() !== request.forecasterAddress.toLowerCase()) {

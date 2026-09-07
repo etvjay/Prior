@@ -12,7 +12,8 @@
     "start": "tsx src/main.ts"
   },
   "dependencies": {
-    "@prior/forecast-protocol": "workspace:*"
+    "@prior/forecast-protocol": "workspace:*",
+    "viem": "2.21.45"
   },
   "devDependencies": {
     "@types/node": "22.10.5",

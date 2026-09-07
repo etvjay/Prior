@@ -6,7 +6,7 @@ import {
   createFixtureProviderClient,
 } from "./client.js";
 import { runExternalForecastAgent } from "./runtime.js";
-import { FixtureForecastSigner } from "./signer.js";
+import { createRuntimeForecastSigner } from "./signer.js";
 import { DeterministicFixtureStrategy } from "./strategy.js";
 
 const profile = process.env.FORECAST_PROVIDER_PROFILE === "B" ? FIXTURE_PROVIDER_B : FIXTURE_PROVIDER_A;
@@ -15,7 +15,7 @@ const baseUrl = process.env.PRIOR_PROVIDER_URL ?? "http://127.0.0.1:8791";
 try {
   const client = createFixtureProviderClient(baseUrl, profile.key);
   const strategy = new DeterministicFixtureStrategy({ probabilityUpBps: profile.probabilityUpBps });
-  const signer = new FixtureForecastSigner({ forecasterAddress: profile.forecasterAddress });
+  const signer = createRuntimeForecastSigner({ fixtureForecasterAddress: profile.forecasterAddress });
   const result = await runExternalForecastAgent(client, strategy, signer);
   // The marker is machine-readable demo output; no credential value is read or printed.
   console.log(`EXTERNAL_FORECAST_RESULT=${JSON.stringify(result)}`);
