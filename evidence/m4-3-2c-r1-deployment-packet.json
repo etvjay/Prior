@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "M4.3.2C-R1.v1",
+  "status": "READY_FOR_GAS_FUNDING",
+  "generatedAt": "2026-09-07T09:07:44Z",
+  "network": {
+    "name": "Somnia Shannon",
+    "chainId": 50312,
+    "rpcUrl": "https://dream-rpc.somnia.network",
+    "observedHead": "481988968",
+    "observedHeadTimestamp": "1788772064"
+  },
+  "sourceIdentity": {
+    "repositoryHead": "02a986eaf1d0c80bd032bf38ea551e5a3f92f345",
+    "pinnedContractSourceBuildCommit": "41e1b30edf9c4ed1c7826d8f4090260792a98f20",
+    "contractDiffSincePinned": "NONE",
+    "compiler": "solc 0.8.24",
+    "foundryProfile": "optimizer=true,runs=200,via_ir=true,bytecode_hash=none,cbor_metadata=false",
+    "sourceChangedBetweenBuildAndPacket": false
+  },
+  "deployer": {
+    "address": "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55",
+    "nonce": "0",
+    "balanceWei": "0",
+    "balanceSTT": "0.000000000000000000"
+  },
+  "dependencies": {
+    "rftRegistryV1": "0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41",
+    "rftRegistryV1CodeBytes": 4399,
+    "binaryMarketsModule": "0x3ecC694Cef705358864a646142ac17A90E29e388",
+    "operatorPermissionsRegistry": "0x15C7e8CE38F021c5b45d098AaD788f63090bF20A"
+  },
+  "gas": {
+    "gasPriceWei": "6000000000",
+    "safetyMultiplierBps": 12500,
+    "registryGas": "33703803",
+    "executorGas": "13054470",
+    "registryEstimatedCostWei": "202222818000000000",
+    "executorEstimatedCostWei": "78326820000000000",
+    "maximumRequiredDeployerFundingWei": "350687047500000000",
+    "maximumRequiredDeployerFundingSTT": "0.3506870475"
+  },
+  "transactions": [
+    {
+      "index": 1,
+      "contract": "CircuitRegistryV2",
+      "nonce": "0",
+      "valueWei": "0",
+      "constructorArgs": ["0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41"],
+      "expectedAddress": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
+      "artifactFileSha256": "e3fcf7095729875f33b1217fe9bb226b84e41a534d1852f86d40ea1bdead3e8b",
+      "creationBytecodeSha256": "d053098834ce78f998c2b1d6c51529c60b0c5201179ad79ab2b1592ba38cad53",
+      "initCodeKeccak256": "0x1af8dd55f8d4fb7d0f35f0fc10beac74767ef2973c0c8e5c212ffc77c5a8ccdc",
+      "runtimeBytecodeSha256": "2db7fcdce5d938f273a24369cdbb20f626baf0d083c01fbe48202b62a008a7cd",
+      "gasEstimate": "33703803"
+    },
+    {
+      "index": 2,
+      "contract": "CircuitExecutorV2",
+      "nonce": "1",
+      "valueWei": "0",
+      "constructorArgs": ["0x1eD3B2310F369977ef82569498d5F678f8B73104", "0x3ecC694Cef705358864a646142ac17A90E29e388", "0x15C7e8CE38F021c5b45d098AaD788f63090bF20A"],
+      "expectedAddress": "0x6e6Bf80Dc412f4DFCb59C15494C83785d54fb66d",
+      "artifactFileSha256": "ec62c29a220adb626edecbd3cb243fed572edc77062754eb2d6ff7b31e3b35e3",
+      "creationBytecodeSha256": "31bbbf9843138b4f6e22585150640839ba343d539bacbb87e714451de00782e9",
+      "initCodeKeccak256": "0x812b4397778a9c871c95f09dafa4eeb7fa31a60c83f490e159eb8ee68222c447",
+      "runtimeBytecodeSha256": "54a800b19ed18d0a791228df773989e4e7e83ef3e362aeddd78eba7ba69e52c8",
+      "gasEstimate": "13054470"
+    }
+  ],
+  "fundingRequest": {
+    "destination": "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55",
+    "maximumSTT": "0.3506870475",
+    "purpose": "V2 deployment gas only",
+    "authorizedDeploymentTransactions": 2,
+    "economicCollateral": "0",
+    "forecasterFundingSTT": "0",
+    "tokenApprovals": "NONE",
+    "dreamDexWrites": "NONE",
+    "validUntil": "before any nonce, gas-price, bytecode, dependency, or predicted-address change; re-read all gates after funding",
+    "nonce": "0",
+    "predictedAddresses": ["0x1eD3B2310F369977ef82569498d5F678f8B73104", "0x6e6Bf80Dc412f4DFCb59C15494C83785d54fb66d"]
+  },
+  "stopConditions": [
+    "nonce must remain 0; do not recalculate and continue automatically",
+    "balance must be sufficient for the refreshed gas ceiling",
+    "chain ID must remain 50312",
+    "RFT V1 bytecode must remain present",
+    "runtime bytecode must match deployedBytecode.object hashes",
+    "RegistryV2 must deploy at the expected address before TX2",
+    "exactly two Shannon writes are authorized",
+    "no Circuit, Forecast, RFT, DreamDEX, approval, permission, or Forecaster-funding operation is authorized"
+  ],
+  "evidenceClassification": "PRE_BROADCAST_DEPLOYMENT_PACKET",
+  "deploymentMetadata": "NOT_DEPLOYED",
+  "writesOccurred": false
+}
