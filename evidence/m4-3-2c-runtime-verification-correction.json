@@ -1,0 +1,25 @@
+{
+  "milestone": "M4.3.2C runtime verification correction",
+  "status": "TX1_RUNTIME_MATCHES_AFTER_IMMUTABLE_PATCH",
+  "registryAddress": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
+  "transactionHash": "0xcaf3049627145d08b3b8908aa4fb6d2844f6b86d45c8dcb6e5596e13a81ae213",
+  "rawArtifactRuntimeSha256": "2db7fcdce5d938f273a24369cdbb20f626baf0d083c01fbe48202b62a008a7cd",
+  "observedOnchainRuntimeSha256": "c1ad8ec4e159886a4a2c5deef5e3f64600688d0065da48967f00ad417c4ba465",
+  "immutableReferences": {
+    "1607": [{"start":3022,"length":32},{"start":3910,"length":32}],
+    "1609": [{"start":1104,"length":32},{"start":6181,"length":32}]
+  },
+  "immutableValuesUsed": {
+    "1607": "0x0000000000000000000000005b1b51cb062b7b782c9ec2bd5674efadb5308f41",
+    "1609": "0x00000000000000000000000082daa64cedfa4d15615adc6d577dba0d9ffccf55"
+  },
+  "patchedArtifactRuntimeSha256": "c1ad8ec4e159886a4a2c5deef5e3f64600688d0065da48967f00ad417c4ba465",
+  "patchedArtifactEqualsOnchain": true,
+  "explanation": "deployedBytecode.object contains zero placeholders for Solidity immutables; constructor deployment patches those slots. Raw artifact runtime hashing falsely reported a mismatch.",
+  "tx2Broadcast": false,
+  "thirdTransaction": false,
+  "deploymentMetadata": "NOT_DEPLOYED",
+  "dreamDexWrites": false,
+  "circuitCreated": false,
+  "forecastCommitted": false
+}

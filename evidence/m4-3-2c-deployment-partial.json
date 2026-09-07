@@ -1,0 +1,24 @@
+{
+  "milestone": "M4.3.2C deployment",
+  "status": "BLOCKED_RUNTIME_BYTECODE_MISMATCH",
+  "network": "Somnia Shannon",
+  "chainId": 50312,
+  "sourceHeadAtAuthorization": "02a986eaf1d0c80bd032bf38ea551e5a3f92f345",
+  "pinnedContractSourceBuildCommit": "41e1b30edf9c4ed1c7826d8f4090260792a98f20",
+  "deployer": "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55",
+  "tx1": {
+    "contract": "CircuitRegistryV2",
+    "transactionHash": "0xcaf3049627145d08b3b8908aa4fb6d2844f6b86d45c8dcb6e5596e13a81ae213",
+    "blockNumber": "0x1cbb1a84",
+    "receiptStatus": "0x1",
+    "address": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
+    "gasUsed": "22469202",
+    "gasCostWei": "134815212000000000",
+    "rftRegistryReadback": "0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41",
+    "codeBytes": 6691,
+    "expectedRuntimeSha256": "2db7fcdce5d938f273a24369cdbb20f626baf0d083c01fbe48202b62a008a7cd",
+    "observedRuntimeSha256": "c1ad8ec4e159886a4a2c5deef5e3f64600688d0065da48967f00ad417c4ba465"
+  },
+  "tx2": {"contract":"CircuitExecutorV2","broadcast":false,"address":"0x6e6Bf80Dc412f4DFCb59C15494C83785d54fb66d","reason":"stopped after TX1 runtime mismatch"},
+  "postStop": {"deployerNonce":"1","deployerBalanceSTT":"10.215871835500000000","executorCode":"0x","deploymentMetadata":"NOT_DEPLOYED","dreamDexWrites":false,"circuitCreated":false,"forecastCommitted":false,"thirdTransaction":false}
+}
