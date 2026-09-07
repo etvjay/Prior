@@ -1,160 +1,151 @@
-# M4.3.2 Live External Forecaster Packet — BLOCKED
+# M4.3.2B Live Gate Authorization Packet - BLOCKED_NO_FRESH_SAFE_BTC_MARKET
 
-Status: `BLOCKED`
+Generated at: `2026-09-07T08:40:51.270Z`
+Status: `BLOCKED_NO_FRESH_SAFE_BTC_MARKET`
+Blocker: `BLOCKED_NO_FRESH_SAFE_BTC_MARKET`
 
-No funding, deployment, live Forecast, or Shannon write has occurred.
+No chain write, funding, faucet call, signature, deployment, broadcast, or private-key import occurred. This packet is read-only evidence and a conditional pre-write plan.
 
-## 1. Signer implementation
+## Network
 
-- commit: `1e62280663f1eec5db5e089921704b49444b0b6a`
-- live-mode correction: local uncommitted correction is verified in the current
-  checkout; fixture submissions are rejected with `LIVE_REQUIRES_EIP712`
-- live scheme: `EIP712_FORECAST_V2`
-- fixture scheme: `FIXTURE_KECCAK_V1`, fixture-only
-- domain: `PRIOR Forecast`, version `2`, chain `50312`
-- verifyingContract: `0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41`
-- expected Forecaster: `0x4EbF775fb6397C1a191614CDCd0E117e04B24AB5`
-- test-vector EIP-712 digest:
-  `0x94ddeefda97911b9d18904c3b11f66a50effd7db4e80e23a84a6d70520bd65ec`
-- protocol/agent/server tests: `6 + 5 + 7` passed
-- core tests: `67` passed
-- typechecks: passed
-
-Authentication classification: `REAL_CRYPTOGRAPHIC_CAPABLE / OFFCHAIN`
-Forecast strategy classification: `INTEGRATION_FIXTURE / QUALITY_NOT_CLAIMED`
-
-## 2. Fresh market discovery
-
-Fresh direct scan:
-
-- read block: `481936750`
-- read timestamp: `1788766841`
-- chain ID: `50312`
+- Chain ID: `50312`
+- Shannon head block: `481972529`
+- Shannon head timestamp: `1788770419`
 - RPC: `https://dream-rpc.somnia.network`
+- Indexer: `https://dev.smk.somnia.host/v1/graphql`
 
-New future markets with substantial headroom were `BOTNAV`, 4-hour markets:
+## Rules
 
-- `0x...15bcf`, expiry `1788780375`
-- `0x...15bd0`, expiry `1788780386`
-- `0x...15bd1`, expiry `1788780398`
+- Asset allowlist: `BTC, ETH`
+- Cadence allowlist: `60, 300, 900, 3600, 14400` seconds
+- Priority: `BTC_1H -> BTC_4H -> BTC_15M -> BTC_5M -> BTC_1M -> ETH_1H -> ETH_4H -> ETH_15M -> ETH_5M -> ETH_1M`
+- Historical exclusion: `0x00000000000000000000000000000000000000000000000000000000000015b8f`
+- Status authority: `DIRECT_ONCHAIN`
+- Cadence authority: `APP_ENFORCED`
+- Reference method: `BOOK_MIDPOINT_REFERENCE`
 
-They are not BTC and are excluded by the live proof target.
+## Discovery and candidate gates
 
-The only preferred BTC 1-hour candidate visible in the latest indexer snapshot
-was:
+| marketId | asset | cadenceSec | direct/indexer status | remainingSec | decision |
+|---|---:|---:|---|---:|---|
+| 0x0000000000000000000000000000000000000000000000000000000000015c7b | ETH | 60 | 4 | -259 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c7a | BTC | 60 | 4 | -259 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c79 | ETH | 300 | 4 | -19 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c78 | BTC | 300 | 4 | -19 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c77 | ETH | 60 | 4 | -319 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c76 | BTC | 60 | 4 | -319 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c75 | ETH | 60 | 4 | -379 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c74 | BTC | 60 | 4 | -379 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c73 | ETH | 60 | 4 | -439 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c72 | BTC | 60 | 4 | -439 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c71 | ETH | 60 | 4 | -499 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c70 | BTC | 60 | 4 | -499 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c6d | ETH | 300 | 4 | -319 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c6c | BTC | 300 | 4 | -319 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c6f | ETH | 60 | 4 | -559 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c6e | BTC | 60 | 4 | -559 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c6b | ETH | 60 | 4 | -619 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c6a | BTC | 60 | 4 | -619 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c68 | BTC | 60 | 4 | -679 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c69 | ETH | 60 | 4 | -679 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c67 | ETH | 60 | 4 | -739 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c66 | BTC | 60 | 4 | -739 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c65 | ETH | 60 | 4 | -799 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c64 | BTC | 60 | 4 | -799 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c61 | ETH | 300 | 4 | -619 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c60 | BTC | 300 | 4 | -619 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c62 | BTC | 60 | 4 | -859 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c63 | ETH | 60 | 4 | -859 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c5e | BTC | 60 | 4 | -919 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c5f | ETH | 60 | 4 | -919 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c5d | ETH | 60 | 4 | -979 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c5c | BTC | 60 | 4 | -979 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c5a | BTC | 60 | 4 | -1039 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c5b | ETH | 60 | 4 | -1039 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c59 | ETH | 60 | 4 | -1099 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c58 | BTC | 60 | 4 | -1099 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c55 | ETH | 300 | 4 | -919 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c54 | BTC | 300 | 4 | -919 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c56 | BTC | 60 | 4 | -1159 | ONCHAIN_NOT_TRADING, EXPIRED |
+| 0x0000000000000000000000000000000000000000000000000000000000015c57 | ETH | 60 | 4 | -1159 | ONCHAIN_NOT_TRADING, EXPIRED |
 
-- marketId: `0x0000000000000000000000000000000000000000000000000000000000015b8f`
-- BTC, interval `3600`
-- expiry `1788768000`
-- status `Trading` at the earlier read
-
-This candidate is explicitly historical/preflight only and must not be reused.
-
-No fresh BTC 1-hour or BTC 4-hour candidate with verified ≥900-second
-headroom is currently available. BTC 5-minute candidates are not being used.
-
-## 3. Deployment plan, not authorized
-
-Existing RFT V1 dependency:
-
-`0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41`
-
-Planned new contracts:
-
-- `CircuitRegistryV2(rftRegistryV1)`
-- `CircuitExecutorV2(registryV2, binaryModule, operatorRegistry)` only for
-  live zero-action rejection evidence
-
-Owner nonce read: `0`.
-
-Predicted addresses if no intervening owner transaction occurs:
-
-- Registry V2: `0x1eD3B2310F369977ef82569498d5F678f8B73104`
-- Executor V2: `0x6e6Bf80Dc412f4DFCb59C15494C83785d54fb66d`
-
-These predictions expire if the nonce changes. No deployment has occurred.
-
-## 4. Provisional intent
-
-The next fresh BTC candidate must determine the exact timing and market class.
-The invariant policy is:
-
-```text
-owner: disposable owner only
-forecaster: 0x4EbF775fb6397C1a191614CDCd0E117e04B24AB5
-targetWindows: 1
-totalBudget: 1
-maxPerMarket: 1
-allowedActionsBitmap: 0
-execution authority: NONE
-capital authority: NONE
-economic spend: ZERO
+Candidates observed: `40`
+```json
+{
+  "indexer": "https://dev.smk.somnia.host/v1/graphql",
+  "directValidation": true,
+  "rowsReturned": 100,
+  "rowsProbed": 40,
+  "predictedAddresses": {
+    "nonce": "0",
+    "registryV2": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
+    "executorV2": "0x6e6Bf80Dc412f4DFCb59C15494C83785d54fb66d",
+    "sequence": [
+      {
+        "nonce": "0",
+        "contract": "CircuitRegistryV2"
+      },
+      {
+        "nonce": "1",
+        "contract": "CircuitExecutorV2"
+      }
+    ]
+  }
+}
 ```
 
-The two numeric budget values are schema-required inert placeholders. They are
-not usable capital authority.
+## Selection
 
-## 5. Conditional transaction sequence
+- Selected market: `none`
+- Selected priority: `none`
+- Reason: No candidate passed direct binding, Trading status, allowed asset/cadence, historical exclusion, and profile headroom gates.
 
-Not authorized and not executable from this packet:
+## Profile decision
 
-1. deploy `CircuitRegistryV2`;
-2. deploy `CircuitExecutorV2`;
-3. owner `create(Intent)`;
-4. owner `authorize(circuitId)`;
-5. owner `activate(circuitId)`;
-6. external agent receives a fresh BTC ForecastRequest;
-7. Forecaster signs EIP-712 submission;
-8. server recovers and verifies the Forecaster address;
-9. Forecaster calls V1 `commitForecast(...)`;
-10. read receipt and canonical `trialId`;
-11. owner calls V2 `bindTrial(circuitId, marketId, trialId)`;
-12. read `CircuitTrialBound` and `getIteration(...)`;
-13. record application policy decision;
-14. simulate `BUY_UP` and `BUY_DOWN`, both expected to revert
-    `ActionNotAllowed`;
-15. owner advances exactly once;
-16. simulate duplicate advancement, expected to revert.
+- Selected profile: `PROFILE B`
+- Default: `true`
+- Reason: Profile B is selected by default because live zero-action rejection evidence is required; this run does not demonstrate that Profile A is sufficient.
+- Headroom rule: `max(60 seconds, 1 × cadenceSec)`
 
-No collateral approval, operator permission, DreamDEX order, or trade is
-permitted.
+## Owner nonce and predicted CREATE addresses
 
-## 6. Gas and funding
-
-Previously measured deployment estimates, tied to the old excluded candidate,
-are not carried forward as a live authorization:
-
-- Registry V2 deployment: `33703803` gas
-- Executor V2 deployment: `13054470` gas
-- gas price at prior read: `6 gwei`
-
-Current packet funding ceiling:
-
-```text
-owner: NOT ISSUED
-Forecaster: NOT ISSUED
-total: 0 STT authorized
-collateral: ZERO
+- Owner: `0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55` (source: `direct eth_getTransactionCount pinned to observed block`)
+- Fresh nonce: `0`
+```json
+{
+  "nonce": "0",
+  "registryV2": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
+  "executorV2": "0x6e6Bf80Dc412f4DFCb59C15494C83785d54fb66d",
+  "sequence": [
+    {
+      "nonce": "0",
+      "contract": "CircuitRegistryV2"
+    },
+    {
+      "nonce": "1",
+      "contract": "CircuitExecutorV2"
+    }
+  ]
+}
 ```
 
-Fresh calldata, timing, fee, and gas estimates must be regenerated after a
-fresh eligible BTC market is observed.
+## Conditional packet
 
-## 7. Single blocker
+No candidate passed the selection gates, so no partial Circuit packet was generated.
 
-`BLOCKED_NO_FRESH_SAFE_BTC_MARKET`
+## Side-effect boundary and evidence ceiling
 
-The signer gates pass. The old BTC 1-hour candidate is excluded. New safe
-markets currently observed are BOTNAV rather than BTC. No alternative market
-or cadence is being substituted.
+```json
+{
+  "chainWrites": false,
+  "funding": false,
+  "faucet": false,
+  "signatures": false,
+  "privateKeyImported": false,
+  "deployments": false,
+  "broadcasts": false
+}
+```
+Evidence ceiling: `SHANNON_READ_VERIFIED`
 
-## 8. Final classification
-
-- signer implementation: `PASS`
-- fixture regression: `PASS`
-- live-mode fixture rejection: `PASS`
-- fresh safe BTC market: `BLOCKED_EXTERNAL`
-- contracts deployed: `NOT_DEPLOYED`
-- funding: `NOT_REQUESTED`
-- broadcast: `NOT_AUTHORIZED`
-- M4.3.2: `BLOCKED`
+The Circuit market cadence remains APP_ENFORCED. Placeholder budgets `1/1` are schema-required inert values, not collateral authority. Zero-action and duplicate-call simulations are not funding requirements.

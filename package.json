@@ -7,6 +7,7 @@
     "test:forecast": "pnpm --filter @prior/forecast-protocol test && pnpm --filter @prior/forecast-agent test && pnpm --filter @prior/forecast-provider-server test",
     "typecheck:forecast": "pnpm --filter @prior/forecast-protocol typecheck && pnpm --filter @prior/forecast-agent typecheck && pnpm --filter @prior/forecast-provider-server typecheck",
     "demo:external-forecast": "tsx scripts/run-external-forecast-demo.ts",
+    "prior:live-gate": "tsx scripts/live-gate.mts",
     "build:contracts": "forge build --root contracts",
     "m0:sdk": "tsx scripts/m0-sdk-exports.ts",
     "m0:markets": "tsx scripts/m0-discover-markets.ts",
