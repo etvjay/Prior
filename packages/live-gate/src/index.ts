@@ -10,10 +10,12 @@ import {
 export const EXCLUDED_HISTORICAL_MARKET_ID =
   "0x00000000000000000000000000000000000000000000000000000000000015b8f";
 
-export const PROFILE_B_MIN_HEADROOM_SEC = 60;
-export const PROFILE_B_CADENCE_MULTIPLIER = 1;
-export const PROFILE_A_MIN_HEADROOM_SEC = 30;
-export const PROFILE_A_CADENCE_MULTIPLIER = 0.5;
+export const PROFILE_B_ABSOLUTE_FLOOR_SEC = 180;
+export const PROFILE_B_RELATIVE_FRACTION = 0.25;
+export const PROFILE_B_RELATIVE_CAP_SEC = 900;
+export const PROFILE_A_ABSOLUTE_FLOOR_SEC = 90;
+export const PROFILE_A_RELATIVE_FRACTION = 0.25;
+export const PROFILE_A_RELATIVE_CAP_SEC = 600;
 
 export const MARKET_PRIORITY = [
   { asset: "BTC", intervalSec: 3600, label: "BTC_1H" },
@@ -48,8 +50,7 @@ export const MARKET_CLASS_BY_ASSET_CADENCE: Readonly<Record<string, number>> = {
 
 export type GateStatus =
   | "READY_FOR_BOUNDED_LIVE_WRITE"
-  | "BLOCKED_NO_FRESH_SAFE_MARKET"
-  | "BLOCKED_NO_FRESH_SAFE_BTC_MARKET"
+  | "BLOCKED_NO_ELIGIBLE_LIVE_MARKET"
   | "BLOCKED_GAS_ESTIMATION_FAILED"
   | "BLOCKED_OWNER_NONCE_READ_FAILED"
   | "BLOCKED_LIVE_READ_FAILED";
@@ -295,9 +296,9 @@ function priorityFor(asset: string | null, intervalSec: number | null): { index:
 
 function requiredHeadroom(intervalSec: number, profile: ProfileName): number {
   if (profile === "A") {
-    return Math.max(PROFILE_A_MIN_HEADROOM_SEC, intervalSec * PROFILE_A_CADENCE_MULTIPLIER);
+    return Math.max(PROFILE_A_ABSOLUTE_FLOOR_SEC, Math.min(PROFILE_A_RELATIVE_CAP_SEC, Math.ceil(intervalSec * PROFILE_A_RELATIVE_FRACTION)));
   }
-  return Math.max(PROFILE_B_MIN_HEADROOM_SEC, intervalSec * PROFILE_B_CADENCE_MULTIPLIER);
+  return Math.max(PROFILE_B_ABSOLUTE_FLOOR_SEC, Math.min(PROFILE_B_RELATIVE_CAP_SEC, Math.ceil(intervalSec * PROFILE_B_RELATIVE_FRACTION)));
 }
 
 function isSameAddress(a: string | null | undefined, b: string | null | undefined): boolean {
@@ -430,10 +431,8 @@ export function deriveBookReference(book: BookRead): ReferenceEvidence {
   }
 }
 
-function chooseBlocker(records: CandidateEvidence[]): GateStatus {
-  if (records.length === 0) return "BLOCKED_NO_FRESH_SAFE_MARKET";
-  const hasBtc = records.some((r) => r.asset?.toUpperCase() === "BTC");
-  return hasBtc ? "BLOCKED_NO_FRESH_SAFE_BTC_MARKET" : "BLOCKED_NO_FRESH_SAFE_MARKET";
+function chooseBlocker(_records: CandidateEvidence[]): GateStatus {
+  return "BLOCKED_NO_ELIGIBLE_LIVE_MARKET";
 }
 
 function profileEvidence(profileAProvenSufficient: boolean): ProfileEvidence {
@@ -443,7 +442,7 @@ function profileEvidence(profileAProvenSufficient: boolean): ProfileEvidence {
       default: false,
       reason: "Profile A is selected because the implementation supplied explicit sufficient evidence; Profile B zero-action rejection evidence is not required for this run.",
       profileA: { sufficient: true, reason: "Caller supplied a demonstrated Profile A sufficiency gate." },
-      minimumHeadroomRule: "max(30 seconds, 0.5 × cadenceSec)",
+      minimumHeadroomRule: "max(90 seconds, min(600 seconds, ceil(0.25 × cadenceSec)))",
     };
   }
   return {
@@ -451,7 +450,7 @@ function profileEvidence(profileAProvenSufficient: boolean): ProfileEvidence {
     default: true,
     reason: "Profile B is selected by default because live zero-action rejection evidence is required; this run does not demonstrate that Profile A is sufficient.",
     profileA: { sufficient: false, reason: "No live Profile A sufficiency evidence was supplied." },
-    minimumHeadroomRule: "max(60 seconds, 1 × cadenceSec)",
+    minimumHeadroomRule: "max(180 seconds, min(900 seconds, ceil(0.25 × cadenceSec)))",
   };
 }
 
@@ -622,7 +621,7 @@ export function evaluateLiveGate(input: GateEvaluationInput): LiveGateEvidence {
     selected.rejectionCodes.push("TIMING_UNAVAILABLE");
     return {
       ...base,
-      status: "BLOCKED_NO_FRESH_SAFE_MARKET",
+      status: "BLOCKED_NO_ELIGIBLE_LIVE_MARKET",
       blocker: "TIMING_UNAVAILABLE",
       selection: { selectedMarketId: null, priorityLabel: null, reason: "Selected candidate lacked exact candidate timing." },
       packet: null,

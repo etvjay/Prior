@@ -112,7 +112,7 @@ describe("M4.3.2B live gate decision", () => {
   it("blocks with candidatesObserved when BTC and ETH are absent", () => {
     const evidence = evaluateLiveGate(input([]));
 
-    expect(evidence.status).toBe("BLOCKED_NO_FRESH_SAFE_MARKET");
+    expect(evidence.status).toBe("BLOCKED_NO_ELIGIBLE_LIVE_MARKET");
     expect(evidence.discovery.candidatesObserved).toEqual([]);
     expect(evidence.selection.selectedMarketId).toBeNull();
     expect(evidence.packet).toBeNull();
@@ -121,12 +121,12 @@ describe("M4.3.2B live gate decision", () => {
   it("discovers but rejects unsafe short cadences by the selected profile", () => {
     const probes = [
       makeProbe(marketId(1), "BTC", 60, 30),
-      makeProbe(marketId(2), "BTC", 300, 200),
-      makeProbe(marketId(3), "BTC", 900, 800),
+      makeProbe(marketId(2), "BTC", 300, 100),
+      makeProbe(marketId(3), "BTC", 900, 200),
     ];
     const evidence = evaluateLiveGate(input(probes));
 
-    expect(evidence.status).toBe("BLOCKED_NO_FRESH_SAFE_BTC_MARKET");
+    expect(evidence.status).toBe("BLOCKED_NO_ELIGIBLE_LIVE_MARKET");
     expect(evidence.discovery.candidatesObserved).toHaveLength(3);
     expect(evidence.discovery.candidatesObserved.every((c) => c.decision === "REJECTED")).toBe(true);
     expect(evidence.discovery.candidatesObserved.map((c) => c.rejectionCodes)).toEqual([
@@ -184,7 +184,7 @@ describe("M4.3.2B live gate decision", () => {
     });
     const evidence = evaluateLiveGate(input([stale, listed]));
 
-    expect(evidence.status).toBe("BLOCKED_NO_FRESH_SAFE_BTC_MARKET");
+    expect(evidence.status).toBe("BLOCKED_NO_ELIGIBLE_LIVE_MARKET");
     expect(evidence.discovery.candidatesObserved.map((c) => c.rejectionCodes)).toEqual([
       ["EXPIRED"],
       ["ONCHAIN_NOT_TRADING"],
@@ -223,7 +223,7 @@ describe("M4.3.2B live gate decision", () => {
   it("never selects the historical preflight market", () => {
     const evidence = evaluateLiveGate(input([makeProbe(EXCLUDED_HISTORICAL_MARKET_ID, "BTC", 3600, 8000)]));
 
-    expect(evidence.status).toBe("BLOCKED_NO_FRESH_SAFE_BTC_MARKET");
+    expect(evidence.status).toBe("BLOCKED_NO_ELIGIBLE_LIVE_MARKET");
     expect(evidence.selection.selectedMarketId).toBeNull();
     expect(evidence.discovery.candidatesObserved[0]?.rejectionCodes).toContain("HISTORICAL_EXCLUDED");
   });
