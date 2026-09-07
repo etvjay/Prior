@@ -160,3 +160,11 @@ docs/SCREEN_GEOMETRY.md
 This includes exact colors, typography, spacing, radii, borders, icon system, probability-
 node geometry, chart language, sound/haptic rules, /live geometry, Circuit geometry,
 expanded Circuit analysis, landing keyframes, and mobile reflow.
+
+## M4.3.1 — Circuit binding and authority hardening
+
+`CircuitRegistryV2` and `CircuitExecutorV2` are implemented locally and covered by Foundry tests. V2 adds an immutable `RFTRegistry` dependency, canonical `trialForIteration` / `processedMarket` storage, deterministic chain-and-registry-domain iteration identity, owner-only committed-trial binding, exactly-once Circuit-market advancement, and pre-effect `allowedActionsBitmap` enforcement. The unchanged V1 contracts remain legacy artifacts.
+
+Local evidence is `MOCK_VERIFIED` / mock-backed only. V2 is `NOT_DEPLOYED`; no M4.3.1 Shannon funding, deployment, Forecast write, MCP operation, DreamDEX write, or autonomous execution occurred. Existing V1 deployment addresses and live evidence remain unchanged and are not promoted to V2 guarantees.
+
+See `docs/CIRCUIT_RFT_BINDING.md` and `docs/DEPLOYMENT_V2.md` for the storage, lifecycle, enforcement matrix, V1/V2 boundary, and deployment metadata.

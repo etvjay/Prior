@@ -171,7 +171,6 @@ A safe initial model:
 ```text
 At proposal/authorization time, record:
 
-```text
 maximumAuthorizedSpend += limitPriceRaw * quantityRaw / oneCollateralRaw
 ```
 

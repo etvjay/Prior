@@ -170,3 +170,40 @@ Preserve Market #1 as verified. Do not process Market #2 under this expired one-
 
 Status:
 BLOCKED_BY_IMMUTABLE_INTENT.
+
+## C-008 — V1 Circuit-to-RFT binding and duplicate iteration guarantees are absent
+
+Observed:
+`CircuitRegistry.sol` V1 stores Circuit intent/runtime and an execution key, but
+has no canonical `Circuit × market → RFT` binding and no processed
+Circuit-market iteration marker. The historical continuity run therefore proved
+one unchanged intent advanced alongside two real BTC 5m markets, one
+attributable RFT per market, and Runner-level duplicate prevention only.
+
+Expected:
+A protocol-level Circuit iteration must store its canonical RFT association and
+reject a second advance for the same `circuitId × marketId`.
+
+Sources:
+- `contracts/src/CircuitRegistry.sol` (unchanged V1)
+- `contracts/src/CircuitRegistryV2.sol`
+- `contracts/test/CircuitRegistryV2.t.sol`
+- `docs/CIRCUIT_RFT_BINDING.md`
+
+Affected:
+V1 historical interpretation, Circuit iteration integrity, and the V2 deployment
+boundary.
+
+Risk:
+V1 must not be described as cryptographically binding RFTs or preventing
+contract-level duplicate iterations. V2 local tests cover the corrected source
+behavior, but no live V2 deployment or DreamDEX admission proof exists.
+
+Resolution:
+Preserve V1 source, addresses, receipts, and evidence as legacy. V2 adds an
+immutable RFT dependency, owner-only COMMITTED-trial binding, chain-and-registry
+iteration identity, `trialForIteration`, `processedMarket`, and pre-effect
+allowed-action enforcement. RFT commit remains independent and unchanged.
+
+Status:
+RESOLVED FOR V2 SOURCE / V1 LEGACY LIMITATION / LIVE DEPLOYMENT OPEN.

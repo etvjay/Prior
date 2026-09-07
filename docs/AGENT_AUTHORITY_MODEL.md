@@ -204,7 +204,7 @@ The deterministic iteration identity is:
 iterationId = keccak256(abi.encodePacked(circuitId, marketId))
 ```
 
-The core helper is `iterationIdentity(circuitId, marketId)`. Pool addresses, labels, and API request IDs are not substitutes for `marketId`.
+The M4.1 application helper is `iterationIdentity(circuitId, marketId)`. For the V2 onchain Circuit iteration boundary, `CircuitRegistryV2.iterationIdentity` instead uses `keccak256(abi.encode(block.chainid, address(this), circuitId, marketId))`, and V2 contract storage is canonical. Pool addresses, labels, and API request IDs are not substitutes for `marketId`.
 
 `actionId` is the idempotency key for an issued action. `executionId` links the fixed envelope to execution evidence. Neither may be used to mutate the envelope after issuance.
 

@@ -257,7 +257,7 @@ The deterministic iteration identity is:
 iterationId = keccak256(abi.encodePacked(circuitId, marketId))
 ```
 
-The implementation helper is `iterationIdentity(circuitId, marketId)`. This is the canonical equivalent of `circuitId × marketId`, and it prevents a pool address or a mutable display label from becoming iteration identity.
+The M4.1 application helper is `iterationIdentity(circuitId, marketId)`, using `abi.encodePacked` for noncanonical domain/read-model records. V2 onchain iteration identity is deliberately stronger and is defined by `CircuitRegistryV2.iterationIdentity` as `keccak256(abi.encode(block.chainid, address(this), circuitId, marketId))`; V2 contract storage is canonical for V2. Pool addresses, labels, and API request IDs are not substitutes for `marketId`.
 
 Retry rules:
 
@@ -432,3 +432,29 @@ The highest-priority next action is:
 > Build the first Forecast Provider/domain workflow and prove that one external agent can submit an attributable Forecast into PRIOR, unless a blocking architecture defect is found.
 
 That workflow must preserve the signed, typed `ForecastSubmission` boundary, use `marketId` as canonical identity, keep API authentication separate from authority, and record the exact evidence class. It must not be expanded into an MCP server or an autonomous trading path as part of that proof.
+
+## 14. M4.3.1 V2 Circuit enforcement audit
+
+Section 11 remains the historical M4.1-to-V1 traceability table. The following
+matrix is scoped to the new, local-only V2 contracts. `APP` means a
+noncanonical application/read-model check; `NONE` means no enforcement is
+claimed.
+
+| Policy dimension | V2 source of truth | Classification |
+|---|---|---|
+| Forecaster | `Intent.forecaster == RFTRegistry.Trial.forecaster` at `bindTrial` | ONCHAIN |
+| Market identity | `marketId` and `keccak256(abi.encode(chainId, V2 registry, circuitId, marketId))` | ONCHAIN |
+| Market scope | `marketClass` is stored, but V2 does not validate market metadata/class | APP |
+| Cadence | `targetWindows` counts completion; no interval/cadence field is enforced in V2 | APP |
+| Minimum margin | `minMarginBps` is stored; no executable-price derivation is added in V2 | APP |
+| Maximum per market | V2 `reserveExecution` rejects spend above `maxPerMarket` | ONCHAIN |
+| Total budget | V2 `reserveExecution` rejects cumulative reserved spend above `totalBudget` | ONCHAIN |
+| Allowed side/action | V2 executor maps kind `0` to bit 0 and kind `2` to bit 1 before economic checks | ONCHAIN |
+| Lifecycle | V2 owner transitions plus binding/advance/reservation state and time checks | ONCHAIN |
+| Duplicate Circuit-market | `processedMarket` for iteration and `executionUsed` for reservation | ONCHAIN |
+| Execution caller | No configured caller/Runner allowlist; the nonzero-address check is not authorization | NONE |
+| Revocation | Owner-only V2 `revoke`; revoked state blocks binding, advance, and reservation | ONCHAIN |
+
+The Runner/core checkpoint and provider workflow remain application/read-model
+surfaces and cannot override this V2 storage. This audit does not broaden the
+M4.3.1 implementation into a complete Mandate executor.

@@ -1,0 +1,13 @@
+{
+  "protocolVersion": "V2",
+  "network": "Somnia Shannon",
+  "chainId": 50312,
+  "status": "NOT_DEPLOYED",
+  "contracts": {
+    "RFTRegistryDependency": "NOT_CONFIGURED",
+    "CircuitRegistryV2": "NOT_DEPLOYED",
+    "CircuitExecutorV2": "NOT_DEPLOYED"
+  },
+  "broadcast": "NOT_AUTHORIZED",
+  "evidenceClass": "MOCK_VERIFIED"
+}
