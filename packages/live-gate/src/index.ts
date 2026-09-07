@@ -149,6 +149,7 @@ export interface GateEvaluationInput {
   gas: GasReport | null;
   profileAProvenSufficient: boolean;
   discoveryMeta?: Record<string, unknown>;
+  deployedAddresses?: { registryV2: string; executorV2: string };
 }
 
 export interface PredictedAddresses {
@@ -456,7 +457,10 @@ function profileEvidence(profileAProvenSufficient: boolean): ProfileEvidence {
 
 export function evaluateLiveGate(input: GateEvaluationInput): LiveGateEvidence {
   const profile = profileEvidence(input.profileAProvenSufficient);
-  const predictedAddresses = predictCreateAddresses(input.owner.address, input.owner.nonce);
+  const freshPredicted = predictCreateAddresses(input.owner.address, input.owner.nonce);
+  const predictedAddresses: PredictedAddresses = input.deployedAddresses
+    ? { ...freshPredicted, registryV2: input.deployedAddresses.registryV2, executorV2: input.deployedAddresses.executorV2 }
+    : freshPredicted;
   const unique = new Map<string, CandidateProbe>();
   for (const probe of input.probes) {
     const id = normalizeId(probe.discovered.marketId);

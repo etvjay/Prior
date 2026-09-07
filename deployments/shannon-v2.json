@@ -2,12 +2,60 @@
   "protocolVersion": "V2",
   "network": "Somnia Shannon",
   "chainId": 50312,
-  "status": "NOT_DEPLOYED",
-  "contracts": {
-    "RFTRegistryDependency": "NOT_CONFIGURED",
-    "CircuitRegistryV2": "NOT_DEPLOYED",
-    "CircuitExecutorV2": "NOT_DEPLOYED"
+  "status": "SHANNON_WRITE_VERIFIED",
+  "broadcast": "AUTHORIZED_TWO_DEPLOYMENTS_COMPLETED",
+  "sourceIdentity": {
+    "repositoryHeadAtDeployment": "90247bc566c51d59cc17a5b7660cbb2cc2eff349",
+    "pinnedContractSourceBuildCommit": "41e1b30edf9c4ed1c7826d8f4090260792a98f20",
+    "contractDiffSincePinned": "NONE",
+    "compiler": "solc 0.8.24",
+    "foundryProfile": "optimizer=true,runs=200,via_ir=true,bytecode_hash=none,cbor_metadata=false",
+    "sourceChangedBetweenBuildAndDeployment": false
   },
-  "broadcast": "NOT_AUTHORIZED",
-  "evidenceClass": "MOCK_VERIFIED"
+  "contracts": {
+    "RFTRegistryDependency": "0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41",
+    "CircuitRegistryV2": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
+    "CircuitExecutorV2": "0x6e6Bf80Dc412f4DFCb59C15494C83785d54fb66d",
+    "BinaryMarketsModule": "0x3ecC694Cef705358864a646142ac17A90E29e388",
+    "OperatorPermissionsRegistry": "0x15C7e8CE38F021c5b45d098AaD788f63090bF20A"
+  },
+  "deployments": {
+    "CircuitRegistryV2": {
+      "transactionHash": "0xcaf3049627145d08b3b8908aa4fb6d2844f6b86d45c8dcb6e5596e13a81ae213",
+      "blockNumber": 482024068,
+      "nonce": 0,
+      "constructorArgs": ["0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41"],
+      "runtimeVerification": {
+        "method": "immutable-aware byte-for-byte comparison",
+        "rawArtifactSha256": "2db7fcdce5d938f273a24369cdbb20f626baf0d083c01fbe48202b62a008a7cd",
+        "deployedRuntimeSha256": "c1ad8ec4e159886a4a2c5deef5e3f64600688d0065da48967f00ad417c4ba465",
+        "match": true
+      },
+      "rftRegistryReadback": "0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41"
+    },
+    "CircuitExecutorV2": {
+      "transactionHash": "0xc514a3fbc159f433cbb3af8dd8481bc08d429c8cfa96d1eb90a8f5899be91ff2",
+      "blockNumber": 482090374,
+      "nonce": 1,
+      "constructorArgs": ["0x1eD3B2310F369977ef82569498d5F678f8B73104", "0x3ecC694Cef705358864a646142ac17A90E29e388", "0x15C7e8CE38F021c5b45d098AaD788f63090bF20A"],
+      "runtimeVerification": {
+        "method": "immutable-aware byte-for-byte comparison",
+        "rawArtifactSha256": "54a800b19ed18d0a791228df773989e4e7e83ef3e362aeddd78eba7ba69e52c8",
+        "deployedRuntimeSha256": "0ddd2cbb15da07afa20d8699aa6d7e704af487d34e39168bce03546121cd365d",
+        "match": true
+      },
+      "circuitsReadback": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
+      "binaryModuleReadback": "0x3ecC694Cef705358864a646142ac17A90E29e388",
+      "operatorRegistryReadback": "0x15C7e8CE38F021c5b45d098AaD788f63090bF20A"
+    }
+  },
+  "economicExposure": {
+    "deploymentGasOnly": true,
+    "economicCollateralRaw": "0",
+    "tokenApprovals": "NONE",
+    "dreamDexWrites": "NONE",
+    "circuitCreated": false,
+    "forecastCommitted": false
+  },
+  "evidenceClass": "CircuitRegistryV2=SHANNON_WRITE_VERIFIED; CircuitExecutorV2=SHANNON_WRITE_VERIFIED; constructor_readbacks=SHANNON_READ_VERIFIED"
 }

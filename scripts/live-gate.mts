@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, writeFile, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { createPublicClient, http, type Address, type Hex } from "viem";
 import { SomniaMarkets, SOMNIA_TESTNET_ADDRESSES } from "@somnia-chain/markets-sdk";
@@ -47,7 +47,11 @@ async function main() {
   }
   const nonceResult = await bounded(fetch(RPC, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_getTransactionCount", params: [OWNER, `0x${block.toString(16)}`] }) }), "nonce").then(r => r.json() as Promise<any>).catch(e => ({ error: { message: (e as Error).message } }));
   const nonce = typeof nonceResult.result === "string" ? BigInt(nonceResult.result).toString() : "0";
-  const evidence = evaluateLiveGate({ generatedAt: new Date().toISOString(), network: { chainId: 50312, headBlock: block, headTimestampSec: timestamp, rpcUrl: RPC, indexerUrl: INDEXER }, owner: { address: OWNER, nonce, source: "direct eth_getTransactionCount pinned to observed block", nonceReadFresh: typeof nonceResult.result === "string" }, forecaster: FORECASTER, rftRegistry: RFT, probes, gas: null, profileAProvenSufficient: false, discoveryMeta: { ...discoveryMeta, rowsReturned: rows.length, rowsProbed: probes.length, predictedAddresses: predictCreateAddresses(OWNER, nonce) } });
+  const metadata: any = JSON.parse(await readFile(resolve(ROOT, "deployments/shannon-v2.json"), "utf8"));
+  const deployedAddresses = metadata.status === "SHANNON_WRITE_VERIFIED"
+    ? { registryV2: metadata.contracts.CircuitRegistryV2, executorV2: metadata.contracts.CircuitExecutorV2 }
+    : undefined;
+  const evidence = evaluateLiveGate({ generatedAt: new Date().toISOString(), network: { chainId: 50312, headBlock: block, headTimestampSec: timestamp, rpcUrl: RPC, indexerUrl: INDEXER }, owner: { address: OWNER, nonce, source: "direct eth_getTransactionCount pinned to observed block", nonceReadFresh: typeof nonceResult.result === "string" }, forecaster: FORECASTER, rftRegistry: RFT, probes, gas: null, profileAProvenSufficient: false, discoveryMeta: { ...discoveryMeta, rowsReturned: rows.length, rowsProbed: probes.length, deployedAddresses, predictedAddresses: predictCreateAddresses(OWNER, nonce) }, deployedAddresses });
   await mkdir(resolve(ROOT, "evidence"), { recursive: true });
   await writeFile(resolve(ROOT, "evidence/live-gate-current.json"), json(evidence));
   await writeFile(resolve(ROOT, "docs/M4_3_2_LIVE_AUTHORIZATION_PACKET.md"), renderLiveGateMarkdown(evidence));
