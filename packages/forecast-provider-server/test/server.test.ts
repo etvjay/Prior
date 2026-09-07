@@ -94,6 +94,36 @@ describe("Layer-3 Forecast provider HTTP adapter", () => {
     expect((await response.json()).code).toBe("SIGNATURE_DOMAIN_MISMATCH");
   });
 
+  it("rejects the fixture scheme when live mode is enabled", async () => {
+    const server = await createForecastProviderServer({ port: 0, liveMode: true });
+    servers.push(server);
+    const requestResponse = await fetch(`${server.url}/v1/forecast-requests/next?providerId=${FIXTURE_PROVIDER_A.provider.providerId}&sessionId=${FIXTURE_PROVIDER_A.sessionId}`);
+    const request = parseForecastRequestWire(await requestResponse.json());
+    const material: ForecastSignMaterial = {
+      protocolVersion: request.protocolVersion,
+      marketId: request.marketId,
+      circuitId: request.circuitId,
+      forecaster: request.forecaster,
+      probabilityUpBps: FIXTURE_PROVIDER_A.probabilityUpBps,
+      generatedAt: "201",
+      validUntil: "400",
+      nonce: request.nonce,
+    };
+    const submission = createFixtureForecastSubmission(request, {
+      probabilityUpBps: material.probabilityUpBps,
+      generatedAt: material.generatedAt,
+      validUntil: material.validUntil,
+      signature: fixtureSignature(material),
+    });
+    const response = await fetch(`${server.url}/v1/forecast-submissions`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(submission),
+    });
+    expect(response.status).toBe(422);
+    expect((await response.json()).code).toBe("LIVE_REQUIRES_EIP712");
+  });
+
   it("rejects an explicit execution request with no execution authority", async () => {
     const server = await createForecastProviderServer({ port: 0 });
     servers.push(server);

@@ -71,6 +71,7 @@ export interface ForecastProviderServerOptions {
   readonly acceptedAt?: bigint;
   readonly recordedAt?: bigint;
   readonly profiles?: readonly FixtureProviderProfile[];
+  readonly liveMode?: boolean;
 }
 
 export interface FixtureProviderContext {
@@ -290,6 +291,7 @@ async function handleRequest(
   contexts: readonly FixtureProviderContext[],
   recordedAt: bigint,
   signatureMetadata: Map<string, AcceptedSignatureMetadata>,
+  liveMode: boolean,
 ): Promise<void> {
   const url = new URL(request.url ?? "/", "http://127.0.0.1");
   try {
@@ -323,6 +325,9 @@ async function handleRequest(
         throw new WireProtocolError("PROVIDER_IDENTITY_MISMATCH", "provider attribution does not match the issued request");
       }
       let acceptedSignatureMetadata: AcceptedSignatureMetadata;
+      if (liveMode && parsed.signatureScheme === "FIXTURE_KECCAK_V1") {
+        throw new WireProtocolError("LIVE_REQUIRES_EIP712", "live mode rejects FIXTURE_KECCAK_V1; submit EIP712_FORECAST_V2");
+      }
       if (parsed.signatureScheme === "FIXTURE_KECCAK_V1") {
         const expectedSignature = fixtureSignature(materialForSubmission(parsed));
         if (!sameId(expectedSignature, parsed.signature)) {
@@ -414,10 +419,11 @@ export async function createForecastProviderServer(options: ForecastProviderServ
   const port = options.port ?? 8791;
   const acceptedAt = options.acceptedAt ?? ACCEPTED_AT;
   const recordedAt = options.recordedAt ?? RECORDED_AT;
+  const liveMode = options.liveMode ?? process.env.PRIOR_FORECAST_SIGNER_MODE === "live";
   const contexts = createFixtureProviderContexts(acceptedAt, recordedAt, options.profiles);
   const signatureMetadata = new Map<string, AcceptedSignatureMetadata>();
   const server = createServer((request, response) => {
-    void handleRequest(request, response, contexts, recordedAt, signatureMetadata);
+    void handleRequest(request, response, contexts, recordedAt, signatureMetadata, liveMode);
   });
   await new Promise<void>((resolve, reject) => {
     const onError = (error: Error) => {
