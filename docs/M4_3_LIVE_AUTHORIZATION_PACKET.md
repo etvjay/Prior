@@ -78,10 +78,11 @@ Minimum new Circuit if the live gate is reopened:
 - one forecast-focused Circuit owned by the existing owner;
 - `forecaster` set to the disposable agent address;
 - `targetWindows = 1`;
-- `allowedActionsBitmap = 0` (no execution action);
-- `totalBudget` and `maxPerMarket` must be nonzero because the current
-  `CircuitRegistry.create` contract requires them, but economic spend authority
-  remains disabled by the zero action bitmap;
+- `allowedActionsBitmap = 0` is the intended policy value, but the deployed
+  `CircuitExecutor.execute` currently reads and discards this field. Therefore
+  zero-action placeholders are **not provably inert** at the contract layer;
+  execution would require a separate fail-closed fix before this can be called
+  execution-isolated.
 - exact `startsAt`, `expiresAt`, and market class must be selected only after a
   fresh candidate read and owner approval.
 
