@@ -50,20 +50,22 @@ Accepted Shannon evidence JSON
 
 | ID | Layer | Current behavior | Expected behavior | Severity | Status |
 |---|---|---|---|---|---|
-| WG-P1-001 | Web ↔ runtime | `/live` reads `ACCEPTED_FORECASTS` from checked-in Shannon evidence. It does not consume `pnpm prior:live-gate`, Runner `/ready`, or live RPC state. | A user-facing live surface should expose the same current state as the canonical live-gate/runtime, or be clearly separated as Demo/Evidence. | P1 | OPEN — intentionally not changed during this audit; current labels say `ACCEPTED RESOLVED EVIDENCE`. |
-| WG-P1-002 | Runner ↔ execution | Runner reconciles chain state and checkpoints but does not drive the full Circuit iteration state machine or submit execution. README explicitly says autonomous execution is not proven and the adapter path is `BLOCKED_EXTERNAL`. | A complete live workflow would need an explicitly authorized, externally proven execution composition. | P1 | BLOCKED_EXTERNAL / intentionally not fixed. |
-| WG-P1-003 | Persistence | `RunnerCheckpoint.load()` inserts parsed records without schema validation, transition validation, or normalization of serialized bigint strings. | Persisted state must be validated before exposure and invalid/stale records must fail closed. | P1 | OPEN — requires a bounded persistence change and tests; not performed in this read-only audit. |
-| WG-P1-004 | Adapter domain mapping | `DreamDexAdapter.classify()` defaults unknown asset/cadence combinations to BTC 15m (`packages/dreamdex/src/index.ts:214-222`). | Unknown market identity must be rejected or represented as unknown, never silently mapped to an authorized class. | P1 | OPEN — requires domain/API decision; not changed without ratification. |
+| WG-P0-001 | Runner ↔ canonical workflow | Runner only reconciles chain state and exposes read-only HTTP endpoints; it never creates/recover iterations, obtains/relays Forecasts, evaluates policy, submits execution, finalizes RFTs, or advances Circuits (`apps/runner/src/index.ts:17-44`). | The Runner spec requires the complete bounded liveness loop (`docs/RUNNER_SPEC.md:36-71`). | P0 | OPEN / not fixed; autonomous external execution remains separately blocked. |
+| WG-P0-002 | Runner ↔ persistence/recovery | `RunnerCheckpoint` has persistence primitives, but production Runner never calls `put()` or `persist()`; checkpoint loading occurs only during `/ready` (`apps/runner/src/checkpoint.ts:18-45`, `apps/runner/src/index.ts:17-21`). | Production Runner must persist and reconstruct iteration state across restart, with chain/RFT/DreamDEX reconciliation. | P0 | OPEN / not fixed. |
+| WG-P1-001 | Web ↔ runtime | `/live` reads `ACCEPTED_FORECASTS` from checked-in Shannon evidence. It does not consume `pnpm prior:live-gate`, Runner `/ready`, or live RPC state. | A user-facing live surface should expose the same current state as the canonical live-gate/runtime, or be clearly separated as Demo/Evidence. | P1 | OPEN — current labels say `ACCEPTED RESOLVED EVIDENCE`. |
+| WG-P1-002 | Persistence | `RunnerCheckpoint.load()` inserts parsed records without schema validation, transition validation, or normalization of serialized bigint strings. | Persisted state must be validated before exposure and invalid/stale records must fail closed. | P1 | OPEN. |
+| WG-P1-003 | Adapter domain mapping | `DreamDexAdapter.classify()` defaults unknown asset/cadence combinations to BTC 15m (`packages/dreamdex/src/index.ts:214-222`). | Unknown market identity must be rejected or represented as unknown, never silently mapped to an authorized class. | P1 | OPEN. |
+| WG-P1-004 | External execution | DreamDEX adapter/guided execution has no composed writer, receipt observer, settlement reader, or RFT finalization path. | A complete live execution workflow requires an explicitly authorized and externally proven composition. | P1 | BLOCKED_EXTERNAL / intentionally not fixed. |
 | WG-P2-001 | Public interfaces | No custom REST or MCP surface exists. | REST/MCP would be needed only for a later third-party/agent integration target. | P2 | NOT A GAP for current MVP; explicitly excluded by `docs/BACKEND_ARCHITECTURE.md:63-124`. |
 | WG-P2-002 | External provider | External Forecast live path remains separate from fixture evidence and is guarded by live-mode signer checks. | External execution should be classified separately from local/fixture proof. | P2 | PASS as classification; live external proof remains unavailable. |
 | WG-P2-003 | Documentation | README describes completed historical guided lifecycle and clearly states autonomous execution and production reliability are not proven. | Narrative must remain below evidence ceiling. | P2 | PASS with limitation disclosure. |
 
 ## End-to-end case coverage
 
-- Success: LOCAL/SYSTEM-PARTIAL — guided lifecycle and protocol tests pass; no current live V2 Circuit workflow.
+- Success: LOCAL/SYSTEM-PARTIAL — guided lifecycle and protocol tests pass; the production Runner does not execute the full live Circuit workflow.
 - Refusal: PASS locally — authority-denied and zero-action V2 tests exist; fixture provider unauthorized execution is rejected.
 - Dependency failure: PARTIAL — provider/live-gate blocked states exist; no single full workflow receipt crosses every boundary.
-- Ambiguous consequence: PARTIAL — checkpoint/recovery evidence exists for Prior orchestration; live external exactly-once semantics remain unproven.
+- Ambiguous consequence: PARTIAL — checkpoint/recovery evidence exists for Prior orchestration; production Runner persistence and live external exactly-once semantics remain unproven.
 
 ## Cross-surface review
 
@@ -85,8 +87,8 @@ Accepted Shannon evidence JSON
 
 ## Verdict
 
-`REQUEST_CHANGES` for a whole-system production claim: P1 gaps remain.
+`REQUEST_CHANGES` for the whole-system product claim: P0 gaps remain in the production Runner workflow and persistence composition.
 
-`APPROVE` for the bounded current MVP evidence claim: no P0 gaps were found, authority boundaries remain intact, and known disconnected/blocked paths are documented rather than presented as proven live capability.
+The bounded MVP evidence claim remains valid: local core/provider/contract tests pass, live V2 infrastructure is verified, discovery now reports its bounded coverage honestly, and no authority boundary was expanded.
 
 The initial audit did not modify contracts, Forecast protocol, signer implementation, or authority semantics. The separately authorized M4.3.2D follow-up changed only live-gate discovery and eligibility reporting, and its final evidence is recorded above.

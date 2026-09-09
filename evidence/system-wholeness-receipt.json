@@ -29,10 +29,10 @@
   "coldHuman": "PARTIAL — web build and evidence narrative available; live try is not a live end-to-end workflow",
   "coldAgent": "PARTIAL — protocol/server contracts exist; no MCP surface",
   "coldDeveloper": "PASS_LOCAL — package scripts, tests, typechecks, contract build, and web build execute",
-  "P0GapsRemaining": 0,
+  "P0GapsRemaining": 2,
   "P1GapsRemaining": 4,
   "authorityViolations": 0,
-  "finalVerdict": "APPROVE_BOUNDED_MVP_EVIDENCE; REQUEST_CHANGES_FOR_WHOLE_SYSTEM_PRODUCTION_CLAIM",
+  "finalVerdict": "REQUEST_CHANGES_FOR_WHOLE_SYSTEM; APPROVE_BOUNDED_MVP_EVIDENCE",
   "verification": {
     "coreTests": "67 passed",
     "forecastTests": "18 passed",
@@ -56,5 +56,6 @@
       "scannerSemanticChanges": false
     }
   },
+  "knownP0Gaps": ["WG-P0-001", "WG-P0-002"],
   "knownP1Gaps": ["WG-P1-001", "WG-P1-002", "WG-P1-003", "WG-P1-004"]
 }
