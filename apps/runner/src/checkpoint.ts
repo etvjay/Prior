@@ -9,7 +9,7 @@ const transitions: Record<CircuitIterationStatus, readonly CircuitIterationStatu
   POLICY_EVALUATING: ["AWAITING_OWNER_AUTHORIZATION", "ABSTAINED"],
   AWAITING_OWNER_AUTHORIZATION: ["EXECUTING", "ABSTAINED"],
   EXECUTING: ["WAITING_FOR_RESOLUTION", "ABSTAINED"],
-  ABSTAINED: ["ITERATION_COMPLETE"],
+  ABSTAINED: ["ITERATION_COMPLETE", "WAITING_FOR_RESOLUTION"],
   WAITING_FOR_RESOLUTION: ["FINALIZING_RFT"],
   FINALIZING_RFT: ["ITERATION_COMPLETE"],
   ITERATION_COMPLETE: [],
@@ -48,7 +48,7 @@ export class RunnerCheckpoint {
     const valid = validate(next);
     const key = this.key(valid.circuitId, valid.marketId);
     const prior = this.entries.get(key);
-    if (prior && !same(prior, valid) && !transitions[prior.status].includes(valid.status)) throw new Error(`illegal iteration transition ${prior.status} -> ${valid.status}`);
+    if (prior && !same(prior, valid) && prior.status !== valid.status && !transitions[prior.status].includes(valid.status)) throw new Error(`illegal iteration transition ${prior.status} -> ${valid.status}`);
     this.entries.set(key, valid);
   }
   async load(): Promise<void> {
