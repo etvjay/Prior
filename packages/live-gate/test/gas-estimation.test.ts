@@ -65,6 +65,12 @@ describe("M4.3.5A stateful fork gas estimation", () => {
     expect(result.funding.forecasterAdditionalFundingWei).toBe("125000000000000");
   });
 
+  it("does not request owner funding when live balance covers the owner ceiling", async () => {
+    const result = await estimateZeroActionLifecycle({ ...input(), ownerLiveBalance: 1_000_000_000_000_000_000n, forecasterLiveBalance: 0n });
+    expect(result.funding.ownerAdditionalFundingWei).toBe("0");
+    expect(result.funding.forecasterAdditionalFundingWei).toBe("125000000000000");
+  });
+
   it("rejects duplicate advance before a second write can be budgeted", async () => {
     const result = await estimateZeroActionLifecycle({ ...input(), order: ["create", "authorize", "activate", "commit", "bind", "advance", "advance"] });
     expect(result.failure?.phase).toBe("advance");

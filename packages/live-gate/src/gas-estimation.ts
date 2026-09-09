@@ -138,9 +138,11 @@ export async function estimateZeroActionLifecycle(input: GasEstimationInput): Pr
 }
 
 function fundingFor(operations: GasOperation[], ownerInjected: bigint, forecasterInjected: bigint, input: GasEstimationInput, gasPrice: bigint) {
-  const ownerAdditional = operations.filter((o) => o.caller.toLowerCase() === input.owner.toLowerCase()).reduce((n, o) => n + o.ceilingGas * gasPrice, 0n);
+  const ownerRequired = operations.filter((o) => o.caller.toLowerCase() === input.owner.toLowerCase()).reduce((n, o) => n + o.ceilingGas * gasPrice, 0n);
+  const ownerAdditional = ownerRequired > (input.ownerLiveBalance ?? 0n) ? ownerRequired - (input.ownerLiveBalance ?? 0n) : 0n;
   const commit = operations.find((o) => o.name === "commit");
-  const forecasterAdditional = commit == null ? 0n : commit.ceilingGas * gasPrice;
+  const forecasterRequired = commit == null ? 0n : commit.ceilingGas * gasPrice;
+  const forecasterAdditional = forecasterRequired > (input.forecasterLiveBalance ?? 0n) ? forecasterRequired - (input.forecasterLiveBalance ?? 0n) : 0n;
   return { forkInjectedOwnerWei: ownerInjected.toString(), forkInjectedForecasterWei: forecasterInjected.toString(), ownerLiveBalance: (input.ownerLiveBalance ?? 0n).toString(), forecasterLiveBalance: (input.forecasterLiveBalance ?? 0n).toString(), ownerAdditionalFundingWei: ownerAdditional.toString(), forecasterAdditionalFundingWei: forecasterAdditional.toString(), ownerNativeWei: ownerInjected.toString(), forecasterNativeWei: forecasterInjected.toString(), totalGasWei: operations.reduce((n, o) => n + o.costWei, 0n).toString(), conservativeTotalWei: operations.reduce((n, o) => n + o.ceilingGas * gasPrice, 0n).toString() };
 }
 function finishSuccess(fork: ForkHandle, operations: GasOperation[], ownerFundingWei: bigint, forecasterFundingWei: bigint, input: GasEstimationInput, gasPrice: bigint, buyUp: any, buyDown: any): GasEstimationResult {
