@@ -1,6 +1,7 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import { createPublicClient, createWalletClient, http, keccak256, encodeAbiParameters, parseAbi, type Address, type Hex } from "viem";
 import type { ForkHandle, ForkLifecycleAdapter, LifecycleWrite } from "./gas-estimation.js";
+import { assembleCreateIntent } from "./create-diagnosis.js";
 
 const registryAbi = parseAbi([
   "function create((bytes32 circuitId,address owner,address forecaster,uint8 marketClass,uint16 targetWindows,uint128 totalBudget,uint128 maxPerMarket,uint16 minMarginBps,uint8 maxConsecutiveLosses,uint64 startsAt,uint64 expiresAt,uint256 allowedActionsBitmap) intent) returns (bytes32)",
@@ -27,13 +28,15 @@ const rpc = async (url: string, method: string, params: unknown[]) => {
 export type ConcreteForkConfig = {
   rpcUrl: string; block: bigint; owner: Address; forecaster: Address;
   marketId: Hex;
-  marketClass: number; startsAt: bigint; expiresAt: bigint;
+  marketClass: number; observationTimestamp: bigint; startsAt: bigint; expiresAt: bigint;
   addresses: { rft: Address; registry: Address; executor: Address; binaryModule: Address };
 };
 
 export async function createConcreteForkAdapter(config: ConcreteForkConfig): Promise<ForkLifecycleAdapter> {
   const fork = await createAnvilShannonFork(config.rpcUrl, config.block);
   const publicClient = createPublicClient({ transport: http(fork.rpcUrl) });
+  const forkBlock = await publicClient.getBlock({ blockNumber: config.block });
+  if (forkBlock.timestamp !== config.observationTimestamp) throw new Error(`OBSERVATION_BLOCK_TIMESTAMP_MISMATCH:block=${config.block}:fork=${forkBlock.timestamp}:observed=${config.observationTimestamp}`);
   const wallet = (account: Address) => createWalletClient({ account, transport: http(fork.rpcUrl) });
   const chainId = BigInt(await publicClient.getChainId());
   let circuitId: Hex | undefined;
@@ -56,7 +59,8 @@ export async function createConcreteForkAdapter(config: ConcreteForkConfig): Pro
       const owner = wallet(config.owner);
       const forecaster = wallet(config.forecaster);
       if (step === "create") {
-        const intent = { circuitId: "0x0000000000000000000000000000000000000000000000000000000000000000" as Hex, owner: config.owner, forecaster: config.forecaster, marketClass: config.marketClass, targetWindows: 1, totalBudget: 1n, maxPerMarket: 1n, minMarginBps: 0, maxConsecutiveLosses: 1, startsAt: config.startsAt, expiresAt: config.expiresAt, allowedActionsBitmap: 0n } as const;
+        const intent = assembleCreateIntent({ owner: config.owner, forecaster: config.forecaster, marketClass: config.marketClass, targetWindows: 1, observationTimestamp: config.observationTimestamp, tradingStart: config.startsAt, expiry: config.expiresAt });
+        if (config.expiresAt <= config.startsAt) throw new Error("INVALID_OBSERVED_INTENT_WINDOW");
         hash = await owner.writeContract({ address: config.addresses.registry, abi: registryAbi, functionName: "create", args: [intent] } as any);
       } else if (step === "authorize") hash = await owner.writeContract({ address: config.addresses.registry, abi: registryAbi, functionName: "authorize", args: [circuitId!] } as any);
       else if (step === "activate") hash = await owner.writeContract({ address: config.addresses.registry, abi: registryAbi, functionName: "activate", args: [circuitId!] } as any);
