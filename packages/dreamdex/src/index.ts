@@ -76,14 +76,16 @@ export class DreamDexAdapter {
   readonly chainId = CHAIN_ID;
   readonly exchange: SomniaMarkets;
   readonly publicClient: any;
+  private readonly indexerUrl: string;
 
   constructor(cfg: DreamDexConfig = {}) {
+    this.indexerUrl = cfg.indexerUrl ?? INDEXER;
     this.publicClient = createPublicClient({
       chain: { id: CHAIN_ID, name: "Somnia Shannon", rpcUrls: { default: { http: [cfg.rpcUrl ?? RPC] } }, nativeCurrency: { name: "STT", symbol: "STT", decimals: 18 } } as any,
       transport: http(cfg.rpcUrl ?? RPC),
     });
     this.exchange = new SomniaMarkets({
-      indexerUrl: cfg.indexerUrl ?? INDEXER,
+      indexerUrl: this.indexerUrl,
       chain: { id: CHAIN_ID } as any,
       wsRpcUrl: "wss://api.infra.testnet.somnia.network/ws",
       addresses: SOMNIA_TESTNET_ADDRESSES,
@@ -105,11 +107,12 @@ export class DreamDexAdapter {
       }`,
       variables: { n: limit },
     };
-    const r = await fetch(INDEXER, {
+    const r = await fetch(this.indexerUrl, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(q),
     });
+    if (!r.ok) throw new Error(`indexer request failed: ${r.status}`);
     const j: any = await r.json();
     const rows = (j?.data?.Market ?? []) as any[];
     return rows.map((r) => ({
@@ -218,8 +221,7 @@ function classify(asset: string, intervalSec: number): MarketClass {
   if (a === "BTC" && i === 300) return 1; // BTC_1H = 1 — also 5m is bucketed here until classes expand
   if (a === "ETH" && i === 60) return 2;
   if (a === "ETH" && i === 300) return 3;
-  // Default to BTC 15m for unknown — UI may reject; caller validates class.
-  return 0;
+  throw new Error(`unsupported market class: ${asset}/${intervalSec}`);
 }
 
 export const _internals = { classify };

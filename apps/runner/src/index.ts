@@ -3,6 +3,7 @@ import { createServer } from "node:http";
 import { effectiveCircuitStatus } from "@prior/core";
 import { DreamDexAdapter } from "@prior/dreamdex";
 import { RunnerCheckpoint } from "./checkpoint.js";
+import { RunnerWorkflow } from "./workflow.js";
 
 const adapter = new DreamDexAdapter({ rpcUrl: process.env.SHANNON_RPC_HTTP, indexerUrl: process.env.DREAMDEX_INDEXER_URL });
 const checkpoint = new RunnerCheckpoint(process.env.PRIOR_CHECKPOINT_PATH ?? ".prior/runner-checkpoint.json");
@@ -14,9 +15,28 @@ let lastReconciledBlock = 0n;
 let lastMarkets = 0;
 let recoveryLoaded = false;
 
+const workflow = new RunnerWorkflow({
+  checkpoint,
+  circuit: { loadActive: async () => {
+    if (!circuitAddress || !circuitId) return null;
+    const intent: any = await adapter.publicClient.readContract({ address: circuitAddress, abi: circuitAbi, functionName: "intents", args: [circuitId] });
+    const runtime: any = await adapter.publicClient.readContract({ address: circuitAddress, abi: circuitAbi, functionName: "runtime", args: [circuitId] });
+    return { circuitId, status: Number(runtime.status) === 2 ? "ACTIVE" : "INACTIVE" };
+  } },
+  markets: { discover: async () => (await adapter.listRecentMarkets(50)).find((m:any) => m.lifecycle === "Trading") ?? null },
+  // External Forecast, relay, execution, receipt, settlement and RFT gateways
+  // are intentionally absent until explicitly configured. The workflow returns
+  // a typed blocked state rather than pretending these writes occurred.
+  policy: { evaluate: async () => ({ kind: "ABSTAIN", reason: "policy gateway unconfigured" }) },
+  settlement: { observe: async () => ({ terminal: false }) },
+  rft: { finalize: async () => { throw new Error("RFT gateway unconfigured"); } },
+  circuitGateway: { advance: async () => { throw new Error("Circuit gateway unconfigured"); } },
+});
+
 async function reconcile(){
   await checkpoint.load(); recoveryLoaded = true;
   const markets = await adapter.listRecentMarkets(50);
+  const cycle = await workflow.runOnce();
   const block = await adapter.publicClient.getBlockNumber();
   lastReconciledBlock=block; lastMarkets=markets.length;
   let circuit = null;
@@ -30,7 +50,7 @@ async function reconcile(){
   }
   // Canonical state is read from chain/DreamDEX. This process deliberately
   // keeps no owner key and does not invent Forecasts or outcomes.
-  return { block:block.toString(), markets:markets.length, trading:markets.filter((m:any)=>m.lifecycle==="Trading").length, circuit };
+  return { block:block.toString(), markets:markets.length, trading:markets.filter((m:any)=>m.lifecycle==="Trading").length, circuit, cycle };
 }
 
 const port=Number(process.env.PORT??8787);

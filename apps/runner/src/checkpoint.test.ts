@@ -1,0 +1,13 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { RunnerCheckpoint } from "./checkpoint.js";
+const circuitId="0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" as const;
+const marketId="0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" as const;
+const entry={circuitId,marketId,status:"WAITING_FOR_MARKET" as const,updatedAt:1n};
+const json=(x:unknown)=>JSON.stringify(x,(_,v)=>typeof v==="bigint"?`${v}n`:v);
+test("checkpoint revives bigint and rejects malformed records",async()=>{const dir=await mkdtemp(join(tmpdir(),"prior-checkpoint-")),file=join(dir,"checkpoint.json");await writeFile(file,json([{...entry,updatedAt:"1n"}]));const c=new RunnerCheckpoint(file);await c.load();assert.equal(c.get(circuitId,marketId)?.updatedAt,1n);await writeFile(file,json([{...entry,status:"NOPE"}]));await assert.rejects(new RunnerCheckpoint(file).load(),/invalid checkpoint/);});
+test("checkpoint fails closed on conflicting duplicate identities",async()=>{const dir=await mkdtemp(join(tmpdir(),"prior-checkpoint-")),file=join(dir,"checkpoint.json");await writeFile(file,json([entry,{...entry,status:"MARKET_FOUND",updatedAt:2n}]));await assert.rejects(new RunnerCheckpoint(file).load(),/duplicate checkpoint/);});
+test("checkpoint persists atomically and rejects illegal transitions",async()=>{const dir=await mkdtemp(join(tmpdir(),"prior-checkpoint-")),file=join(dir,"checkpoint.json"),c=new RunnerCheckpoint(file);c.put(entry);c.put({...entry,status:"MARKET_FOUND",updatedAt:2n});await c.persist();assert.equal(JSON.parse(await readFile(file,"utf8"))[0].updatedAt,"2n");assert.throws(()=>c.put({...entry,status:"EXECUTING",updatedAt:3n}),/illegal iteration transition/);});
