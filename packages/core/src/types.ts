@@ -100,6 +100,7 @@ export const CircuitIterationStatus = {
   ABSTAINED: "ABSTAINED",
   WAITING_FOR_RESOLUTION: "WAITING_FOR_RESOLUTION",
   FINALIZING_RFT: "FINALIZING_RFT",
+  ADVANCING_CIRCUIT: "ADVANCING_CIRCUIT",
   ITERATION_COMPLETE: "ITERATION_COMPLETE",
 } as const;
 export type CircuitIterationStatus = (typeof CircuitIterationStatus)[keyof typeof CircuitIterationStatus];

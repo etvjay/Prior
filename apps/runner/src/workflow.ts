@@ -17,6 +17,7 @@ export interface RunnerMarket { readonly marketId: MarketId; readonly lifecycle:
 export interface RunnerForecast { readonly trialId?: TrialId; readonly pUpBps: number }
 export type RunnerPolicy = { readonly kind: "BUY_UP" | "BUY_DOWN" } | { readonly kind: "ABSTAIN"; readonly reason: string };
 export type RunnerReceipt = { readonly status: "CONFIRMED" | "FAILED" | "UNKNOWN"; readonly txHash?: `0x${string}` };
+export type RunnerAdvanceResult = { readonly status: "SUBMITTED" | "CONFIRMED" | "ALREADY_CANONICAL" | "CONFLICT" | "FAILED" };
 export type RunnerSettlement = { readonly terminal: boolean; readonly outcome?: "UP" | "DOWN" | null; readonly voided?: boolean };
 
 export interface RunnerWorkflowDeps {
@@ -37,7 +38,7 @@ export interface RunnerWorkflowDeps {
   readonly settlement: { observe(market: RunnerMarket): Promise<RunnerSettlement> };
   readonly rft: { finalize(trialId: TrialId, market: RunnerMarket): Promise<void> };
   /** Owner-only bind/advance callbacks. Runner supplies no owner signer and cannot create/authorize/activate. */
-  readonly circuitGateway: { bindTrial?(circuit: RunnerCircuit, market: RunnerMarket, trialId: TrialId): Promise<void>; advance(circuit: RunnerCircuit, market: RunnerMarket): Promise<void> };
+  readonly circuitGateway: { bindTrial?(circuit: RunnerCircuit, market: RunnerMarket, trialId: TrialId): Promise<void>; advance(circuit: RunnerCircuit, market: RunnerMarket): Promise<void | RunnerAdvanceResult> };
 }
 
 const save = async (d: RunnerWorkflowDeps, item: CircuitIteration, status: CircuitIterationStatus, extra: Partial<CircuitIteration> = {}): Promise<CircuitIteration> => {
@@ -45,6 +46,18 @@ const save = async (d: RunnerWorkflowDeps, item: CircuitIteration, status: Circu
   d.checkpoint.put(next);
   await d.checkpoint.persist();
   return next;
+};
+
+const advanceConfirmed = async (d: RunnerWorkflowDeps, circuit: RunnerCircuit, market: RunnerMarket): Promise<RunnerResult | null> => {
+  try {
+    const result = await d.circuitGateway.advance(circuit, market);
+    if (result && result.status !== "CONFIRMED" && result.status !== "ALREADY_CANONICAL") return { kind: "BLOCKED", reason: "DEPENDENCY_FAILURE" };
+    return null;
+  } catch (cause) {
+    const result = blocked(cause);
+    if (result) return result;
+    throw cause;
+  }
 };
 
 export class RunnerWorkflow {
@@ -62,8 +75,19 @@ export class RunnerWorkflow {
     let item = d.checkpoint.get(circuit.circuitId, market.marketId) ?? {
       circuitId: circuit.circuitId, marketId: market.marketId, status: "WAITING_FOR_MARKET" as const, updatedAt: 0n,
     };
-    if (item.status === "ITERATION_COMPLETE") return { kind: "COMPLETED", circuitId: circuit.circuitId, marketId: market.marketId };
-    if (item.status === "FORECAST_COMMITTING" && !item.forecastTrialId) return { kind: "BLOCKED", reason: "AMBIGUOUS_RECEIPT" };
+    if (item.status === "ITERATION_COMPLETE") {
+      const canonical = d.canonical?.getIteration ? await d.canonical.getIteration(circuit, market) : null;
+      if (!canonical || canonical.processed) return { kind: "COMPLETED", circuitId: circuit.circuitId, marketId: market.marketId };
+      item = await save(d, item, "ADVANCING_CIRCUIT");
+    }
+    if (item.status === "ADVANCING_CIRCUIT") {
+      const canonical = d.canonical?.getIteration ? await d.canonical.getIteration(circuit, market) : null;
+      if (canonical?.processed) return { kind: "COMPLETED", circuitId: circuit.circuitId, marketId: market.marketId };
+      const result = await advanceConfirmed(d, circuit, market);
+      if (result) return result;
+      await save(d, item, "ITERATION_COMPLETE");
+      return { kind: "COMPLETED", circuitId: circuit.circuitId, marketId: market.marketId };
+    }
 
     if (item.status === "WAITING_FOR_MARKET") item = await save(d, item, "MARKET_FOUND");
     if (item.status === "MARKET_FOUND") item = await save(d, item, "WAITING_FOR_FORECAST");
@@ -90,6 +114,10 @@ export class RunnerWorkflow {
       }
     } else {
       forecast = await d.forecast.obtain(market, circuit);
+    }
+    if (item.status === "FORECAST_COMMITTING" && !item.forecastTrialId) {
+      // A missing local receipt is recoverable only after the canonical identity read above.
+      return { kind: "BLOCKED", reason: "AMBIGUOUS_RECEIPT" };
     }
 
     const trialId = item.forecastTrialId;
@@ -142,17 +170,13 @@ export class RunnerWorkflow {
         throw cause;
       }
     }
-    await save(d, item, "ITERATION_COMPLETE", item.executionId ? { executionId: item.executionId } : {});
+    item = await save(d, item, "ADVANCING_CIRCUIT", item.executionId ? { executionId: item.executionId } : {});
     const processed = d.canonical?.getIteration ? (await d.canonical.getIteration(circuit, market)).processed : false;
     if (!processed) {
-      try {
-        await d.circuitGateway.advance(circuit, market);
-      } catch (cause) {
-        const result = blocked(cause);
-        if (result) return result;
-        throw cause;
-      }
+      const result = await advanceConfirmed(d, circuit, market);
+      if (result) return result;
     }
+    await save(d, item, "ITERATION_COMPLETE", item.executionId ? { executionId: item.executionId } : {});
     return { kind: "COMPLETED", circuitId: circuit.circuitId, marketId: market.marketId };
   }
 }
