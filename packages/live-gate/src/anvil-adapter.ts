@@ -1,5 +1,8 @@
-import { spawn, type ChildProcess } from "node:child_process";
-import { createPublicClient, createWalletClient, http, keccak256, encodeAbiParameters, parseAbi, type Address, type Hex } from "viem";
+import { spawn, execFile, type ChildProcess } from "node:child_process";
+import { createServer } from "node:net";
+import { randomUUID } from "node:crypto";
+import { promisify } from "node:util";
+import { createPublicClient, createWalletClient, http, keccak256, encodeAbiParameters, parseAbi, stringToHex, type Address, type Hex } from "viem";
 import type { ForkHandle, ForkLifecycleAdapter, LifecycleWrite } from "./gas-estimation.js";
 import { assembleCreateIntent } from "./create-diagnosis.js";
 
@@ -17,6 +20,45 @@ const rftAbi = parseAbi([
 ]);
 const executorAbi = parseAbi(["function execute(bytes32,bytes32,address,uint8,uint256,uint256,uint64,uint8,uint8,address,uint96,uint64,uint128) payable returns (uint128)"]);
 const moduleAbi = parseAbi(["function markets(bytes32) view returns (uint256,uint8,uint8,address,uint32,bytes32,address,address,address,address,uint256,uint256,uint64,uint64)"]);
+const execFileAsync = promisify(execFile);
+
+export const FORK_PROCESS_START_FAILED = "FORK_PROCESS_START_FAILED" as const;
+export const FORK_IDENTITY_MISMATCH = "FORK_IDENTITY_MISMATCH" as const;
+export const UPSTREAM_HISTORICAL_STATE_UNAVAILABLE = "UPSTREAM_HISTORICAL_STATE_UNAVAILABLE" as const;
+export const ANVIL_SHANNON_FORK_INCOMPATIBILITY = "ANVIL_SHANNON_FORK_INCOMPATIBILITY" as const;
+
+export class ForkIsolationError extends Error {
+  constructor(public readonly code: typeof FORK_PROCESS_START_FAILED | typeof FORK_IDENTITY_MISMATCH | typeof UPSTREAM_HISTORICAL_STATE_UNAVAILABLE | typeof ANVIL_SHANNON_FORK_INCOMPATIBILITY, message: string, public readonly evidence?: ForkEvidence) {
+    super(`${code}:${message}`);
+    this.name = "ForkIsolationError";
+  }
+}
+
+export type ForkEvidence = {
+  forkRunId: string;
+  pid: number;
+  args: string[];
+  port: number;
+  rpcUrl: string;
+  anvilVersion: string;
+  stdout: string;
+  stderr: string;
+  upstream: { number: bigint; hash: string; timestamp: bigint };
+  actual?: { number: bigint; hash: string; timestamp: bigint; chainId: bigint };
+  upstreamRegistryCode?: string;
+  upstreamRftRegistry?: string;
+};
+
+export type ForkPortAllocation = { port: number; release: () => Promise<void> };
+
+export async function allocateUnusedLocalhostPort(): Promise<ForkPortAllocation> {
+  const server = createServer();
+  await new Promise<void>((resolve, reject) => { server.once("error", reject); server.listen(0, "127.0.0.1", () => resolve()); });
+  const address = server.address();
+  if (!address || typeof address === "string") { await new Promise<void>((resolve) => server.close(() => resolve())); throw new Error("LOCALHOST_PORT_ALLOCATION_FAILED"); }
+  let released = false;
+  return { port: address.port, release: async () => { if (!released) { released = true; await new Promise<void>((resolve) => server.close(() => resolve())); } } };
+}
 
 const rpc = async (url: string, method: string, params: unknown[]) => {
   const response = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }) });
@@ -33,10 +75,15 @@ export type ConcreteForkConfig = {
 };
 
 export async function createConcreteForkAdapter(config: ConcreteForkConfig): Promise<ForkLifecycleAdapter> {
-  const fork = await createAnvilShannonFork(config.rpcUrl, config.block);
+  const fork = await createAnvilShannonFork(config.rpcUrl, config.block, undefined, { registryAddress: config.addresses.registry });
   const publicClient = createPublicClient({ transport: http(fork.rpcUrl) });
-  const forkBlock = await publicClient.getBlock({ blockNumber: config.block });
-  if (forkBlock.timestamp !== config.observationTimestamp) throw new Error(`OBSERVATION_BLOCK_TIMESTAMP_MISMATCH:block=${config.block}:fork=${forkBlock.timestamp}:observed=${config.observationTimestamp}`);
+  try {
+    const forkBlock = await publicClient.getBlock({ blockNumber: config.block });
+    if (forkBlock.timestamp !== config.observationTimestamp) throw new Error(`OBSERVATION_BLOCK_TIMESTAMP_MISMATCH:block=${config.block}:fork=${forkBlock.timestamp}:observed=${config.observationTimestamp}`);
+  } catch (error) {
+    await fork.close();
+    throw error;
+  }
   const wallet = (account: Address) => createWalletClient({ account, transport: http(fork.rpcUrl) });
   const chainId = BigInt(await publicClient.getChainId());
   let circuitId: Hex | undefined;
@@ -92,10 +139,82 @@ export async function createConcreteForkAdapter(config: ConcreteForkConfig): Pro
   return adapter;
 }
 
-export async function createAnvilShannonFork(rpcUrl: string, block: bigint, port = 8545): Promise<ForkHandle & { close: () => Promise<void> }> {
-  const child: ChildProcess = spawn("anvil", ["--fork-url", rpcUrl, "--fork-block-number", block.toString(), "--port", String(port), "--silent"], { stdio: "ignore" });
-  const local = `http://127.0.0.1:${port}`;
-  try { for (let i = 0; i < 30; i++) { try { const c = createPublicClient({ transport: http(local) }); if ((await c.getBlockNumber()) === block) break; } catch {} await new Promise((resolve) => setTimeout(resolve, 200)); } const c = createPublicClient({ transport: http(local) }); const actual = await c.getBlockNumber(); if (actual !== block) throw new Error(`FORK_BLOCK_MISMATCH:expected=${block}:actual=${actual}`); }
-  catch (error) { child.kill("SIGTERM"); throw error; }
-  return { block, rpcUrl: local, simulationOnly: true, close: async () => { if (!child.killed) { child.kill("SIGTERM"); await new Promise<void>((resolve) => { child.once("exit", () => resolve()); setTimeout(resolve, 1000); }); } } };
+function hexNumber(value: bigint): string { return `0x${value.toString(16)}`; }
+function blockIdentity(value: any): { number: bigint; hash: string; timestamp: bigint } {
+  if (!value?.number || !value?.hash || value.timestamp == null) throw new Error("historical block response missing identity");
+  return { number: BigInt(value.number), hash: String(value.hash), timestamp: BigInt(value.timestamp) };
+}
+export function verifyForkIdentity(upstream: { number: bigint; hash: string; timestamp: bigint }, actual: { number: bigint; hash: string; timestamp: bigint }, chainId: bigint): void {
+  if (chainId !== 50312n || actual.number !== upstream.number || actual.hash.toLowerCase() !== upstream.hash.toLowerCase() || actual.timestamp !== upstream.timestamp) throw new ForkIsolationError(FORK_IDENTITY_MISMATCH, `expected ${upstream.number}/${upstream.hash}/${upstream.timestamp}, got ${chainId}/${actual.number}/${actual.hash}/${actual.timestamp}`);
+}
+function closeChild(child: ChildProcess): Promise<void> {
+  return new Promise((resolve) => {
+    if (child.exitCode != null || child.signalCode != null) return resolve();
+    let done = false;
+    const finish = () => { if (!done) { done = true; clearTimeout(timer); resolve(); } };
+    const timer = setTimeout(() => { if (child.exitCode == null && child.signalCode == null) child.kill("SIGKILL"); finish(); }, 2000);
+    child.once("exit", finish);
+    child.kill("SIGTERM");
+  });
+}
+
+/** Starts one isolated child and never adopts an already-running Anvil endpoint. */
+export async function createAnvilShannonFork(rpcUrl: string, block: bigint, requestedPort?: number, options?: { registryAddress?: Address }): Promise<ForkHandle & { close: () => Promise<void>; evidence: ForkEvidence }> {
+  const forkRunId = randomUUID();
+  const upstreamTag = hexNumber(block);
+  let upstreamRaw: any;
+  let upstreamRegistryCode = "";
+  let upstreamRftRegistry = "";
+  try {
+    upstreamRaw = await rpc(rpcUrl, "eth_getBlockByNumber", [upstreamTag, false]);
+    if (!upstreamRaw) throw new Error("block unavailable");
+    const upstream = blockIdentity(upstreamRaw);
+    if (upstream.number !== block) throw new Error(`number=${upstream.number}`);
+    if (options?.registryAddress) {
+      upstreamRegistryCode = await rpc(rpcUrl, "eth_getCode", [options.registryAddress, upstreamTag]);
+      if (!upstreamRegistryCode || upstreamRegistryCode === "0x") throw new Error("RegistryV2 code unavailable");
+      const selector = keccak256(stringToHex("rftRegistry()" as string)).slice(0, 10);
+      const result = await rpc(rpcUrl, "eth_call", [{ to: options.registryAddress, data: selector }, upstreamTag]);
+      if (typeof result !== "string" || result.length < 42) throw new Error("rftRegistry unavailable");
+      upstreamRftRegistry = `0x${result.slice(-40)}`;
+    }
+  } catch (error) {
+    throw new ForkIsolationError(UPSTREAM_HISTORICAL_STATE_UNAVAILABLE, String(error));
+  }
+  const upstream = blockIdentity(upstreamRaw);
+  const allocation = await allocateUnusedLocalhostPort();
+  const port = allocation.port;
+  const args = ["--fork-url", rpcUrl, "--fork-block-number", block.toString(), "--port", String(port), "--silent"];
+  let version = "unknown";
+  try { version = (await execFileAsync("anvil", ["--version"])).stdout.trim(); } catch { /* startup evidence retains unknown version */ }
+  await allocation.release();
+  const child: ChildProcess = spawn("anvil", args, { stdio: ["ignore", "pipe", "pipe"] });
+  const pid = child.pid;
+  if (!pid) throw new ForkIsolationError(FORK_PROCESS_START_FAILED, "child has no pid");
+  let stdout = ""; let stderr = "";
+  child.stdout?.on("data", (chunk) => { stdout += String(chunk); });
+  child.stderr?.on("data", (chunk) => { stderr += String(chunk); });
+  const evidence: ForkEvidence = { forkRunId, pid, args, port, rpcUrl: `http://127.0.0.1:${port}`, anvilVersion: version, stdout, stderr, upstream, upstreamRegistryCode, upstreamRftRegistry };
+  const local = evidence.rpcUrl;
+  const fail = async (code: typeof FORK_PROCESS_START_FAILED | typeof FORK_IDENTITY_MISMATCH, message: string): Promise<never> => { await closeChild(child); evidence.stdout = stdout; evidence.stderr = stderr; throw new ForkIsolationError(code, message, evidence); };
+  try {
+    const client = createPublicClient({ transport: http(local) });
+    let actual: { number: bigint; hash: string; timestamp: bigint } | undefined;
+    for (let i = 0; i < 100; i++) {
+      if (child.exitCode != null || child.signalCode != null) await fail(FORK_PROCESS_START_FAILED, `child exited pid=${pid}`);
+      try { actual = blockIdentity(await rpc(local, "eth_getBlockByNumber", ["latest", false])); break; } catch { await new Promise((resolve) => setTimeout(resolve, 100)); }
+    }
+    if (!actual) { await fail(FORK_PROCESS_START_FAILED, "owned RPC did not become ready"); return undefined as never; }
+    const observed: { number: bigint; hash: string; timestamp: bigint } = actual;
+    const chainId = BigInt(await client.getChainId());
+    evidence.actual = { ...observed, chainId };
+    try { verifyForkIdentity(upstream, observed, chainId); } catch (error) { await fail(FORK_IDENTITY_MISMATCH, (error as Error).message); }
+  } catch (error) {
+    await closeChild(child);
+    evidence.stdout = stdout; evidence.stderr = stderr;
+    if (error instanceof ForkIsolationError) throw error;
+    throw new ForkIsolationError(FORK_PROCESS_START_FAILED, String(error), evidence);
+  }
+  const close: () => Promise<void> = async () => { await closeChild(child); evidence.stdout = stdout; evidence.stderr = stderr; }; // close: async lifecycle hook
+  return { block, rpcUrl: local, simulationOnly: true, close, evidence };
 }

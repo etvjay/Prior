@@ -1,7 +1,3 @@
-import { spawn } from "node:child_process";
-import { once } from "node:events";
-import { createPublicClient, http, type Address } from "viem";
-
 export const GAS_REASON_CODES = {
   FORK_CREATION_FAILED: "FORK_CREATION_FAILED",
   MISSING_DEPLOYED_CODE: "MISSING_DEPLOYED_CODE",
@@ -86,7 +82,7 @@ function argsFor(step: LifecycleWrite, input: GasEstimationInput): unknown[] {
 }
 
 /** Executes only on an adapter-backed Shannon fork. It never imports keys or broadcasts. */
-export async function estimateZeroActionLifecycle(input: GasEstimationInput): Promise<GasEstimationResult> {
+async function estimateZeroActionLifecycleUnsafe(input: GasEstimationInput): Promise<GasEstimationResult> {
   let fork: ForkHandle;
   try { fork = await input.adapter.createFork(); } catch (e) { return noopResult({ code: GAS_REASON_CODES.FORK_CREATION_FAILED, phase: "fork", detail: String(e) }); }
   if (!fork.simulationOnly) return noopResult({ code: GAS_REASON_CODES.FORK_CREATION_FAILED, phase: "fork", detail: "fork was not classified simulation-only" });
@@ -126,6 +122,13 @@ export async function estimateZeroActionLifecycle(input: GasEstimationInput): Pr
   return finishSuccess(fork, operations, ownerFundingWei, gasPrice, buyUp, buyDown);
 }
 
+/** The fork is an owned process resource; close it on every normal lifecycle outcome. */
+export async function estimateZeroActionLifecycle(input: GasEstimationInput): Promise<GasEstimationResult> {
+  const result = await estimateZeroActionLifecycleUnsafe(input);
+  await result.fork?.close?.();
+  return result;
+}
+
 function finishSuccess(fork: ForkHandle, operations: GasOperation[], ownerFundingWei: bigint, gasPrice: bigint, buyUp: any, buyDown: any): GasEstimationResult {
   const total = operations.reduce((n, o) => n + o.costWei, 0n); const conservative = operations.reduce((n, o) => n + o.ceilingGas * gasPrice, 0n);
   const funding = { ownerNativeWei: ownerFundingWei.toString(), forecasterNativeWei: "0" as const, totalGasWei: total.toString(), conservativeTotalWei: conservative.toString() };
@@ -134,12 +137,4 @@ function finishSuccess(fork: ForkHandle, operations: GasOperation[], ownerFundin
 function finishFailure(fork: ForkHandle, operations: GasOperation[], ownerFundingWei: bigint, code: GasReasonCode, phase: string, detail?: string): GasEstimationResult {
   const funding = { ownerNativeWei: ownerFundingWei.toString(), forecasterNativeWei: "0" as const, totalGasWei: operations.reduce((n, o) => n + o.costWei, 0n).toString(), conservativeTotalWei: "0" };
   const failure = { code, phase, detail }; return { status: "BLOCKED_GAS_ESTIMATION_FAILED", classification: "FORK_SIMULATION_ONLY", fork, operations, funding, zeroAction: { buyUp: { reverted: false }, buyDown: { reverted: false }, budgeted: false }, phaseB: { status: "UNRESOLVED", operations: [], note: "Phase B is post-resolution fresh-estimate-only; no success is inferred." }, failure, packet: { schemaVersion: "M4.3.5A.v1", evidenceClass: "FORK_SIMULATION_ONLY", chainWrites: false, broadcast: false, gas: operations, funding, failure } };
-}
-
-/** Best-effort Anvil launcher used by the live gate; code verification remains mandatory. */
-export async function createAnvilShannonFork(rpcUrl: string, block: bigint, port = 8545): Promise<ForkHandle> {
-  const child = spawn("anvil", ["--fork-url", rpcUrl, "--fork-block-number", block.toString(), "--port", String(port), "--silent"], { stdio: "ignore" });
-  await new Promise((resolve, reject) => { const timer = setTimeout(resolve, 3000); child.once("error", (e) => { clearTimeout(timer); reject(e); }); });
-  const rpc = `http://127.0.0.1:${port}`; const client = createPublicClient({ transport: http(rpc) }); await client.getBlockNumber();
-  return { block, rpcUrl: rpc, simulationOnly: true };
 }
