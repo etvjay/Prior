@@ -23,7 +23,7 @@ function marketId(n: number): string {
 
 function makeProbe(
   id: string,
-  asset: "BTC" | "ETH",
+  asset: string,
   intervalSec: number,
   remainingSec: number,
   overrides: Partial<CandidateProbe> = {},
@@ -112,7 +112,7 @@ describe("M4.3.2B live gate decision", () => {
   it("blocks with candidatesObserved when BTC and ETH are absent", () => {
     const evidence = evaluateLiveGate(input([]));
 
-    expect(evidence.status).toBe("BLOCKED_NO_ELIGIBLE_LIVE_MARKET");
+    expect(evidence.status).toBe("NO_LIVE_COMPATIBLE_MARKET");
     expect(evidence.discovery.candidatesObserved).toEqual([]);
     expect(evidence.selection.selectedMarketId).toBeNull();
     expect(evidence.packet).toBeNull();
@@ -126,7 +126,7 @@ describe("M4.3.2B live gate decision", () => {
     ];
     const evidence = evaluateLiveGate(input(probes));
 
-    expect(evidence.status).toBe("BLOCKED_NO_ELIGIBLE_LIVE_MARKET");
+    expect(evidence.status).toBe("LIVE_MARKETS_FOUND_NONE_PROOF_ELIGIBLE");
     expect(evidence.discovery.candidatesObserved).toHaveLength(3);
     expect(evidence.discovery.candidatesObserved.every((c) => c.decision === "REJECTED")).toBe(true);
     expect(evidence.discovery.candidatesObserved.map((c) => c.rejectionCodes)).toEqual([
@@ -184,7 +184,7 @@ describe("M4.3.2B live gate decision", () => {
     });
     const evidence = evaluateLiveGate(input([stale, listed]));
 
-    expect(evidence.status).toBe("BLOCKED_NO_ELIGIBLE_LIVE_MARKET");
+    expect(evidence.status).toBe("NO_LIVE_COMPATIBLE_MARKET");
     expect(evidence.discovery.candidatesObserved.map((c) => c.rejectionCodes)).toEqual([
       ["EXPIRED"],
       ["ONCHAIN_NOT_TRADING"],
@@ -196,10 +196,67 @@ describe("M4.3.2B live gate decision", () => {
       book: { ok: true, quoteDecimals: 6, oneCollateralRaw: "1000000", tickSizeRaw: "1000", lotSizeRaw: "1000", minQuantityRaw: "1000", bestBidRaw: null, bestAskRaw: null },
     })]));
 
-    expect(evidence.status).toBe("READY_FOR_BOUNDED_LIVE_WRITE");
-    expect(evidence.packet?.market.reference.referenceUnavailable).toBe(true);
-    expect(evidence.packet?.market.reference.referenceValid).toBe(false);
-    expect(evidence.packet?.market.reference.referenceRaw).toBeNull();
+    expect(evidence.status).toBe("LIVE_MARKETS_FOUND_NONE_PROOF_ELIGIBLE");
+    expect(evidence.discovery.candidatesObserved[0]?.compatible).toBe(true);
+    expect(evidence.discovery.candidatesObserved[0]?.proofEligible).toBe(false);
+    expect(evidence.discovery.candidatesObserved[0]?.rejectionCodes).toContain("REFERENCE_UNAVAILABLE");
+    expect(evidence.packet).toBeNull();
+  });
+
+  it("does not let the first 40 stale rows hide a later live candidate", () => {
+    const stale = Array.from({ length: 40 }, (_, i) => makeProbe(marketId(100 + i), "BTC", 3600, 0));
+    const live = makeProbe(marketId(999), "SOL", 777, 8000);
+    const evidence = evaluateLiveGate(input([...stale, live]));
+
+    expect(evidence.discovery.candidatesObserved.some((c) => c.marketId === marketId(999))).toBe(true);
+    expect(evidence.discovery.candidatesObserved.find((c) => c.marketId === marketId(999))?.compatible).toBe(true);
+  });
+
+  it("keeps a fallback live market visible when indexer rows are incomplete", () => {
+    const evidence = evaluateLiveGate({
+      ...input([]),
+      discoveryMeta: { incompleteIndexer: true, fallbackCandidates: 1 },
+      probes: [makeProbe(marketId(1000), "SOL", 777, 8000)],
+    });
+
+    expect(evidence.discovery.meta.fallbackCandidates).toBe(1);
+    expect(evidence.discovery.candidatesObserved[0]?.source).toBe("fixture");
+    expect(evidence.discovery.candidatesObserved[0]?.compatible).toBe(true);
+  });
+
+  it("does not reject a compatible non-BTC/ETH asset for compatibility", () => {
+    const evidence = evaluateLiveGate(input([makeProbe(marketId(1001), "SOL", 777, 8000)]));
+    const candidate = evidence.discovery.candidatesObserved[0];
+
+    expect(candidate?.compatible).toBe(true);
+    expect(candidate?.rejectionCodes).not.toContain("ASSET_NOT_ALLOWED");
+    expect(candidate?.proofEligible).toBe(true);
+  });
+
+  it("does not reject an unusual cadence for compatibility", () => {
+    const evidence = evaluateLiveGate(input([makeProbe(marketId(1002), "BTC", 777, 8000)]));
+    const candidate = evidence.discovery.candidatesObserved[0];
+
+    expect(candidate?.compatible).toBe(true);
+    expect(candidate?.rejectionCodes).not.toContain("CADENCE_NOT_ALLOWED");
+  });
+
+  it("separates compatibility from proof headroom", () => {
+    const evidence = evaluateLiveGate(input([makeProbe(marketId(1003), "BTC", 3600, 100)]));
+    const candidate = evidence.discovery.candidatesObserved[0];
+
+    expect(candidate?.compatible).toBe(true);
+    expect(candidate?.proofEligible).toBe(false);
+    expect(candidate?.rejectionCodes).toContain("HEADROOM_INSUFFICIENT");
+  });
+
+  it("reports incomplete discovery instead of claiming no live market", () => {
+    const evidence = evaluateLiveGate({
+      ...input([]),
+      discoveryMeta: { discoveryComplete: false, discoveryError: "INDEXER_TIMEOUT" },
+    });
+
+    expect(evidence.status).toBe("DISCOVERY_INCOMPLETE");
   });
 
   it("changes both predicted CREATE addresses when the fresh nonce changes", () => {
@@ -223,7 +280,7 @@ describe("M4.3.2B live gate decision", () => {
   it("never selects the historical preflight market", () => {
     const evidence = evaluateLiveGate(input([makeProbe(EXCLUDED_HISTORICAL_MARKET_ID, "BTC", 3600, 8000)]));
 
-    expect(evidence.status).toBe("BLOCKED_NO_ELIGIBLE_LIVE_MARKET");
+    expect(evidence.status).toBe("NO_LIVE_COMPATIBLE_MARKET");
     expect(evidence.selection.selectedMarketId).toBeNull();
     expect(evidence.discovery.candidatesObserved[0]?.rejectionCodes).toContain("HISTORICAL_EXCLUDED");
   });

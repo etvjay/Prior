@@ -21,13 +21,25 @@ async function main() {
   const head = await bounded(client.getBlock({ blockTag: "latest" }), "head");
   const block = Number(head.number);
   const timestamp = Number(head.timestamp);
-  process.stderr.write(`[live-gate] head=${block}, discovering BTC/ETH binary markets\n`);
+  process.stderr.write(`[live-gate] head=${block}, discovering binary markets (paged, current-first)\n`);
   let rows: any[] = [];
-  let discoveryMeta: Record<string, unknown> = { indexer: INDEXER, directValidation: true };
-  try { rows = await bounded((exchange as any).client.listBinaryMarkets({ limit: 100 }), "discovery"); }
-  catch (e) { discoveryMeta = { ...discoveryMeta, fatalCode: "BLOCKED_LIVE_READ_FAILED", discoveryError: (e as Error).message }; }
+  let discoveryMeta: Record<string, unknown> = { indexer: INDEXER, directValidation: true, discoveryComplete: false, fallbackSupported: false };
+  try {
+    const pageSize = 100;
+    for (let offset = 0; offset < 1_000 && Date.now() < deadline; offset += pageSize) {
+      const page: any[] = await bounded((exchange as any).client.listBinaryMarkets({ limit: pageSize, offset }), "discovery");
+      rows.push(...page);
+      if (page.length < pageSize) break;
+    }
+    // The installed SDK exposes the indexer list and on-chain market reads, but
+    // does not expose a supported MarketCreated ABI/getLogs discovery surface.
+    // Do not claim exhaustive discovery until a supported fallback is available.
+    discoveryMeta = { ...discoveryMeta, rowsReturned: rows.length, discoveryComplete: false, discoveryError: "MARKET_CREATED_LOG_FALLBACK_UNAVAILABLE_IN_SDK" };
+  }
+  catch (e) { discoveryMeta = { ...discoveryMeta, fatalCode: "DISCOVERY_FAILED", discoveryError: (e as Error).message }; }
+  const dedupedRows = [...new Map(rows.map((row) => [String(row.marketId ?? row.id ?? "").toLowerCase(), row])).values()];
   const probes: CandidateProbe[] = [];
-  for (const row of rows.slice(0, 40)) {
+  for (const row of dedupedRows) {
     const marketId = String(row.marketId ?? row.id ?? "") as Hex;
     if (!/^0x[\da-f]{64}$/i.test(marketId)) continue;
     const asset = row.asset == null ? null : String(row.asset).toUpperCase();

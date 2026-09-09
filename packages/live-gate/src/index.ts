@@ -50,6 +50,11 @@ export const MARKET_CLASS_BY_ASSET_CADENCE: Readonly<Record<string, number>> = {
 
 export type GateStatus =
   | "READY_FOR_BOUNDED_LIVE_WRITE"
+  | "COMPATIBLE_MARKET_REQUIRES_AUTHORIZATION"
+  | "LIVE_MARKETS_FOUND_NONE_PROOF_ELIGIBLE"
+  | "NO_LIVE_COMPATIBLE_MARKET"
+  | "DISCOVERY_INCOMPLETE"
+  | "DISCOVERY_FAILED"
   | "BLOCKED_NO_ELIGIBLE_LIVE_MARKET"
   | "BLOCKED_GAS_ESTIMATION_FAILED"
   | "BLOCKED_OWNER_NONCE_READ_FAILED"
@@ -177,6 +182,10 @@ export interface ReferenceEvidence {
 
 export interface CandidateEvidence extends DiscoveredCandidate {
   decision: "SELECTED" | "REJECTED";
+  compatible: boolean;
+  proofEligible: boolean;
+  compatibilityReasons: string[];
+  proofEligibilityReasons: string[];
   rejectionCodes: string[];
   direct: DirectMarketRead;
   remainingSec: number | null;
@@ -269,6 +278,7 @@ export interface LiveGateEvidence {
   discovery: {
     sourceHierarchy: ["DIRECT_CHAIN_READS", "PINNED_SDK_ABI_TYPES", "INDEXER_ASSISTANCE", "MARKET_CREATED_LOG_FALLBACK"];
     candidatesObserved: CandidateEvidence[];
+    counts: { discoverable: number; compatible: number; proofEligible: number };
     meta: Record<string, unknown>;
   };
   selection: {
@@ -483,15 +493,7 @@ export function evaluateLiveGate(input: GateEvaluationInput): LiveGateEvidence {
       rejectionCodes.push("HISTORICAL_EXCLUDED");
     }
     if (discovered.marketType.toUpperCase() !== "BINARY") rejectionCodes.push("NOT_BINARY");
-    if (discovered.asset == null || !["BTC", "ETH"].includes(discovered.asset.toUpperCase())) {
-      rejectionCodes.push("ASSET_NOT_ALLOWED");
-    }
-    if (discovered.intervalSec == null || ![60, 300, 900, 3600, 14400].includes(discovered.intervalSec)) {
-      rejectionCodes.push("CADENCE_NOT_ALLOWED");
-    }
-    if (priority == null && !rejectionCodes.includes("CADENCE_NOT_ALLOWED")) {
-      rejectionCodes.push("PRIORITY_UNMAPPED");
-    }
+    const proofEligibilityReasons: string[] = [];
     if (!direct.ok) {
       rejectionCodes.push("DIRECT_READ_FAILED");
     } else {
@@ -512,14 +514,23 @@ export function evaluateLiveGate(input: GateEvaluationInput): LiveGateEvidence {
     if (remainingSec != null && remainingSec < 0 && !rejectionCodes.includes("EXPIRED")) {
       rejectionCodes.push("EXPIRED");
     }
+    const compatibilityReasons: string[] = [...rejectionCodes];
     if (required != null && remainingSec != null && remainingSec > 0 && remainingSec < required) {
-      rejectionCodes.push("HEADROOM_INSUFFICIENT");
+      proofEligibilityReasons.push("HEADROOM_INSUFFICIENT");
     }
+    const reference = deriveBookReference(probe.book);
+    if (!reference.referenceValid) proofEligibilityReasons.push("REFERENCE_UNAVAILABLE");
     const dedupedRejections = [...new Set(rejectionCodes)];
+    const compatible = compatibilityReasons.length === 0;
+    const proofEligible = compatible && proofEligibilityReasons.length === 0;
     records.push({
       ...discovered,
-      decision: dedupedRejections.length === 0 ? "SELECTED" : "REJECTED",
-      rejectionCodes: dedupedRejections,
+      decision: proofEligible ? "SELECTED" : "REJECTED",
+      rejectionCodes: [...new Set([...dedupedRejections, ...proofEligibilityReasons])],
+      compatible,
+      proofEligible,
+      compatibilityReasons: [...new Set(compatibilityReasons)],
+      proofEligibilityReasons: [...new Set(proofEligibilityReasons)],
       direct,
       remainingSec,
       requiredHeadroomSec: required,
@@ -571,16 +582,38 @@ export function evaluateLiveGate(input: GateEvaluationInput): LiveGateEvidence {
     discovery: {
       sourceHierarchy: ["DIRECT_CHAIN_READS", "PINNED_SDK_ABI_TYPES", "INDEXER_ASSISTANCE", "MARKET_CREATED_LOG_FALLBACK"],
       candidatesObserved: records,
+      counts: {
+        discoverable: records.length,
+        compatible: records.filter((record) => record.compatible).length,
+        proofEligible: records.filter((record) => record.proofEligible).length,
+      },
       meta: input.discoveryMeta ?? {},
     },
     profile,
     owner: ownerOutput,
   };
 
+  if (input.discoveryMeta?.discoveryComplete === false) {
+    const status: GateStatus = input.discoveryMeta.fatalCode === "DISCOVERY_FAILED" ? "DISCOVERY_FAILED" : "DISCOVERY_INCOMPLETE";
+    return {
+      ...base,
+      status,
+      blocker: status,
+      selection: { selectedMarketId: null, priorityLabel: null, reason: "Discovery did not complete with a supported paginated indexer plus MarketCreated-log fallback; no exhaustive market claim was inferred." },
+      packet: null,
+      gas: null,
+      evidenceCeiling: "SHANNON_READ_VERIFIED",
+    };
+  }
+
   if (selected == null) {
     const status: GateStatus = input.discoveryMeta?.fatalCode === "BLOCKED_LIVE_READ_FAILED"
-      ? "BLOCKED_LIVE_READ_FAILED"
-      : chooseBlocker(records);
+      ? "DISCOVERY_FAILED"
+      : input.discoveryMeta?.discoveryComplete === false
+        ? "DISCOVERY_INCOMPLETE"
+        : records.some((r) => r.compatible)
+          ? "LIVE_MARKETS_FOUND_NONE_PROOF_ELIGIBLE"
+          : "NO_LIVE_COMPATIBLE_MARKET";
     return {
       ...base,
       status,
@@ -588,9 +621,11 @@ export function evaluateLiveGate(input: GateEvaluationInput): LiveGateEvidence {
       selection: {
         selectedMarketId: null,
         priorityLabel: null,
-        reason: status === "BLOCKED_LIVE_READ_FAILED"
+        reason: status === "DISCOVERY_FAILED" || status === "DISCOVERY_INCOMPLETE"
           ? "The configured discovery/read sources did not complete; no market claim was inferred."
-          : "No candidate passed direct binding, Trading status, allowed asset/cadence, historical exclusion, and profile headroom gates.",
+          : status === "LIVE_MARKETS_FOUND_NONE_PROOF_ELIGIBLE"
+            ? "Compatible live markets were found, but none passed the proof-eligibility profile gates."
+            : "No candidate passed direct binding, Trading status, expiry, and market identity gates.",
       },
       packet: null,
       gas: null,
@@ -617,6 +652,17 @@ export function evaluateLiveGate(input: GateEvaluationInput): LiveGateEvidence {
   const selectedProbe = unique.get(normalizeId(selected.marketId));
   if (!selectedProbe) throw new Error(`selected probe missing for ${selected.marketId}`);
   const reference = deriveBookReference(selectedProbe.book);
+  if (selected.priorityLabel == null) {
+    return {
+      ...base,
+      status: "COMPATIBLE_MARKET_REQUIRES_AUTHORIZATION",
+      blocker: "MARKET_CLASS_UNMAPPED",
+      selection: { selectedMarketId: selected.marketId, priorityLabel: null, reason: "A compatible proof-eligible market was found, but its asset/cadence has no deployed Circuit market class mapping." },
+      packet: null,
+      gas: null,
+      evidenceCeiling: "SHANNON_READ_VERIFIED",
+    };
+  }
   const classInfo = marketClassFor(selected.asset as string, selected.intervalSec as number);
   const startsAt = selected.tradingStartSec;
   const expiresAt = selected.direct.expirySec ?? selected.expirySec;
