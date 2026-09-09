@@ -28,7 +28,7 @@ export type GasOperation = {
   gasPriceWei: bigint;
   costWei: bigint;
 };
-export type ForkHandle = { block: bigint; rpcUrl: string; simulationOnly: true };
+export type ForkHandle = { block: bigint; rpcUrl: string; simulationOnly: true; close?: () => Promise<void> };
 export type ForkLifecycleAdapter = {
   calls?: string[];
   createFork(): Promise<ForkHandle>;
@@ -98,7 +98,7 @@ export async function estimateZeroActionLifecycle(input: GasEstimationInput): Pr
   if (gasPrice == null || gasPrice <= 0n) return noopResult({ code: GAS_REASON_CODES.GAS_PRICE_UNAVAILABLE, phase: "gas-price" });
   const ownerFundingWei = input.ownerFundingWei ?? 1_000_000_000_000_000_000n;
   if (ownerFundingWei <= 0n) return noopResult({ code: GAS_REASON_CODES.FORK_CREATION_FAILED, phase: "owner-funding", detail: "owner requires non-zero fork-only native balance" });
-  try { await input.adapter.setBalance(input.owner, ownerFundingWei); await input.adapter.setBalance(input.forecaster, 0n); await input.adapter.impersonate(input.owner); await input.adapter.impersonate(input.forecaster); }
+  try { await input.adapter.setBalance(input.owner, ownerFundingWei); await input.adapter.impersonate(input.owner); await input.adapter.impersonate(input.forecaster); }
   catch (e) { return noopResult({ code: GAS_REASON_CODES.FORK_CREATION_FAILED, phase: "impersonation-or-funding", detail: String(e) }); }
   const operations: GasOperation[] = [];
   const completed = new Set<LifecycleWrite>();
