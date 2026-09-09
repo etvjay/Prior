@@ -1,0 +1,11 @@
+{
+  "milestone": "M4.3.4",
+  "classification": "LOCAL_READINESS",
+  "liveExternalEvidence": "BLOCKED_EXTERNAL",
+  "settlementSource": "BinaryMarketsModule.markets + BinarySettlement.isFinalized/getSettlement",
+  "statuses": ["NOT_STARTED", "SUBMITTED", "CONFIRMED", "ALREADY_CANONICAL", "CONFLICT", "FAILED"],
+  "broadcasts": false,
+  "deploymentMetadataChanged": false,
+  "secretsInCheckpoints": false,
+  "limitations": ["No eligible market/scoped live credentials supplied", "No live lifecycle evidence produced"]
+}

@@ -1,5 +1,7 @@
 import type { TrialId } from "@prior/core";
 import type { ForecastRequestWire, ForecastSubmissionWire } from "@prior/forecast-protocol";
+import { canonicalSettlementFromReads, binarySettlementReadAbi } from "@prior/dreamdex";
+import { parseEventLogs } from "viem";
 
 type ForecastProviderClient = {
   readonly getForecastRequest: () => Promise<ForecastRequestWire>;
@@ -81,6 +83,36 @@ export class DreamDexSettlementReader {
     if (value.source !== "dreamdex") throw new Error("settlement source is not DreamDEX");
     if (!value.finalized && value.outcome !== null) throw new Error("unfinalized settlement has outcome");
     if (value.finalized && !value.voided && value.outcome === null) throw new Error("finalized settlement missing outcome");
-    return { terminal: value.finalized, outcome: value.outcome, voided: value.voided, source: value.source };
+    return { terminal: value.finalized, outcome: value.outcome, voided: value.voided, source: "dreamdex" };
+  }
+}
+
+const binaryModuleReadAbi = [{type:"function",name:"markets",stateMutability:"view",inputs:[{name:"marketId",type:"bytes32"}],outputs:[{type:"uint256"},{type:"uint8"},{type:"uint8"},{type:"address"},{type:"uint32"},{type:"bytes32"},{type:"address"},{type:"address"},{type:"address"},{type:"address"},{type:"uint256"},{type:"uint256"},{type:"uint64"},{type:"uint64"}]}] as const;
+/** Direct Shannon reads: indexer lifecycle labels are never settlement truth. */
+export class CanonicalDreamDexSettlementReader {
+  constructor(private readonly d:{readonly publicClient:any;readonly binaryModule:Id;readonly settlement:Id}) {}
+  async observe(marketId:Id):Promise<SettlementObservation & {readonly state:string}> {
+    const m:any=await this.d.publicClient.readContract({address:this.d.binaryModule,abi:binaryModuleReadAbi,functionName:"markets",args:[marketId]});
+    const yesId=BigInt(m.yesId ?? m[10]), noId=BigInt(m.noId ?? m[11]);
+    const finalized=await this.d.publicClient.readContract({address:this.d.settlement,abi:binarySettlementReadAbi,functionName:"isFinalized",args:[yesId]});
+    const raw=finalized?await this.d.publicClient.readContract({address:this.d.settlement,abi:binarySettlementReadAbi,functionName:"getSettlement",args:[yesId>>8n]}):null;
+    const settlement=raw?{voided:Boolean(raw.voided ?? raw[3]),payoutNumerators:(raw.payoutNumerators ?? raw[8]).map((x:any)=>BigInt(x))}:null;
+    const result=canonicalSettlementFromReads({market:{yesId,noId,expiry:BigInt(m.expiry ?? m[13])},finalized:Boolean(finalized),settlement});
+    return {terminal:result.state==="RESOLVED_UP"||result.state==="RESOLVED_DOWN"||result.state==="VOIDED",outcome:result.outcome,voided:result.voided,source:"dreamdex",state:result.state};
+  }
+}
+
+export type ReceiptExpectation={readonly contract:Id;readonly event:string;readonly identity:readonly unknown[];readonly identityFields?:readonly string[]};
+/** Read-only receipt verifier requiring success, target contract, event and identity. */
+export class CanonicalReceiptReader {
+  constructor(private readonly client:any) {}
+  async read(hash:Id, expectation:ReceiptExpectation, eventAbi:readonly unknown[]):Promise<ReceiptObservation>{
+    const receipt=await this.client.getTransactionReceipt({hash});
+    if(receipt.status!=="success") return {status:"FAILED",txHash:hash};
+    const logs=(receipt.logs??[]).filter((l:any)=>l.address?.toLowerCase()===expectation.contract.toLowerCase());
+    let parsed:any[]=[];
+    try { parsed=parseEventLogs({abi:eventAbi as any,logs:logs as any,strict:true}) as any[]; } catch { return {status:"UNKNOWN"}; }
+    const matching=parsed.some((l:any)=>l.eventName===expectation.event && expectation.identity.every((v:any,i)=>String(l.args?.[expectation.identityFields?.[i]??i]??"").toLowerCase()===String(v).toLowerCase()));
+    return matching?{status:"CONFIRMED",txHash:hash}:{status:"UNKNOWN"};
   }
 }

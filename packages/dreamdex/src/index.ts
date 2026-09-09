@@ -225,3 +225,26 @@ function classify(asset: string, intervalSec: number): MarketClass {
 }
 
 export const _internals = { classify };
+
+/** Exact BinaryMarketsModule + BinarySettlement read projection used by RFT finalization. */
+export type CanonicalSettlementState = "TRADING" | "RESOLVED_UP" | "RESOLVED_DOWN" | "VOIDED" | "INCOMPLETE" | "CONFLICT";
+export type CanonicalSettlement = { readonly state: CanonicalSettlementState; readonly outcome: "UP" | "DOWN" | null; readonly voided: boolean };
+export function canonicalSettlementFromReads(input: {
+  readonly market: { readonly yesId: bigint; readonly noId: bigint; readonly expiry: bigint };
+  readonly finalized: boolean;
+  readonly settlement: { readonly voided: boolean; readonly payoutNumerators: readonly bigint[] } | null;
+}): CanonicalSettlement {
+  if (!input.finalized && input.settlement !== null) return { state: "CONFLICT", outcome: null, voided: false };
+  if (!input.finalized) return { state: "TRADING", outcome: null, voided: false };
+  const s = input.settlement;
+  if (!s || s.payoutNumerators.length < 2) return { state: "INCOMPLETE", outcome: null, voided: false };
+  if (s.voided) return { state: "VOIDED", outcome: null, voided: true };
+  if (s.payoutNumerators[0] === s.payoutNumerators[1]) return { state: "CONFLICT", outcome: null, voided: false };
+  const up = s.payoutNumerators[0] > s.payoutNumerators[1];
+  return { state: up ? "RESOLVED_UP" : "RESOLVED_DOWN", outcome: up ? "UP" : "DOWN", voided: false };
+}
+
+export const binarySettlementReadAbi = [
+  { type: "function", name: "isFinalized", stateMutability: "view", inputs: [{ name: "outcomeId", type: "uint256" }], outputs: [{ type: "bool" }] },
+  { type: "function", name: "getSettlement", stateMutability: "view", inputs: [{ name: "marketKey", type: "uint256" }], outputs: [{ type: "tuple", components: [{ name: "collateralToken", type: "address" }, { name: "backing", type: "uint128" }, { name: "finalized", type: "bool" }, { name: "voided", type: "bool" }, { name: "settlementFeeBpsTimes1k", type: "uint256" }, { name: "feeRecipient", type: "address" }, { name: "pool", type: "address" }, { name: "nonce", type: "uint64" }, { name: "payoutNumerators", type: "uint256[]" }] }] }
+] as const;

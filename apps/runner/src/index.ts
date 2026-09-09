@@ -5,7 +5,7 @@ import { DreamDexAdapter } from "@prior/dreamdex";
 import { FixtureProviderAClient, type ForecastProviderClient } from "@prior/forecast-agent";
 import { RunnerCheckpoint } from "./checkpoint.js";
 import { RunnerBlockedError, RunnerWorkflow, type RunnerWorkflowDeps, type RunnerCircuit, type RunnerMarket } from "./workflow.js";
-import { DreamDexSettlementReader, ExternalForecastGateway, CircuitControlGateway, ReceiptReconciler, type Id } from "./adapters.js";
+import { DreamDexSettlementReader, CanonicalDreamDexSettlementReader, ExternalForecastGateway, CircuitControlGateway, ReceiptReconciler, type Id } from "./adapters.js";
 import type { ForecastRequestWire, ForecastSubmissionWire } from "@prior/forecast-protocol";
 
 const circuitAbi = [{type:"function",name:"intents",stateMutability:"view",inputs:[{name:"id",type:"bytes32"}],outputs:[{type:"tuple",components:[{type:"bytes32",name:"circuitId"},{type:"address",name:"owner"},{type:"address",name:"forecaster"},{type:"uint8",name:"marketClass"},{type:"uint16",name:"targetWindows"},{type:"uint128",name:"totalBudget"},{type:"uint128",name:"maxPerMarket"},{type:"uint16",name:"minMarginBps"},{type:"uint8",name:"maxConsecutiveLosses"},{type:"uint64",name:"startsAt"},{type:"uint64",name:"expiresAt"},{type:"uint256",name:"allowedActionsBitmap"}]}]},{type:"function",name:"runtime",stateMutability:"view",inputs:[{name:"id",type:"bytes32"}],outputs:[{type:"tuple",components:[{type:"uint8",name:"status"},{type:"uint16",name:"completed"},{type:"uint16",name:"missed"},{type:"uint16",name:"abstained"},{type:"uint8",name:"consecutiveLosses"},{type:"uint128",name:"reservedSpend"}]}]}] as const;
@@ -43,13 +43,12 @@ export function buildRunnerWorkflow(options: Options = {}): RunnerWorkflow {
     },
   } : undefined;
   const forecastGateway = provider ? (options.buildSubmission ? new ExternalForecastGateway({ provider, buildSubmission: options.buildSubmission, commit: options.commitForecast ?? (() => external("RFT commit")) }) : { commit: async () => external("forecast submission signer") }) : undefined;
-  const settlement = new DreamDexSettlementReader(async (marketId: Id) => {
-    const found = (await adapter.listRecentMarkets(100)).find((market) => market.marketId === marketId);
-    if (!found) throw new RunnerBlockedError("DEPENDENCY_FAILURE", "DreamDEX market not found");
-    if (found.lifecycle === "Voided") return { finalized: true, voided: true, outcome: null, source: "dreamdex" as const };
-    if (found.lifecycle === "Resolved") throw new RunnerBlockedError("BLOCKED_EXTERNAL", "DreamDEX outcome read is unavailable from the verified adapter");
-    return { finalized: false, voided: false, outcome: null, source: "dreamdex" as const };
+  const canonicalSettlement = new CanonicalDreamDexSettlementReader({
+    publicClient: adapter.publicClient,
+    binaryModule: (process.env.DREAMDEX_BINARY_MODULE ?? "0x3ecC694Cef705358864a646142ac17A90E29e388") as Id,
+    settlement: (process.env.DREAMDEX_BINARY_SETTLEMENT ?? "0xbF4a49e0Dfd092e5FBE8E5761064C49533e6Ed23") as Id,
   });
+  const settlement = canonicalSettlement;
   const ownerGateway = new CircuitControlGateway({ bindTrial: options.bindTrial ?? (() => external("Circuit bindTrial")), advance: options.advanceCircuit ?? (() => external("Circuit advance")) });
   return new RunnerWorkflow({
     checkpoint,

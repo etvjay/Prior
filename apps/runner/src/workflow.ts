@@ -25,6 +25,12 @@ export interface RunnerWorkflowDeps {
   readonly markets: { discover(circuit: RunnerCircuit): Promise<RunnerMarket | null> };
   readonly forecast?: { obtain(market: RunnerMarket, circuit: RunnerCircuit): Promise<RunnerForecast> };
   readonly forecastGateway?: { commit(forecast: RunnerForecast, market: RunnerMarket, circuit: RunnerCircuit): Promise<{ trialId: TrialId }> };
+  /** Canonical reads used before each write; absent only for legacy fixture composition. */
+  readonly canonical?: {
+    trialFor?(market: RunnerMarket, circuit: RunnerCircuit): Promise<TrialId | null>;
+    getTrial?(trialId: TrialId): Promise<{ readonly marketId: string; readonly status: number; readonly forecaster?: string }>;
+    getIteration?(circuit: RunnerCircuit, market: RunnerMarket): Promise<{ readonly bound: boolean; readonly processed: boolean; readonly trialId: TrialId }>;
+  };
   readonly policy: { evaluate(forecast: RunnerForecast, market: RunnerMarket, circuit: RunnerCircuit): Promise<RunnerPolicy> };
   readonly execution?: { submit(policy: Exclude<RunnerPolicy, { kind: "ABSTAIN" }>, market: RunnerMarket, circuit: RunnerCircuit): Promise<{ executionId: `0x${string}` }> };
   readonly receipts?: { observe(id: string): Promise<RunnerReceipt> };
@@ -65,17 +71,23 @@ export class RunnerWorkflow {
     let forecast: RunnerForecast;
     if (!item.forecastTrialId) {
       forecast = await d.forecast.obtain(market, circuit);
-      item = await save(d, item, "FORECAST_COMMITTING");
-      let committed: { trialId: TrialId };
-      try {
-        committed = await d.forecastGateway.commit(forecast, market, circuit);
-      } catch (cause) {
-        const result = blocked(cause);
-        if (result) return result;
-        throw cause;
+      // Reconcile the canonical forecaster×market identity before attempting a write.
+      const existing = d.canonical?.trialFor ? await d.canonical.trialFor(market, circuit) : null;
+      if (existing) {
+        item = await save(d, item, "FORECAST_COMMITTING", { forecastTrialId: existing });
+      } else {
+        item = await save(d, item, "FORECAST_COMMITTING");
+        let committed: { trialId: TrialId };
+        try {
+          committed = await d.forecastGateway.commit(forecast, market, circuit);
+        } catch (cause) {
+          const result = blocked(cause);
+          if (result) return result;
+          throw cause;
+        }
+        if (!committed?.trialId) return { kind: "BLOCKED", reason: "AMBIGUOUS_RECEIPT" };
+        item = await save(d, item, "FORECAST_COMMITTING", { forecastTrialId: committed.trialId });
       }
-      if (!committed?.trialId) return { kind: "BLOCKED", reason: "AMBIGUOUS_RECEIPT" };
-      item = await save(d, item, "FORECAST_COMMITTING", { forecastTrialId: committed.trialId });
     } else {
       forecast = await d.forecast.obtain(market, circuit);
     }
@@ -84,12 +96,16 @@ export class RunnerWorkflow {
     if (!trialId) return { kind: "BLOCKED", reason: "AMBIGUOUS_RECEIPT" };
     if (d.circuitGateway.bindTrial) {
       if (item.status === "FORECAST_COMMITTING") {
-        try {
-          await d.circuitGateway.bindTrial(circuit, market, trialId);
-        } catch (cause) {
-          const result = blocked(cause);
-          if (result) return result;
-          throw cause;
+        const iteration = d.canonical?.getIteration ? await d.canonical.getIteration(circuit, market) : null;
+        if (iteration?.processed) return { kind: "COMPLETED", circuitId: circuit.circuitId, marketId: market.marketId };
+        if (!iteration?.bound) {
+          try {
+            await d.circuitGateway.bindTrial(circuit, market, trialId);
+          } catch (cause) {
+            const result = blocked(cause);
+            if (result) return result;
+            throw cause;
+          }
         }
         item = await save(d, item, "POLICY_EVALUATING");
       }
@@ -115,20 +131,27 @@ export class RunnerWorkflow {
     const settlement = await d.settlement.observe(market);
     if (!settlement.terminal) return { kind: "BLOCKED", reason: "DEPENDENCY_FAILURE" };
     item = await save(d, item, "FINALIZING_RFT", item.executionId ? { executionId: item.executionId } : {});
-    try {
-      await d.rft.finalize(trialId, market);
-    } catch (cause) {
-      const result = blocked(cause);
-      if (result) return result;
-      throw cause;
+    const canonicalTrial = d.canonical?.getTrial ? await d.canonical.getTrial(trialId) : null;
+    if (canonicalTrial && canonicalTrial.marketId.toLowerCase() !== market.marketId.toLowerCase()) return { kind: "BLOCKED", reason: "DEPENDENCY_FAILURE" };
+    if (!canonicalTrial || canonicalTrial.status < 2) {
+      try {
+        await d.rft.finalize(trialId, market);
+      } catch (cause) {
+        const result = blocked(cause);
+        if (result) return result;
+        throw cause;
+      }
     }
     await save(d, item, "ITERATION_COMPLETE", item.executionId ? { executionId: item.executionId } : {});
-    try {
-      await d.circuitGateway.advance(circuit, market);
-    } catch (cause) {
-      const result = blocked(cause);
-      if (result) return result;
-      throw cause;
+    const processed = d.canonical?.getIteration ? (await d.canonical.getIteration(circuit, market)).processed : false;
+    if (!processed) {
+      try {
+        await d.circuitGateway.advance(circuit, market);
+      } catch (cause) {
+        const result = blocked(cause);
+        if (result) return result;
+        throw cause;
+      }
     }
     return { kind: "COMPLETED", circuitId: circuit.circuitId, marketId: market.marketId };
   }
