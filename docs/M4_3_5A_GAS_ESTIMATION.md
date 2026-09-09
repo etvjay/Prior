@@ -12,7 +12,7 @@ The simulator performs canonical readbacks after writes. It verifies trial ident
 
 Reference data remains optional. The ABI placeholder `referenceValid=false` and `referenceUpBps=0` are preserved and are never treated as market evidence.
 
-BUY_UP and BUY_DOWN are simulated as expected `ActionNotAllowed` reverts with zero budget impact. Forecaster native funding is exactly zero; only the owner receives fork-only gas balance.
+BUY_UP and BUY_DOWN are simulated as expected `ActionNotAllowed` reverts with zero budget impact. Both exact actors receive fork-only native balance; live Shannon balances remain separate and untouched. Required additional funding is reported per actor, with forecaster funding derived from measured commit gas × fresh Shannon gas price × 1.25.
 
 ## Gas packet
 

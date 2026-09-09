@@ -38,7 +38,11 @@ describe("M4.3.5A stateful fork gas estimation", () => {
     expect(result.classification).toBe("FORK_SIMULATION_ONLY");
     expect(result.operations.map((x) => x.name)).toEqual(["create", "authorize", "activate", "commit", "bind", "advance"]);
     expect(result.operations.every((x) => x.gasUsed && x.ceilingGas === (x.gasUsed * 125n) / 100n)).toBe(true);
-    expect(result.funding.forecasterNativeWei).toBe("0");
+    expect(result.funding.forkInjectedOwnerWei).toBe("1000000000000000000");
+    expect(result.funding.forkInjectedForecasterWei).toBe("1000000000000000000");
+    expect(result.funding.ownerLiveBalance).toBe("0");
+    expect(result.funding.forecasterLiveBalance).toBe("0");
+    expect(result.funding.forecasterAdditionalFundingWei).toBe("125000000000000");
     expect(result.zeroAction.buyUp.reason).toBe("ActionNotAllowed");
     expect(result.zeroAction.budgeted).toBe(false);
     expect(result.phaseB.status).toBe("UNRESOLVED");
@@ -48,6 +52,17 @@ describe("M4.3.5A stateful fork gas estimation", () => {
     const result = await estimateZeroActionLifecycle({ ...input(), ownerFundingWei: 0n });
     expect(result.failure?.phase).toBe("owner-funding");
     expect(result.funding.forecasterNativeWei).toBe("0");
+  });
+
+  it("injects both exact actors only on the fork and computes nonzero forecaster funding from commit gas", async () => {
+    const seen: string[] = [];
+    const result = await estimateZeroActionLifecycle({ ...input(adapter({ async setBalance(address, amountWei) { seen.push(`${address}:${amountWei}`); } })), forkInjectedOwnerWei: 11n, forkInjectedForecasterWei: 22n, ownerLiveBalance: 7n, forecasterLiveBalance: 0n });
+    expect(seen).toEqual([`${OWNER}:11`, `${FORECASTER}:22`]);
+    expect(result.funding.forkInjectedOwnerWei).toBe("11");
+    expect(result.funding.forkInjectedForecasterWei).toBe("22");
+    expect(result.funding.ownerLiveBalance).toBe("7");
+    expect(result.funding.forecasterLiveBalance).toBe("0");
+    expect(result.funding.forecasterAdditionalFundingWei).toBe("125000000000000");
   });
 
   it("rejects duplicate advance before a second write can be budgeted", async () => {

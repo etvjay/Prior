@@ -2,7 +2,7 @@ import { spawn, execFile, type ChildProcess } from "node:child_process";
 import { createServer } from "node:net";
 import { randomUUID } from "node:crypto";
 import { promisify } from "node:util";
-import { createPublicClient, createWalletClient, http, keccak256, encodeAbiParameters, parseAbi, stringToHex, type Address, type Hex } from "viem";
+import { createPublicClient, createWalletClient, defineChain, http, keccak256, encodeAbiParameters, parseAbi, stringToHex, type Address, type Hex } from "viem";
 import type { ForkHandle, ForkLifecycleAdapter, LifecycleWrite } from "./gas-estimation.js";
 import { assembleCreateIntent } from "./create-diagnosis.js";
 
@@ -21,6 +21,13 @@ const rftAbi = parseAbi([
 const executorAbi = parseAbi(["function execute(bytes32,bytes32,address,uint8,uint256,uint256,uint64,uint8,uint8,address,uint96,uint64,uint128) payable returns (uint128)"]);
 const moduleAbi = parseAbi(["function markets(bytes32) view returns (uint256,uint8,uint8,address,uint32,bytes32,address,address,address,address,uint256,uint256,uint64,uint64)"]);
 const execFileAsync = promisify(execFile);
+
+export const SOMNIA_SHANNON_CHAIN = defineChain({
+  id: 50312,
+  name: "Somnia Shannon",
+  nativeCurrency: { name: "Somnia Testnet Token", symbol: "STT", decimals: 18 },
+  rpcUrls: { default: { http: ["https://dream-rpc.somnia.network"] } },
+});
 
 export const FORK_PROCESS_START_FAILED = "FORK_PROCESS_START_FAILED" as const;
 export const FORK_IDENTITY_MISMATCH = "FORK_IDENTITY_MISMATCH" as const;
@@ -77,6 +84,7 @@ export type ConcreteForkConfig = {
 export async function createConcreteForkAdapter(config: ConcreteForkConfig): Promise<ForkLifecycleAdapter> {
   const fork = await createAnvilShannonFork(config.rpcUrl, config.block, undefined, { registryAddress: config.addresses.registry });
   const publicClient = createPublicClient({ transport: http(fork.rpcUrl) });
+  const shannonClient = createPublicClient({ chain: SOMNIA_SHANNON_CHAIN, transport: http(config.rpcUrl) });
   try {
     const forkBlock = await publicClient.getBlock({ blockNumber: config.block });
     if (forkBlock.timestamp !== config.observationTimestamp) throw new Error(`OBSERVATION_BLOCK_TIMESTAMP_MISMATCH:block=${config.block}:fork=${forkBlock.timestamp}:observed=${config.observationTimestamp}`);
@@ -84,7 +92,7 @@ export async function createConcreteForkAdapter(config: ConcreteForkConfig): Pro
     await fork.close();
     throw error;
   }
-  const wallet = (account: Address) => createWalletClient({ account, transport: http(fork.rpcUrl) });
+  const wallet = (account: Address) => createWalletClient({ account, chain: SOMNIA_SHANNON_CHAIN, transport: http(fork.rpcUrl) });
   const chainId = BigInt(await publicClient.getChainId());
   let circuitId: Hex | undefined;
   let trialId: Hex | undefined;
@@ -93,14 +101,14 @@ export async function createConcreteForkAdapter(config: ConcreteForkConfig): Pro
     async createFork() { return fork; },
     async codeAt(address) { return await publicClient.getBytecode({ address: address as Address }) ?? "0x"; },
     async setBalance(address, amountWei) {
-      if (address.toLowerCase() !== config.owner.toLowerCase()) throw new Error("FORECASTER_FUNDING_FORBIDDEN");
+      if (![config.owner, config.forecaster].some((x) => x.toLowerCase() === address.toLowerCase())) throw new Error("FORK_FUNDING_ACTOR_NOT_ALLOWED");
       await rpc(fork.rpcUrl, "anvil_setBalance", [address, `0x${amountWei.toString(16)}`]);
     },
     async impersonate(address) {
       if (![config.owner, config.forecaster].some((x) => x.toLowerCase() === address.toLowerCase())) throw new Error("IMPERSONATION_ACTOR_NOT_ALLOWED");
       await rpc(fork.rpcUrl, "anvil_impersonateAccount", [address]);
     },
-    async gasPrice() { return await publicClient.getGasPrice(); },
+    async gasPrice() { return await shannonClient.getGasPrice(); },
     async write(step: LifecycleWrite) {
       let hash: Hex;
       const owner = wallet(config.owner);
@@ -129,7 +137,7 @@ export async function createConcreteForkAdapter(config: ConcreteForkConfig): Pro
     },
     async simulateAction(kind) {
       try { await publicClient.simulateContract({ address: config.addresses.executor, abi: executorAbi, functionName: "execute", account: config.owner, args: [circuitId!, config.marketId!, "0x0000000000000000000000000000000000000000", kind === "BUY_UP" ? 0 : 2, 0n, 1n, 0n, 0, 0, config.owner, 0, 0, 1n] as any }); return { reverted: false }; }
-      catch (error: any) { return { reverted: true, reason: error?.cause?.data?.errorName ?? error?.shortMessage?.includes("ActionNotAllowed") ? "ActionNotAllowed" : error?.shortMessage ?? String(error) }; }
+      catch (error: any) { const text = `${String(error)} ${String(error?.shortMessage ?? "")} ${String(error?.cause?.data?.errorName ?? "")}`; const actionNotAllowed = error?.cause?.data?.errorName === "ActionNotAllowed" || error?.shortMessage?.includes("ActionNotAllowed") || text.includes("ActionNotAllowed") || text.includes("0x829e3733"); return { reverted: true, reason: actionNotAllowed ? "ActionNotAllowed" : error?.shortMessage ?? String(error) }; }
     },
     async revalidate() {
       try { const direct = createPublicClient({ transport: http(config.rpcUrl) }); await direct.getBalance({ address: config.forecaster }); for (const address of [config.addresses.rft, config.addresses.registry, config.addresses.executor]) if (!(await direct.getBytecode({ address }))) return { ok: false, reason: "REVALIDATION_MISSING_SHANNON_CODE" }; await direct.readContract({ address: config.addresses.binaryModule, abi: moduleAbi, functionName: "markets", args: [config.marketId] }); return { ok: true }; }

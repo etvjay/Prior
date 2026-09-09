@@ -49,13 +49,17 @@ export type GasEstimationInput = {
   adapter: ForkLifecycleAdapter;
   order?: LifecycleWrite[];
   ownerFundingWei?: bigint;
+  forkInjectedOwnerWei?: bigint;
+  forkInjectedForecasterWei?: bigint;
+  ownerLiveBalance?: bigint;
+  forecasterLiveBalance?: bigint;
 };
 export type GasEstimationResult = {
   status: "ESTIMATED" | "BLOCKED_GAS_ESTIMATION_FAILED";
   classification: "FORK_SIMULATION_ONLY";
   fork: ForkHandle | null;
   operations: GasOperation[];
-  funding: { ownerNativeWei: string; forecasterNativeWei: "0"; totalGasWei: string; conservativeTotalWei: string };
+  funding: { forkInjectedOwnerWei: string; forkInjectedForecasterWei: string; ownerLiveBalance: string; forecasterLiveBalance: string; ownerAdditionalFundingWei: string; forecasterAdditionalFundingWei: string; ownerNativeWei: string; forecasterNativeWei: string; totalGasWei: string; conservativeTotalWei: string };
   zeroAction: { buyUp: { reverted: boolean; reason?: string }; buyDown: { reverted: boolean; reason?: string }; budgeted: false };
   phaseB: { status: "UNRESOLVED" | "FRESH_ESTIMATE_REQUIRED"; operations: never[]; note: string };
   failure: { code: GasReasonCode; phase: string; detail?: string } | null;
@@ -64,11 +68,13 @@ export type GasEstimationResult = {
 
 const noopResult = (failure: GasEstimationResult["failure"]): GasEstimationResult => ({
   status: "BLOCKED_GAS_ESTIMATION_FAILED", classification: "FORK_SIMULATION_ONLY", fork: null, operations: [],
-  funding: { ownerNativeWei: "0", forecasterNativeWei: "0", totalGasWei: "0", conservativeTotalWei: "0" },
+  funding: { forkInjectedOwnerWei: "0", forkInjectedForecasterWei: "0", ownerLiveBalance: "0", forecasterLiveBalance: "0", ownerAdditionalFundingWei: "0", forecasterAdditionalFundingWei: "0", ownerNativeWei: "0", forecasterNativeWei: "0", totalGasWei: "0", conservativeTotalWei: "0" },
   zeroAction: { buyUp: { reverted: false }, buyDown: { reverted: false }, budgeted: false },
   phaseB: { status: "UNRESOLVED", operations: [], note: "Phase B is forbidden until a fresh post-resolution estimate." }, failure,
-  packet: { schemaVersion: "M4.3.5A.v1", evidenceClass: "FORK_SIMULATION_ONLY", chainWrites: false, broadcast: false, gas: [], funding: { ownerNativeWei: "0", forecasterNativeWei: "0", totalGasWei: "0", conservativeTotalWei: "0" }, failure },
+  packet: { schemaVersion: "M4.3.5A.v1", evidenceClass: "FORK_SIMULATION_ONLY", chainWrites: false, broadcast: false, gas: [], funding: { forkInjectedOwnerWei: "0", forkInjectedForecasterWei: "0", ownerLiveBalance: "0", forecasterLiveBalance: "0", ownerAdditionalFundingWei: "0", forecasterAdditionalFundingWei: "0", ownerNativeWei: "0", forecasterNativeWei: "0", totalGasWei: "0", conservativeTotalWei: "0" }, failure },
 });
+
+const forkFailure = (fork: ForkHandle, failure: GasEstimationResult["failure"]): GasEstimationResult => ({ ...noopResult(failure), fork });
 
 function callerFor(step: LifecycleWrite, owner: string, forecaster: string): string { return step === "commit" ? forecaster : owner; }
 function targetFor(step: LifecycleWrite, a: GasEstimationInput["addresses"]): string { return step === "commit" ? a.rft : a.registry; }
@@ -85,17 +91,19 @@ function argsFor(step: LifecycleWrite, input: GasEstimationInput): unknown[] {
 async function estimateZeroActionLifecycleUnsafe(input: GasEstimationInput): Promise<GasEstimationResult> {
   let fork: ForkHandle;
   try { fork = await input.adapter.createFork(); } catch (e) { return noopResult({ code: GAS_REASON_CODES.FORK_CREATION_FAILED, phase: "fork", detail: String(e) }); }
-  if (!fork.simulationOnly) return noopResult({ code: GAS_REASON_CODES.FORK_CREATION_FAILED, phase: "fork", detail: "fork was not classified simulation-only" });
+  if (!fork.simulationOnly) return forkFailure(fork, { code: GAS_REASON_CODES.FORK_CREATION_FAILED, phase: "fork", detail: "fork was not classified simulation-only" });
   for (const [name, address] of Object.entries(input.addresses)) {
-    try { if ((await input.adapter.codeAt(address)).length <= 2) return noopResult({ code: GAS_REASON_CODES.MISSING_DEPLOYED_CODE, phase: name }); }
-    catch (e) { return noopResult({ code: GAS_REASON_CODES.MISSING_DEPLOYED_CODE, phase: name, detail: String(e) }); }
+    try { if ((await input.adapter.codeAt(address)).length <= 2) return forkFailure(fork, { code: GAS_REASON_CODES.MISSING_DEPLOYED_CODE, phase: name }); }
+    catch (e) { return forkFailure(fork, { code: GAS_REASON_CODES.MISSING_DEPLOYED_CODE, phase: name, detail: String(e) }); }
   }
   const gasPrice = await input.adapter.gasPrice().catch(() => null);
-  if (gasPrice == null || gasPrice <= 0n) return noopResult({ code: GAS_REASON_CODES.GAS_PRICE_UNAVAILABLE, phase: "gas-price" });
-  const ownerFundingWei = input.ownerFundingWei ?? 1_000_000_000_000_000_000n;
-  if (ownerFundingWei <= 0n) return noopResult({ code: GAS_REASON_CODES.FORK_CREATION_FAILED, phase: "owner-funding", detail: "owner requires non-zero fork-only native balance" });
-  try { await input.adapter.setBalance(input.owner, ownerFundingWei); await input.adapter.impersonate(input.owner); await input.adapter.impersonate(input.forecaster); }
-  catch (e) { return noopResult({ code: GAS_REASON_CODES.FORK_CREATION_FAILED, phase: "impersonation-or-funding", detail: String(e) }); }
+  if (gasPrice == null || gasPrice <= 0n) return forkFailure(fork, { code: GAS_REASON_CODES.GAS_PRICE_UNAVAILABLE, phase: "gas-price" });
+  const ownerFundingWei = input.forkInjectedOwnerWei ?? input.ownerFundingWei ?? 1_000_000_000_000_000_000n;
+  const forecasterFundingWei = input.forkInjectedForecasterWei ?? 1_000_000_000_000_000_000n;
+  if (ownerFundingWei <= 0n) return forkFailure(fork, { code: GAS_REASON_CODES.FORK_CREATION_FAILED, phase: "owner-funding", detail: "owner requires non-zero fork-only native balance" });
+  if (forecasterFundingWei <= 0n) return forkFailure(fork, { code: GAS_REASON_CODES.FORK_CREATION_FAILED, phase: "forecaster-funding", detail: "forecaster requires non-zero fork-only native balance" });
+  try { await input.adapter.setBalance(input.owner, ownerFundingWei); await input.adapter.setBalance(input.forecaster, forecasterFundingWei); await input.adapter.impersonate(input.owner); await input.adapter.impersonate(input.forecaster); }
+  catch (e) { return forkFailure(fork, { code: GAS_REASON_CODES.FORK_CREATION_FAILED, phase: "impersonation-or-funding", detail: String(e) }); }
   const operations: GasOperation[] = [];
   const completed = new Set<LifecycleWrite>();
   const order = input.order ?? ["create", "authorize", "activate", "commit", "bind", "advance"];
@@ -113,13 +121,13 @@ async function estimateZeroActionLifecycleUnsafe(input: GasEstimationInput): Pro
       completed.add(step);
     } catch (e) {
       const code = ({ create: GAS_REASON_CODES.CREATE_FAILED, authorize: GAS_REASON_CODES.AUTHORIZE_FAILED, activate: GAS_REASON_CODES.ACTIVATE_FAILED, commit: GAS_REASON_CODES.COMMIT_FAILED, bind: GAS_REASON_CODES.BIND_FAILED, advance: GAS_REASON_CODES.READBACK_FAILED })[step];
-      return finishFailure(fork, operations, ownerFundingWei, code, step, String(e));
+      return finishFailure(fork, operations, ownerFundingWei, forecasterFundingWei, input, gasPrice, code, step, String(e));
     }
   }
   const [buyUp, buyDown] = await Promise.all([input.adapter.simulateAction("BUY_UP"), input.adapter.simulateAction("BUY_DOWN")]);
   const revalidation = await input.adapter.revalidate().catch((e) => ({ ok: false, reason: String(e) }));
-  if (!revalidation.ok) return finishFailure(fork, operations, ownerFundingWei, GAS_REASON_CODES.REVALIDATION_FAILED, "revalidation", revalidation.reason);
-  return finishSuccess(fork, operations, ownerFundingWei, gasPrice, buyUp, buyDown);
+  if (!revalidation.ok) return finishFailure(fork, operations, ownerFundingWei, forecasterFundingWei, input, gasPrice, GAS_REASON_CODES.REVALIDATION_FAILED, "revalidation", revalidation.reason);
+  return finishSuccess(fork, operations, ownerFundingWei, forecasterFundingWei, input, gasPrice, buyUp, buyDown);
 }
 
 /** The fork is an owned process resource; close it on every normal lifecycle outcome. */
@@ -129,12 +137,17 @@ export async function estimateZeroActionLifecycle(input: GasEstimationInput): Pr
   return result;
 }
 
-function finishSuccess(fork: ForkHandle, operations: GasOperation[], ownerFundingWei: bigint, gasPrice: bigint, buyUp: any, buyDown: any): GasEstimationResult {
-  const total = operations.reduce((n, o) => n + o.costWei, 0n); const conservative = operations.reduce((n, o) => n + o.ceilingGas * gasPrice, 0n);
-  const funding = { ownerNativeWei: ownerFundingWei.toString(), forecasterNativeWei: "0" as const, totalGasWei: total.toString(), conservativeTotalWei: conservative.toString() };
+function fundingFor(operations: GasOperation[], ownerInjected: bigint, forecasterInjected: bigint, input: GasEstimationInput, gasPrice: bigint) {
+  const ownerAdditional = operations.filter((o) => o.caller.toLowerCase() === input.owner.toLowerCase()).reduce((n, o) => n + o.ceilingGas * gasPrice, 0n);
+  const commit = operations.find((o) => o.name === "commit");
+  const forecasterAdditional = commit == null ? 0n : commit.ceilingGas * gasPrice;
+  return { forkInjectedOwnerWei: ownerInjected.toString(), forkInjectedForecasterWei: forecasterInjected.toString(), ownerLiveBalance: (input.ownerLiveBalance ?? 0n).toString(), forecasterLiveBalance: (input.forecasterLiveBalance ?? 0n).toString(), ownerAdditionalFundingWei: ownerAdditional.toString(), forecasterAdditionalFundingWei: forecasterAdditional.toString(), ownerNativeWei: ownerInjected.toString(), forecasterNativeWei: forecasterInjected.toString(), totalGasWei: operations.reduce((n, o) => n + o.costWei, 0n).toString(), conservativeTotalWei: operations.reduce((n, o) => n + o.ceilingGas * gasPrice, 0n).toString() };
+}
+function finishSuccess(fork: ForkHandle, operations: GasOperation[], ownerFundingWei: bigint, forecasterFundingWei: bigint, input: GasEstimationInput, gasPrice: bigint, buyUp: any, buyDown: any): GasEstimationResult {
+  const funding = fundingFor(operations, ownerFundingWei, forecasterFundingWei, input, gasPrice);
   return { status: "ESTIMATED", classification: "FORK_SIMULATION_ONLY", fork, operations, funding, zeroAction: { buyUp, buyDown, budgeted: false }, phaseB: { status: "UNRESOLVED", operations: [], note: "Phase B is post-resolution fresh-estimate-only; no success is inferred from this unresolved fork." }, failure: null, packet: { schemaVersion: "M4.3.5A.v1", evidenceClass: "FORK_SIMULATION_ONLY", chainWrites: false, broadcast: false, gas: operations, funding, failure: null } };
 }
-function finishFailure(fork: ForkHandle, operations: GasOperation[], ownerFundingWei: bigint, code: GasReasonCode, phase: string, detail?: string): GasEstimationResult {
-  const funding = { ownerNativeWei: ownerFundingWei.toString(), forecasterNativeWei: "0" as const, totalGasWei: operations.reduce((n, o) => n + o.costWei, 0n).toString(), conservativeTotalWei: "0" };
+function finishFailure(fork: ForkHandle, operations: GasOperation[], ownerFundingWei: bigint, forecasterFundingWei: bigint, input: GasEstimationInput, gasPrice: bigint, code: GasReasonCode, phase: string, detail?: string): GasEstimationResult {
+  const funding = fundingFor(operations, ownerFundingWei, forecasterFundingWei, input, gasPrice);
   const failure = { code, phase, detail }; return { status: "BLOCKED_GAS_ESTIMATION_FAILED", classification: "FORK_SIMULATION_ONLY", fork, operations, funding, zeroAction: { buyUp: { reverted: false }, buyDown: { reverted: false }, budgeted: false }, phaseB: { status: "UNRESOLVED", operations: [], note: "Phase B is post-resolution fresh-estimate-only; no success is inferred." }, failure, packet: { schemaVersion: "M4.3.5A.v1", evidenceClass: "FORK_SIMULATION_ONLY", chainWrites: false, broadcast: false, gas: operations, funding, failure } };
 }
