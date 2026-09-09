@@ -153,6 +153,12 @@ execution authority: false
 The implementation ceiling is `X2_EXTERNAL_FIXTURE_ONLY`; it is not onchain
 evidence and does not promote M4.3 to a live commitment milestone.
 
+## M4.3.5A — Stateful fork gas estimation
+
+M4.3.5A adds a local-only, stateful Anvil/Shannon-fork lifecycle estimator for the live zero-action path. It pins the observed Shannon head, verifies deployed RFT/RegistryV2/ExecutorV2 bytecode, impersonates only the exact owner and forecaster on the fork, and records per-write gas, 1.25 ceiling, gas price, caller, target, function, arguments, estimation method, and cost. Canonical trial/iteration readbacks and ordered create → authorize → activate → commit → bind → advance checks are enforced. BUY_UP/BUY_DOWN `ActionNotAllowed` simulations are excluded from funding. Phase B is unresolved until post-resolution fresh estimation. Output classification is `FORK_SIMULATION_ONLY`; no Shannon write, funding, signing, or broadcast is performed.
+
+The milestone implementation is `UNIT_VERIFIED` in `packages/live-gate`; live-gate selection invokes the stateful fork path for a mapped selected candidate and fails closed with structured reason codes. A live read run on 2026-09-09 found only an unmapped `BOTNAV/5400` candidate and therefore returned `COMPATIBLE_MARKET_REQUIRES_AUTHORIZATION` without attempting gas or writes.
+
 ```text
 docs/VISUAL_LANGUAGE.md
 docs/SCREEN_GEOMETRY.md

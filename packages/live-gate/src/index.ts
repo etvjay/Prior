@@ -1,3 +1,5 @@
+export * from "./gas-estimation.js";
+
 import {
   encodeAbiParameters,
   getAddress,

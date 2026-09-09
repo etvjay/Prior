@@ -1,0 +1,261 @@
+{
+  "status": "ESTIMATED",
+  "classification": "FORK_SIMULATION_ONLY",
+  "fork": {
+    "block": "0",
+    "rpcUrl": "fixture://anvil-shannon",
+    "simulationOnly": true
+  },
+  "operations": [
+    {
+      "name": "create",
+      "caller": "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55",
+      "target": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
+      "functionName": "create",
+      "args": [
+        "0xcircuit",
+        "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55",
+        "0x4EbF775fb6397C1a191614CDCd0E117e04B24AB5",
+        0,
+        1,
+        "1",
+        "1",
+        0,
+        1,
+        "0",
+        "3600",
+        "0"
+      ],
+      "estimationMethod": "stateful fork eth_estimateGas + receipt gasUsed",
+      "gasUsed": "100000",
+      "ceilingGas": "125000",
+      "gasPriceWei": "1000000000",
+      "costWei": "100000000000000"
+    },
+    {
+      "name": "authorize",
+      "caller": "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55",
+      "target": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
+      "functionName": "authorize",
+      "args": [
+        "0xcircuit"
+      ],
+      "estimationMethod": "stateful fork eth_estimateGas + receipt gasUsed",
+      "gasUsed": "100000",
+      "ceilingGas": "125000",
+      "gasPriceWei": "1000000000",
+      "costWei": "100000000000000"
+    },
+    {
+      "name": "activate",
+      "caller": "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55",
+      "target": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
+      "functionName": "activate",
+      "args": [
+        "0xcircuit"
+      ],
+      "estimationMethod": "stateful fork eth_estimateGas + receipt gasUsed",
+      "gasUsed": "100000",
+      "ceilingGas": "125000",
+      "gasPriceWei": "1000000000",
+      "costWei": "100000000000000"
+    },
+    {
+      "name": "commit",
+      "caller": "0x4EbF775fb6397C1a191614CDCd0E117e04B24AB5",
+      "target": "0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41",
+      "functionName": "commitForecast",
+      "args": [
+        "0xmarket",
+        5000,
+        0,
+        false,
+        0,
+        3
+      ],
+      "estimationMethod": "stateful fork eth_estimateGas + receipt gasUsed",
+      "gasUsed": "100000",
+      "ceilingGas": "125000",
+      "gasPriceWei": "1000000000",
+      "costWei": "100000000000000"
+    },
+    {
+      "name": "bind",
+      "caller": "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55",
+      "target": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
+      "functionName": "bindTrial",
+      "args": [
+        "0xcircuit",
+        "0xmarket",
+        "0xtrial"
+      ],
+      "estimationMethod": "stateful fork eth_estimateGas + receipt gasUsed",
+      "gasUsed": "100000",
+      "ceilingGas": "125000",
+      "gasPriceWei": "1000000000",
+      "costWei": "100000000000000"
+    },
+    {
+      "name": "advance",
+      "caller": "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55",
+      "target": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
+      "functionName": "advance",
+      "args": [
+        "0xcircuit",
+        "0xmarket",
+        false,
+        true,
+        false
+      ],
+      "estimationMethod": "stateful fork eth_estimateGas + receipt gasUsed",
+      "gasUsed": "100000",
+      "ceilingGas": "125000",
+      "gasPriceWei": "1000000000",
+      "costWei": "100000000000000"
+    }
+  ],
+  "funding": {
+    "ownerNativeWei": "1000000000000000000",
+    "forecasterNativeWei": "0",
+    "totalGasWei": "600000000000000",
+    "conservativeTotalWei": "750000000000000"
+  },
+  "zeroAction": {
+    "buyUp": {
+      "reverted": true,
+      "reason": "ActionNotAllowed"
+    },
+    "buyDown": {
+      "reverted": true,
+      "reason": "ActionNotAllowed"
+    },
+    "budgeted": false
+  },
+  "phaseB": {
+    "status": "UNRESOLVED",
+    "operations": [],
+    "note": "Phase B is post-resolution fresh-estimate-only; no success is inferred from this unresolved fork."
+  },
+  "failure": null,
+  "packet": {
+    "schemaVersion": "M4.3.5A.v1",
+    "evidenceClass": "FORK_SIMULATION_ONLY",
+    "chainWrites": false,
+    "broadcast": false,
+    "gas": [
+      {
+        "name": "create",
+        "caller": "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55",
+        "target": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
+        "functionName": "create",
+        "args": [
+          "0xcircuit",
+          "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55",
+          "0x4EbF775fb6397C1a191614CDCd0E117e04B24AB5",
+          0,
+          1,
+          "1",
+          "1",
+          0,
+          1,
+          "0",
+          "3600",
+          "0"
+        ],
+        "estimationMethod": "stateful fork eth_estimateGas + receipt gasUsed",
+        "gasUsed": "100000",
+        "ceilingGas": "125000",
+        "gasPriceWei": "1000000000",
+        "costWei": "100000000000000"
+      },
+      {
+        "name": "authorize",
+        "caller": "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55",
+        "target": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
+        "functionName": "authorize",
+        "args": [
+          "0xcircuit"
+        ],
+        "estimationMethod": "stateful fork eth_estimateGas + receipt gasUsed",
+        "gasUsed": "100000",
+        "ceilingGas": "125000",
+        "gasPriceWei": "1000000000",
+        "costWei": "100000000000000"
+      },
+      {
+        "name": "activate",
+        "caller": "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55",
+        "target": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
+        "functionName": "activate",
+        "args": [
+          "0xcircuit"
+        ],
+        "estimationMethod": "stateful fork eth_estimateGas + receipt gasUsed",
+        "gasUsed": "100000",
+        "ceilingGas": "125000",
+        "gasPriceWei": "1000000000",
+        "costWei": "100000000000000"
+      },
+      {
+        "name": "commit",
+        "caller": "0x4EbF775fb6397C1a191614CDCd0E117e04B24AB5",
+        "target": "0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41",
+        "functionName": "commitForecast",
+        "args": [
+          "0xmarket",
+          5000,
+          0,
+          false,
+          0,
+          3
+        ],
+        "estimationMethod": "stateful fork eth_estimateGas + receipt gasUsed",
+        "gasUsed": "100000",
+        "ceilingGas": "125000",
+        "gasPriceWei": "1000000000",
+        "costWei": "100000000000000"
+      },
+      {
+        "name": "bind",
+        "caller": "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55",
+        "target": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
+        "functionName": "bindTrial",
+        "args": [
+          "0xcircuit",
+          "0xmarket",
+          "0xtrial"
+        ],
+        "estimationMethod": "stateful fork eth_estimateGas + receipt gasUsed",
+        "gasUsed": "100000",
+        "ceilingGas": "125000",
+        "gasPriceWei": "1000000000",
+        "costWei": "100000000000000"
+      },
+      {
+        "name": "advance",
+        "caller": "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55",
+        "target": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
+        "functionName": "advance",
+        "args": [
+          "0xcircuit",
+          "0xmarket",
+          false,
+          true,
+          false
+        ],
+        "estimationMethod": "stateful fork eth_estimateGas + receipt gasUsed",
+        "gasUsed": "100000",
+        "ceilingGas": "125000",
+        "gasPriceWei": "1000000000",
+        "costWei": "100000000000000"
+      }
+    ],
+    "funding": {
+      "ownerNativeWei": "1000000000000000000",
+      "forecasterNativeWei": "0",
+      "totalGasWei": "600000000000000",
+      "conservativeTotalWei": "750000000000000"
+    },
+    "failure": null
+  }
+}

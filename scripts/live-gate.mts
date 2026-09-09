@@ -4,6 +4,7 @@ import { createPublicClient, http, parseAbi, type Address, type Hex } from "viem
 import { SomniaMarkets, SOMNIA_TESTNET_ADDRESSES } from "@somnia-chain/markets-sdk";
 import { somniaShannon } from "@somnia-chain/markets-sdk/chains";
 import { evaluateLiveGate, humanSummary, renderLiveGateMarkdown, predictCreateAddresses, type CandidateProbe } from "../packages/live-gate/src/index.js";
+import { createAnvilShannonFork, estimateZeroActionLifecycle, type ForkLifecycleAdapter, type GasEstimationInput } from "../packages/live-gate/src/gas-estimation.js";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const RPC = process.env.SHANNON_RPC_HTTP ?? "https://dream-rpc.somnia.network";
@@ -37,6 +38,26 @@ async function discoverCreatedLogs(client: any, headBlock: bigint): Promise<{ ro
     }
     return { rows, complete: from === 0n, error: from === 0n ? undefined : "BOUNDED_LOG_LOOKBACK_NOT_EXHAUSTIVE" };
   } catch (e) { return { rows, complete: false, error: (e as Error).message }; }
+}
+
+async function estimateSelectedForkGas(args: { block: bigint; marketId: string; circuitId: string; trialId: string; registry: string; executor: string }): Promise<any> {
+  let fork: any;
+  const adapter: ForkLifecycleAdapter = {
+    async createFork() { fork = await createAnvilShannonFork(RPC, args.block); return fork; },
+    async codeAt(address) { const c = createPublicClient({ transport: http(fork.rpcUrl) }); return await c.getBytecode({ address: address as Address }) ?? "0x"; },
+    async setBalance(address, amountWei) { await rpcFork(fork.rpcUrl, "anvil_setBalance", [address, `0x${amountWei.toString(16)}`]); },
+    async impersonate(address) { await rpcFork(fork.rpcUrl, "anvil_impersonateAccount", [address]); },
+    async gasPrice() { const c = createPublicClient({ transport: http(fork.rpcUrl) }); return await c.getGasPrice(); },
+    async write() { throw new Error("LIVE_WRITE_ADAPTER_NOT_ENABLED_FOR_M4_3_5A"); },
+    async read(step) { throw new Error(`READBACK_ADAPTER_NOT_ENABLED:${step}`); },
+    async simulateAction() { return { reverted: true, reason: "ActionNotAllowed" }; },
+    async revalidate() { return { ok: false, reason: "REVALIDATION_ADAPTER_NOT_ENABLED" }; },
+  };
+  return estimateZeroActionLifecycle({ rpcUrl: RPC, block: args.block, addresses: { rft: RFT, registry: args.registry, executor: args.executor }, owner: OWNER, forecaster: FORECASTER, marketId: args.marketId, circuitId: args.circuitId, trialId: args.trialId, adapter });
+}
+async function rpcFork(url: string, method: string, params: unknown[]) {
+  const response = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }) });
+  if (!response.ok) throw new Error(`${method}_HTTP_${response.status}`);
 }
 
 async function main() {
@@ -90,7 +111,15 @@ async function main() {
   const deployedAddresses = metadata.status === "SHANNON_WRITE_VERIFIED"
     ? { registryV2: metadata.contracts.CircuitRegistryV2, executorV2: metadata.contracts.CircuitExecutorV2 }
     : undefined;
-  const evidence = evaluateLiveGate({ generatedAt: new Date().toISOString(), network: { chainId: 50312, headBlock: block, headTimestampSec: timestamp, rpcUrl: RPC, indexerUrl: INDEXER }, owner: { address: OWNER, nonce, source: "direct eth_getTransactionCount pinned to observed block", nonceReadFresh: typeof nonceResult.result === "string" }, forecaster: FORECASTER, rftRegistry: RFT, probes, gas: null, profileAProvenSufficient: false, discoveryMeta: { ...discoveryMeta, rowsReturned: rows.length, rowsDiscovered: dedupedRows.length, rowsProbed: probes.length, deployedAddresses, predictedAddresses: predictCreateAddresses(OWNER, nonce) }, deployedAddresses });
+  const preliminary = evaluateLiveGate({ generatedAt: new Date().toISOString(), network: { chainId: 50312, headBlock: block, headTimestampSec: timestamp, rpcUrl: RPC, indexerUrl: INDEXER }, owner: { address: OWNER, nonce, source: "direct eth_getTransactionCount pinned to observed block", nonceReadFresh: typeof nonceResult.result === "string" }, forecaster: FORECASTER, rftRegistry: RFT, probes, gas: null, profileAProvenSufficient: false, discoveryMeta: { ...discoveryMeta, rowsReturned: rows.length, rowsDiscovered: dedupedRows.length, rowsProbed: probes.length, deployedAddresses, predictedAddresses: predictCreateAddresses(OWNER, nonce) }, deployedAddresses });
+  let gas: any = null;
+  const selectedId = preliminary.selection.selectedMarketId;
+  const selected = selectedId == null ? null : preliminary.discovery.candidatesObserved.find((candidate) => candidate.marketId.toLowerCase() === selectedId.toLowerCase());
+  if (selected != null && preliminary.packet != null) {
+    const result = await estimateSelectedForkGas({ block: BigInt(block), marketId: selected.marketId, circuitId: preliminary.packet.circuitIntent.circuitId, trialId: preliminary.packet.forecastCommitSimulation.trialId, registry: deployedAddresses?.registryV2 ?? "0x0000000000000000000000000000000000000000", executor: deployedAddresses?.executorV2 ?? "0x0000000000000000000000000000000000000000" });
+    gas = { status: result.status === "ESTIMATED" ? "ESTIMATED" : "FAILED", complete: result.status === "ESTIMATED", method: "stateful Anvil Shannon fork pinned to observed head", gasPriceWei: result.operations[0]?.gasPriceWei?.toString() ?? null, conservativeMultiplierBps: 12500, operations: result.operations.map((operation: any) => ({ name: operation.name, status: "ESTIMATED", gas: operation.gasUsed.toString(), feeWei: operation.costWei.toString(), conservativeFeeWei: (operation.ceilingGas * operation.gasPriceWei).toString(), fundingRequirement: "GAS_ONLY" })), limitation: result.failure == null ? null : `${result.failure.code}:${result.failure.phase}` };
+  }
+  const evidence = evaluateLiveGate({ generatedAt: new Date().toISOString(), network: { chainId: 50312, headBlock: block, headTimestampSec: timestamp, rpcUrl: RPC, indexerUrl: INDEXER }, owner: { address: OWNER, nonce, source: "direct eth_getTransactionCount pinned to observed block", nonceReadFresh: typeof nonceResult.result === "string" }, forecaster: FORECASTER, rftRegistry: RFT, probes, gas, profileAProvenSufficient: false, discoveryMeta: { ...discoveryMeta, rowsReturned: rows.length, rowsDiscovered: dedupedRows.length, rowsProbed: probes.length, deployedAddresses, predictedAddresses: predictCreateAddresses(OWNER, nonce) }, deployedAddresses });
   await mkdir(resolve(ROOT, "evidence"), { recursive: true });
   await writeFile(resolve(ROOT, "evidence/live-gate-current.json"), json(evidence));
   await writeFile(resolve(ROOT, "docs/M4_3_2_LIVE_AUTHORIZATION_PACKET.md"), renderLiveGateMarkdown(evidence));
