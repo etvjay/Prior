@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "system-wholeness-receipt.v1",
+  "system": "Prior",
+  "reviewedGitSha": "6f2885ece0c4e48d88813b1cc82fd9d5aaacab8f",
+  "canonicalSha": "6f2885ece0c4e48d88813b1cc82fd9d5aaacab8f",
+  "auditDocument": "docs/SYSTEM_WHOLENESS_AUDIT.md",
+  "systemMap": "docs/SYSTEM_WHOLENESS_AUDIT.md#actual-implementation-graph",
+  "entrySurfaces": {
+    "web": ["/", "/live", "/circuits", "/circuit/[id]", "/forecast/[id]", "/history/[address]", "/profile/[address]"],
+    "runnerHttp": ["/health", "/ready", "/runtime", "/iterations"],
+    "cli": ["pnpm prior:live-gate", "pnpm test", "pnpm test:forecast"],
+    "rest": "NOT_PRESENT_BY_CANONICAL_MVP_DECISION",
+    "mcp": "NOT_PRESENT_BY_CANONICAL_MVP_DECISION"
+  },
+  "artifactChain": {
+    "local": "input/evidence -> forecast/protocol -> policy -> guided proposal -> receipt/evidence",
+    "live": "live market -> Circuit -> Forecast -> RFT -> execution -> reconciliation is not fully composed"
+  },
+  "stateMachine": {
+    "coreAndProtocol": "EXPLICIT_LOCAL_STATES",
+    "runner": "READ_ONLY_RECONCILIATION_WITH_CHECKPOINT",
+    "liveExternal": "BLOCKED_EXTERNAL"
+  },
+  "transportEquivalence": "NOT_APPLICABLE_FOR_UNIMPLEMENTED_REST_MCP; LOCAL_PROTOCOL_TESTS_PASS",
+  "authorityContinuity": "PASS_FOR_BOUNDED_GUIDED_AND_V2_ZERO_ACTION_PATHS",
+  "provenanceContinuity": "PASS_WITHIN_RETAINED_LOCAL_EVIDENCE; FULL_LIVE_CHAIN_NOT_PROVEN",
+  "modeEnvironmentStatus": "Shannon infrastructure verified; live market gate blocked",
+  "externalIntegrationStatus": "BLOCKED_EXTERNAL",
+  "coldHuman": "PARTIAL — web build and evidence narrative available; live try is not a live end-to-end workflow",
+  "coldAgent": "PARTIAL — protocol/server contracts exist; no MCP surface",
+  "coldDeveloper": "PASS_LOCAL — package scripts, tests, typechecks, contract build, and web build execute",
+  "P0GapsRemaining": 0,
+  "P1GapsRemaining": 4,
+  "authorityViolations": 0,
+  "finalVerdict": "APPROVE_BOUNDED_MVP_EVIDENCE; REQUEST_CHANGES_FOR_WHOLE_SYSTEM_PRODUCTION_CLAIM",
+  "verification": {
+    "coreTests": "67 passed",
+    "forecastTests": "18 passed",
+    "contractTests": "28 passed",
+    "webBuild": "PASS",
+    "latestLiveGate": "DISCOVERY_INCOMPLETE",
+    "discoveryCounts": {
+      "discoverable": 101,
+      "directRead": 59,
+      "currentlyTrading": 10,
+      "compatible": 10,
+      "proofEligible": 0
+    },
+    "sideEffectsDuringAudit": {
+      "chainWrites": false,
+      "funding": false,
+      "broadcasts": false,
+      "contractChanges": false,
+      "forecastProtocolChanges": false,
+      "signerChanges": false,
+      "scannerSemanticChanges": false
+    }
+  },
+  "knownP1Gaps": ["WG-P1-001", "WG-P1-002", "WG-P1-003", "WG-P1-004"]
+}
