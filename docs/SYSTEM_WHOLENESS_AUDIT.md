@@ -83,11 +83,12 @@ Accepted Shannon evidence JSON
 - `pnpm typecheck:forecast`: PASS.
 - `(cd contracts && forge test && forge build)`: PASS — 28 contract tests, build pass; compiler warnings only.
 - `pnpm build:web`: PASS — Next.js production build, 7 generated routes.
+- Runner verification after the bounded workflow fix: Runner tests `5/5`, Runner typecheck PASS, recovery harness PASS, and recursive workspace tests PASS.
 - Latest authorized live-gate observation: `DISCOVERY_INCOMPLETE` at block `483803674`, with `101` deduplicated discoveries, `59` successful direct reads, `10` currently Trading/structurally compatible markets, `0` proof-eligible markets, and no writes/funding/broadcasts.
 
 ## Verdict
 
-`REQUEST_CHANGES` for the whole-system product claim: P0 gaps remain in the production Runner workflow and persistence composition.
+`REQUEST_CHANGES` remains for the whole-system product claim: the production Runner now has a tested, durable orchestration engine, but its real Forecast/execution/receipt/RFT gateways are intentionally unconfigured and therefore the live loop remains blocked external.
 
 The bounded MVP evidence claim remains valid: local core/provider/contract tests pass, live V2 infrastructure is verified, discovery now reports its bounded coverage honestly, and no authority boundary was expanded.
 
