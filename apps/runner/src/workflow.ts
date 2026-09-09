@@ -2,7 +2,16 @@ import type { CircuitIteration, CircuitIterationStatus, MarketId, TrialId } from
 import { RunnerCheckpoint } from "./checkpoint.js";
 
 export type RunnerResult = { readonly kind: "COMPLETED"; readonly circuitId: string; readonly marketId: string } | { readonly kind: "BLOCKED"; readonly reason: RunnerBlockedReason };
-export type RunnerBlockedReason = "NO_ACTIVE_CIRCUIT" | "NO_ELIGIBLE_MARKET" | "FORECAST_GATEWAY_UNCONFIGURED" | "EXECUTION_GATEWAY_UNCONFIGURED" | "OWNER_CONTROL_UNAVAILABLE" | "AMBIGUOUS_RECEIPT" | "DEPENDENCY_FAILURE";
+export type RunnerBlockedReason = "NO_ACTIVE_CIRCUIT" | "NO_ELIGIBLE_MARKET" | "FORECAST_GATEWAY_UNCONFIGURED" | "EXECUTION_GATEWAY_UNCONFIGURED" | "OWNER_CONTROL_UNAVAILABLE" | "AMBIGUOUS_RECEIPT" | "DEPENDENCY_FAILURE" | "BLOCKED_EXTERNAL";
+
+export class RunnerBlockedError extends Error {
+  public constructor(public readonly reason: RunnerBlockedReason = "BLOCKED_EXTERNAL", message = "external authority unavailable") {
+    super(message);
+    this.name = "RunnerBlockedError";
+  }
+}
+
+const blocked = (cause: unknown): RunnerResult | null => cause instanceof RunnerBlockedError ? { kind: "BLOCKED", reason: cause.reason } : null;
 export interface RunnerCircuit { readonly circuitId: `0x${string}`; readonly status: string }
 export interface RunnerMarket { readonly marketId: MarketId; readonly lifecycle: string }
 export interface RunnerForecast { readonly trialId?: TrialId; readonly pUpBps: number }
@@ -57,7 +66,14 @@ export class RunnerWorkflow {
     if (!item.forecastTrialId) {
       forecast = await d.forecast.obtain(market, circuit);
       item = await save(d, item, "FORECAST_COMMITTING");
-      const committed = await d.forecastGateway.commit(forecast, market, circuit);
+      let committed: { trialId: TrialId };
+      try {
+        committed = await d.forecastGateway.commit(forecast, market, circuit);
+      } catch (cause) {
+        const result = blocked(cause);
+        if (result) return result;
+        throw cause;
+      }
       if (!committed?.trialId) return { kind: "BLOCKED", reason: "AMBIGUOUS_RECEIPT" };
       item = await save(d, item, "FORECAST_COMMITTING", { forecastTrialId: committed.trialId });
     } else {
@@ -68,7 +84,13 @@ export class RunnerWorkflow {
     if (!trialId) return { kind: "BLOCKED", reason: "AMBIGUOUS_RECEIPT" };
     if (d.circuitGateway.bindTrial) {
       if (item.status === "FORECAST_COMMITTING") {
-        await d.circuitGateway.bindTrial(circuit, market, trialId);
+        try {
+          await d.circuitGateway.bindTrial(circuit, market, trialId);
+        } catch (cause) {
+          const result = blocked(cause);
+          if (result) return result;
+          throw cause;
+        }
         item = await save(d, item, "POLICY_EVALUATING");
       }
     } else {
@@ -93,9 +115,21 @@ export class RunnerWorkflow {
     const settlement = await d.settlement.observe(market);
     if (!settlement.terminal) return { kind: "BLOCKED", reason: "DEPENDENCY_FAILURE" };
     item = await save(d, item, "FINALIZING_RFT", item.executionId ? { executionId: item.executionId } : {});
-    await d.rft.finalize(trialId, market);
+    try {
+      await d.rft.finalize(trialId, market);
+    } catch (cause) {
+      const result = blocked(cause);
+      if (result) return result;
+      throw cause;
+    }
     await save(d, item, "ITERATION_COMPLETE", item.executionId ? { executionId: item.executionId } : {});
-    await d.circuitGateway.advance(circuit, market);
+    try {
+      await d.circuitGateway.advance(circuit, market);
+    } catch (cause) {
+      const result = blocked(cause);
+      if (result) return result;
+      throw cause;
+    }
     return { kind: "COMPLETED", circuitId: circuit.circuitId, marketId: market.marketId };
   }
 }
