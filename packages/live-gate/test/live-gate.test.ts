@@ -6,6 +6,7 @@ import {
   predictCreateAddresses,
   type CandidateProbe,
   type GateEvaluationInput,
+  discoveryOutcome,
 } from "../src/index.js";
 
 const OWNER = "0x82d0000000000000000000000000000000000001" as const;
@@ -302,5 +303,11 @@ describe("M4.3.2B live gate decision", () => {
     expect(reference.bestAskRaw).toBe("500000");
     expect(reference.referenceRaw).toBe("495000");
     expect(reference.referenceUpBps).toBe(4950);
+  });
+
+  it("reports incomplete discovery instead of claiming no live compatible market", () => {
+    expect(discoveryOutcome({ discoveryComplete: false, compatible: 0, proofEligible: 0 })).toBe("DISCOVERY_INCOMPLETE");
+    expect(discoveryOutcome({ discoveryComplete: true, compatible: 0, proofEligible: 0 })).toBe("NO_LIVE_COMPATIBLE_MARKET");
+    expect(discoveryOutcome({ discoveryComplete: true, compatible: 2, proofEligible: 0 })).toBe("LIVE_MARKETS_FOUND_NONE_PROOF_ELIGIBLE");
   });
 });

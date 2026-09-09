@@ -1,11 +1,11 @@
 {
   "schemaVersion": "M4.3.2B.v1",
   "milestone": "M4.3.2B",
-  "generatedAt": "2026-09-07T12:00:02.512Z",
+  "generatedAt": "2026-09-09T11:33:47.379Z",
   "network": {
     "chainId": 50312,
-    "headBlock": 482091965,
-    "headTimestampSec": 1788782366,
+    "headBlock": 483803674,
+    "headTimestampSec": 1788953582,
     "rpcUrl": "https://dream-rpc.somnia.network",
     "indexerUrl": "https://dev.smk.somnia.host/v1/graphql"
   },
@@ -19,17 +19,35 @@
     "broadcasts": false
   },
   "rules": {
-    "allowedAssets": [
-      "BTC",
-      "ETH"
-    ],
-    "allowedCadencesSec": [
-      60,
-      300,
-      900,
-      3600,
-      14400
-    ],
+    "compatibility": {
+      "marketType": "BINARY",
+      "requiredFields": [
+        "marketId",
+        "marketAddress",
+        "pool",
+        "status",
+        "expiry",
+        "probability/book"
+      ],
+      "directStatusRequired": "Trading",
+      "expiryRequired": "GREATER_THAN_OBSERVED_CHAIN_TIMESTAMP"
+    },
+    "proofProfile": {
+      "preferredAssets": [
+        "BTC",
+        "ETH"
+      ],
+      "allowOtherCompatibleAssets": true,
+      "preferredCadencesSec": [
+        60,
+        300,
+        900,
+        3600,
+        14400
+      ],
+      "headroomRule": "max(180 seconds, min(900 seconds, ceil(0.25 × cadenceSec)))",
+      "requireBookReference": true
+    },
     "priority": [
       {
         "asset": "BTC",
@@ -96,1331 +114,4000 @@
     ],
     "candidatesObserved": [
       {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dd3",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "ETH",
-        "intervalSec": 60,
-        "expirySec": 1788778680,
-        "tradingStartSec": 1788778620,
-        "statusFromIndexer": "Trading",
-        "marketAddress": "0xbf38b7551acb6fd404f4ccfcc7791a781c67c70b",
-        "poolAddress": "0x16a7c2bdd5d9f89cacbb84d80c3f66034337ecdf",
-        "createdAtBlock": 482054513,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0xBf38b7551ACB6Fd404f4CCFCC7791A781C67C70b",
-          "pool": "0x16A7c2bDD5d9F89cacbB84D80c3F66034337eCDf",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "12",
-          "expirySec": 1788778680,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -3686,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 9,
-        "priorityLabel": "ETH_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dd2",
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fc1",
         "source": "indexer",
         "marketType": "BINARY",
         "asset": "BTC",
-        "intervalSec": 60,
-        "expirySec": 1788778680,
-        "tradingStartSec": 1788778620,
+        "intervalSec": 3600,
+        "expirySec": 1788955200,
+        "tradingStartSec": 1788951600,
         "statusFromIndexer": "Trading",
-        "marketAddress": "0x0df5b8e70b993cb72515a43c07254492c8a2a1f7",
-        "poolAddress": "0x3e2c7e60e954c3aa55bc63e7163e5d04c2d3dc28",
-        "createdAtBlock": 482054513,
+        "marketAddress": "0xe0beca99c0a9a3254af8b0875764cd85962ac903",
+        "poolAddress": "0xb7cd5bdf4dd8b1f3bc11fe043e6c4f0fe387f7e0",
+        "createdAtBlock": 483783854,
         "decision": "REJECTED",
         "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": true,
+        "proofEligible": false,
+        "compatibilityReasons": [],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
         ],
         "direct": {
           "ok": true,
-          "marketAddress": "0x0df5B8E70B993cB72515A43C07254492c8a2a1f7",
-          "pool": "0x3E2C7E60E954c3Aa55bC63e7163E5d04c2d3dC28",
+          "marketAddress": "0xE0beCa99C0A9a3254Af8B0875764cd85962Ac903",
+          "pool": "0xB7Cd5BdF4DD8B1f3BC11fE043e6c4f0Fe387f7E0",
           "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "29",
-          "expirySec": 1788778680,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
+          "nonce": "43",
+          "expirySec": 1788955200,
+          "status": 1,
+          "statusLabel": "Trading",
+          "readAtBlock": 483803674
         },
-        "remainingSec": -3686,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 4,
-        "priorityLabel": "BTC_1M"
+        "remainingSec": 1618,
+        "requiredHeadroomSec": 900,
+        "priorityIndex": 0,
+        "priorityLabel": "BTC_1H"
       },
       {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dd1",
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fc2",
         "source": "indexer",
         "marketType": "BINARY",
         "asset": "ETH",
-        "intervalSec": 60,
-        "expirySec": 1788778620,
-        "tradingStartSec": 1788778560,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x0a8c5c631433415d4fe6cd5ab1774fd0de72c29f",
-        "poolAddress": "0xe259e659df538e1816d95aa6d26123242b8a96d1",
-        "createdAtBlock": 482053913,
+        "intervalSec": 3600,
+        "expirySec": 1788955200,
+        "tradingStartSec": 1788951600,
+        "statusFromIndexer": "Trading",
+        "marketAddress": "0x43caa96953cc4f313c763d7ddd00de7734bf1958",
+        "poolAddress": "0x63632b83fc46932767b8816d6d7ba1cefd2490ff",
+        "createdAtBlock": 483783854,
         "decision": "REJECTED",
         "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": true,
+        "proofEligible": false,
+        "compatibilityReasons": [],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
         ],
         "direct": {
           "ok": true,
-          "marketAddress": "0x0A8C5c631433415d4FE6CD5AB1774Fd0dE72c29F",
-          "pool": "0xe259E659DF538e1816d95aA6D26123242B8a96d1",
+          "marketAddress": "0x43cAA96953cc4f313C763D7DdD00dE7734BF1958",
+          "pool": "0x63632B83FC46932767b8816d6D7bA1ceFD2490ff",
           "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "90",
-          "expirySec": 1788778620,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
+          "nonce": "2",
+          "expirySec": 1788955200,
+          "status": 1,
+          "statusLabel": "Trading",
+          "readAtBlock": 483803674
         },
-        "remainingSec": -3746,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 9,
-        "priorityLabel": "ETH_1M"
+        "remainingSec": 1618,
+        "requiredHeadroomSec": 900,
+        "priorityIndex": 5,
+        "priorityLabel": "ETH_1H"
       },
       {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dd0",
+        "marketId": "0x000000000000000000000000000000000000000000000000000000000001801b",
         "source": "indexer",
         "marketType": "BINARY",
         "asset": "BTC",
-        "intervalSec": 60,
-        "expirySec": 1788778620,
-        "tradingStartSec": 1788778560,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0xc13077808eb8ec4b680a8e88709341e4c5afa52f",
-        "poolAddress": "0x9bbc33cf4c91cd9991fc2b699b133bd6435f99f9",
-        "createdAtBlock": 482053913,
+        "intervalSec": 900,
+        "expirySec": 1788954300,
+        "tradingStartSec": 1788953400,
+        "statusFromIndexer": "Trading",
+        "marketAddress": "0x86b7eea46a466d916aef4124b3d606d02556d6e1",
+        "poolAddress": "0xd52e59d1857e2f7dda2626b22aea29c2562fd120",
+        "createdAtBlock": 483801851,
         "decision": "REJECTED",
         "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": true,
+        "proofEligible": false,
+        "compatibilityReasons": [],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
         ],
         "direct": {
           "ok": true,
-          "marketAddress": "0xc13077808eb8ec4b680A8E88709341E4C5AFA52F",
-          "pool": "0x9bbc33cf4c91cd9991FC2b699b133bD6435f99F9",
+          "marketAddress": "0x86B7Eea46A466D916AeF4124b3d606d02556d6E1",
+          "pool": "0xD52E59D1857E2f7dDa2626B22aeA29c2562Fd120",
           "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "12",
-          "expirySec": 1788778620,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
+          "nonce": "4",
+          "expirySec": 1788954300,
+          "status": 1,
+          "statusLabel": "Trading",
+          "readAtBlock": 483803674
         },
-        "remainingSec": -3746,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 4,
-        "priorityLabel": "BTC_1M"
+        "remainingSec": 718,
+        "requiredHeadroomSec": 225,
+        "priorityIndex": 2,
+        "priorityLabel": "BTC_15M"
       },
       {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dcd",
+        "marketId": "0x000000000000000000000000000000000000000000000000000000000001801c",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 900,
+        "expirySec": 1788954300,
+        "tradingStartSec": 1788953400,
+        "statusFromIndexer": "Trading",
+        "marketAddress": "0x936330e0452b421bf01d858a4a5d4a2f9729d86a",
+        "poolAddress": "0x3027a62451535fa4e7d7f9b80017be4e64297217",
+        "createdAtBlock": 483801851,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": true,
+        "proofEligible": false,
+        "compatibilityReasons": [],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x936330E0452B421bF01D858A4A5D4A2F9729D86a",
+          "pool": "0x3027a62451535fa4E7d7f9b80017Be4E64297217",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "4",
+          "expirySec": 1788954300,
+          "status": 1,
+          "statusLabel": "Trading",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": 718,
+        "requiredHeadroomSec": 225,
+        "priorityIndex": 7,
+        "priorityLabel": "ETH_15M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018018",
         "source": "indexer",
         "marketType": "BINARY",
         "asset": "ETH",
         "intervalSec": 300,
-        "expirySec": 1788778800,
-        "tradingStartSec": 1788778500,
+        "expirySec": 1788953700,
+        "tradingStartSec": 1788953400,
         "statusFromIndexer": "Trading",
-        "marketAddress": "0x2950aa3452a616f8e479566d905e56f13b0f9efa",
-        "poolAddress": "0x29d637c9f8f1d86e46adbfec715705ebe0ee6b06",
-        "createdAtBlock": 482053313,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x2950aA3452a616F8e479566D905e56F13b0F9EFa",
-          "pool": "0x29D637C9f8f1d86e46adbfEC715705EBE0Ee6B06",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "5",
-          "expirySec": 1788778800,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -3566,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 8,
-        "priorityLabel": "ETH_5M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dcc",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "BTC",
-        "intervalSec": 300,
-        "expirySec": 1788778800,
-        "tradingStartSec": 1788778500,
-        "statusFromIndexer": "Trading",
-        "marketAddress": "0x2b7389a11f722a91ea4cbfe51517e3f0f0ed839f",
-        "poolAddress": "0x6cc7e1f7d478ede9c29a6e3389b3a94893671b12",
-        "createdAtBlock": 482053313,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x2B7389A11f722a91eA4cBfE51517E3F0f0Ed839F",
-          "pool": "0x6Cc7E1F7D478EDe9C29A6e3389b3A94893671B12",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "88",
-          "expirySec": 1788778800,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -3566,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 3,
-        "priorityLabel": "BTC_5M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dcf",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "ETH",
-        "intervalSec": 60,
-        "expirySec": 1788778560,
-        "tradingStartSec": 1788778500,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x9ac4623e38467aa6c09ffc59e6fcabae7d0ce99d",
-        "poolAddress": "0x9b97f870b4646b75f0ee6bbd4d0860644370c476",
-        "createdAtBlock": 482053313,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x9ac4623E38467aA6c09FFC59e6FCABAE7D0ce99D",
-          "pool": "0x9B97F870b4646B75F0Ee6BBD4d0860644370C476",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "12",
-          "expirySec": 1788778560,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -3806,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 9,
-        "priorityLabel": "ETH_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dce",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "BTC",
-        "intervalSec": 60,
-        "expirySec": 1788778560,
-        "tradingStartSec": 1788778500,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0xbb88d07ce3618270ca7bfda2995d6d5d1233c6e2",
-        "poolAddress": "0x4a6b9bc2055c7f60e1d3be5ee77f47726777ab3f",
-        "createdAtBlock": 482053313,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0xbb88d07cE3618270ca7bfDA2995d6d5D1233c6e2",
-          "pool": "0x4a6B9bC2055c7F60E1D3be5Ee77f47726777ab3F",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "6",
-          "expirySec": 1788778560,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -3806,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 4,
-        "priorityLabel": "BTC_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dcb",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "ETH",
-        "intervalSec": 60,
-        "expirySec": 1788778500,
-        "tradingStartSec": 1788778440,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x3a45927033afdc8dce64767ac020ef357ec1df2b",
-        "poolAddress": "0x25b845e0d24e5df1d8df0a435d3be8c1ea045d07",
-        "createdAtBlock": 482052713,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x3A45927033aFDc8dCE64767ac020eF357Ec1df2b",
-          "pool": "0x25b845e0D24E5DF1d8dF0A435D3be8c1EA045D07",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "700",
-          "expirySec": 1788778500,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -3866,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 9,
-        "priorityLabel": "ETH_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dca",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "BTC",
-        "intervalSec": 60,
-        "expirySec": 1788778500,
-        "tradingStartSec": 1788778440,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0xd3f92fcc09e5593587c6b5db0a7e4c3f798918a3",
-        "poolAddress": "0xd44345dbb60f4bc5222b3c62120884920a6a8ae7",
-        "createdAtBlock": 482052713,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0xD3F92fcC09E5593587c6b5dB0A7e4c3f798918a3",
-          "pool": "0xd44345dBB60F4bC5222b3c62120884920a6A8ae7",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "12",
-          "expirySec": 1788778500,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -3866,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 4,
-        "priorityLabel": "BTC_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dc9",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "ETH",
-        "intervalSec": 60,
-        "expirySec": 1788778440,
-        "tradingStartSec": 1788778380,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0xc4b62eed4672fe6b46ac9121a0c44db738a683bd",
-        "poolAddress": "0xdb62a3be75aecdfcee9e002b11609add8db7bb65",
-        "createdAtBlock": 482052113,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0xC4b62eED4672FE6b46ac9121a0c44Db738a683Bd",
-          "pool": "0xdB62a3BE75aecdfCeE9e002B11609ADd8DB7bb65",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "47",
-          "expirySec": 1788778440,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -3926,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 9,
-        "priorityLabel": "ETH_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dc8",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "BTC",
-        "intervalSec": 60,
-        "expirySec": 1788778440,
-        "tradingStartSec": 1788778380,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x3f70884c65842912e4f6bf3df3e442c90d113434",
-        "poolAddress": "0x0914a6be25dad9080060da535d9ea1d624b39b3c",
-        "createdAtBlock": 482052113,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x3f70884c65842912E4F6Bf3dF3e442C90d113434",
-          "pool": "0x0914A6Be25dad9080060dA535D9eA1D624b39B3c",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "153",
-          "expirySec": 1788778440,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -3926,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 4,
-        "priorityLabel": "BTC_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dc7",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "ETH",
-        "intervalSec": 60,
-        "expirySec": 1788778380,
-        "tradingStartSec": 1788778320,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x84b0a8c84fda681aa96dfa557f9618b9003dc6dc",
-        "poolAddress": "0x29e1d7dab55f5401dc76e5254d999442f0df5c1c",
-        "createdAtBlock": 482051514,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x84B0A8C84FDA681Aa96dfa557f9618b9003dC6DC",
-          "pool": "0x29E1d7DAb55F5401dc76E5254D999442f0df5C1c",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "1",
-          "expirySec": 1788778380,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -3986,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 9,
-        "priorityLabel": "ETH_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dc6",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "BTC",
-        "intervalSec": 60,
-        "expirySec": 1788778380,
-        "tradingStartSec": 1788778320,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0xce12a17b9e7e4e8785e3a9ae9c85e1c7d94c7eea",
-        "poolAddress": "0x4e83efca63853d0760b3141ea0297971cd5e8ef9",
-        "createdAtBlock": 482051514,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0xCE12a17b9E7E4E8785e3A9ae9C85E1c7D94c7EeA",
-          "pool": "0x4e83EFCa63853d0760B3141eA0297971Cd5e8eF9",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "292",
-          "expirySec": 1788778380,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -3986,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 4,
-        "priorityLabel": "BTC_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dc5",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "ETH",
-        "intervalSec": 60,
-        "expirySec": 1788778320,
-        "tradingStartSec": 1788778260,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x257e88380f260130f3902cff7e12fb7d7ebda208",
-        "poolAddress": "0xae5d2e6297d07c9fd1d10c2cf210375343c82d59",
-        "createdAtBlock": 482050913,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x257E88380f260130F3902CFF7E12fb7D7eBDa208",
-          "pool": "0xae5D2E6297d07C9FD1D10C2CF210375343c82D59",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "233",
-          "expirySec": 1788778320,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -4046,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 9,
-        "priorityLabel": "ETH_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dc4",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "BTC",
-        "intervalSec": 60,
-        "expirySec": 1788778320,
-        "tradingStartSec": 1788778260,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x260387542dcd8bea63945fe99ff672a0ba3730be",
-        "poolAddress": "0x816425987ea14d0bf91f4a3244bc2f6130c0e2ca",
-        "createdAtBlock": 482050913,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x260387542dCd8Bea63945Fe99FF672A0BA3730Be",
-          "pool": "0x816425987Ea14D0bf91F4a3244bc2F6130c0e2cA",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "333",
-          "expirySec": 1788778320,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -4046,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 4,
-        "priorityLabel": "BTC_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dc1",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "ETH",
-        "intervalSec": 300,
-        "expirySec": 1788778500,
-        "tradingStartSec": 1788778200,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x4c97eececc932fc5d9da46abf6fa2724e4b6a73a",
-        "poolAddress": "0x3fe1ed38adf03d0c410e10e7e06e25a3dd4672f6",
-        "createdAtBlock": 482050314,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x4c97eecECC932fC5d9dA46abF6fA2724E4B6a73A",
-          "pool": "0x3fe1eD38aDf03d0c410E10E7e06e25a3dd4672f6",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "32",
-          "expirySec": 1788778500,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -3866,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 8,
-        "priorityLabel": "ETH_5M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dc0",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "BTC",
-        "intervalSec": 300,
-        "expirySec": 1788778500,
-        "tradingStartSec": 1788778200,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0xd7b808f9c0e914de155263a80e11a14f5ca5ea68",
+        "marketAddress": "0xb81ef3fc510df128f1636699c9e2748b0532b2d6",
         "poolAddress": "0xc7cfc964eedbf526be8dd6ec5cd2ab3f5f7e28fd",
-        "createdAtBlock": 482050314,
+        "createdAtBlock": 483801851,
         "decision": "REJECTED",
         "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
+          "HEADROOM_INSUFFICIENT",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": true,
+        "proofEligible": false,
+        "compatibilityReasons": [],
+        "proofEligibilityReasons": [
+          "HEADROOM_INSUFFICIENT",
+          "REFERENCE_UNAVAILABLE"
         ],
         "direct": {
           "ok": true,
-          "marketAddress": "0xd7B808F9C0E914De155263a80e11A14f5ca5eA68",
+          "marketAddress": "0xB81ef3Fc510df128F1636699c9E2748b0532B2d6",
           "pool": "0xc7cfC964eEDBf526bE8Dd6eC5Cd2aB3f5F7E28Fd",
           "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "13",
-          "expirySec": 1788778500,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
+          "nonce": "66",
+          "expirySec": 1788953700,
+          "status": 1,
+          "statusLabel": "Trading",
+          "readAtBlock": 483803674
         },
-        "remainingSec": -3866,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 3,
-        "priorityLabel": "BTC_5M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dc3",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "ETH",
-        "intervalSec": 60,
-        "expirySec": 1788778260,
-        "tradingStartSec": 1788778200,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x3319d9cd08730de6f7ce1782c063400ddaa5a438",
-        "poolAddress": "0x23f45d1fec8aebfc82a042fa684ab05d8ccc3e73",
-        "createdAtBlock": 482050314,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x3319D9CD08730de6F7CE1782C063400DDAA5a438",
-          "pool": "0x23F45D1FeC8aeBFc82A042fa684AB05d8cCC3E73",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "509",
-          "expirySec": 1788778260,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -4106,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 9,
-        "priorityLabel": "ETH_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dc2",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "BTC",
-        "intervalSec": 60,
-        "expirySec": 1788778260,
-        "tradingStartSec": 1788778200,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0xb85fdcdd7b34d9efb7840bd5b9fff8ef426d42ca",
-        "poolAddress": "0x7d503565f8817d846475dca703534e0008899a16",
-        "createdAtBlock": 482050314,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0xB85fdCdd7B34D9eFB7840bd5B9fFf8eF426d42ca",
-          "pool": "0x7d503565F8817d846475DCa703534e0008899A16",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "727",
-          "expirySec": 1788778260,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -4106,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 4,
-        "priorityLabel": "BTC_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dbf",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "ETH",
-        "intervalSec": 60,
-        "expirySec": 1788778200,
-        "tradingStartSec": 1788778140,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x8bc41a10fb3567916a53122ac7a4a395b404bb6a",
-        "poolAddress": "0xe9342119a79301dfc9c642c017c59ea42bb53f63",
-        "createdAtBlock": 482049714,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x8bc41a10Fb3567916a53122AC7a4A395B404bB6A",
-          "pool": "0xE9342119a79301DFc9C642C017c59ea42bB53F63",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "377",
-          "expirySec": 1788778200,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -4166,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 9,
-        "priorityLabel": "ETH_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dbe",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "BTC",
-        "intervalSec": 60,
-        "expirySec": 1788778200,
-        "tradingStartSec": 1788778140,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x51bed08fedb39d53178208f0a63425756439cd8d",
-        "poolAddress": "0xa4c141cc26fe1a4d782369c8f691c7eeed5d2702",
-        "createdAtBlock": 482049714,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x51beD08fEDB39D53178208F0A63425756439cD8D",
-          "pool": "0xa4c141cC26fe1a4D782369C8F691c7EeEd5D2702",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "10",
-          "expirySec": 1788778200,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -4166,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 4,
-        "priorityLabel": "BTC_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dbd",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "ETH",
-        "intervalSec": 60,
-        "expirySec": 1788778140,
-        "tradingStartSec": 1788778080,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x6ce74cd519136b41842ab4790ed2813d9710531f",
-        "poolAddress": "0x753e5113179c9ec862d17c5cbfe0deed98d54c0f",
-        "createdAtBlock": 482049114,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x6ce74cD519136b41842Ab4790eD2813d9710531F",
-          "pool": "0x753e5113179C9eC862d17C5cbFe0DEED98D54c0f",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "97",
-          "expirySec": 1788778140,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -4226,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 9,
-        "priorityLabel": "ETH_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dbc",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "BTC",
-        "intervalSec": 60,
-        "expirySec": 1788778140,
-        "tradingStartSec": 1788778080,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x80ce897a52f7d17b328926214f4aec16d4c6086d",
-        "poolAddress": "0xcac7138336837be59773b01a4481e948058ab259",
-        "createdAtBlock": 482049114,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x80cE897a52f7D17B328926214f4aEC16D4c6086D",
-          "pool": "0xcAC7138336837BE59773B01a4481e948058ab259",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "56",
-          "expirySec": 1788778140,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -4226,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 4,
-        "priorityLabel": "BTC_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dbb",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "ETH",
-        "intervalSec": 60,
-        "expirySec": 1788778080,
-        "tradingStartSec": 1788778020,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x4bb578cef664036abcf65d2e00655d6a2a5da64d",
-        "poolAddress": "0x7bd3291daa3c50aba21808162417f1b217ec3375",
-        "createdAtBlock": 482048514,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x4BB578cEf664036abCF65D2E00655D6A2a5dA64D",
-          "pool": "0x7bd3291daa3C50Aba21808162417f1b217eC3375",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "552",
-          "expirySec": 1788778080,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -4286,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 9,
-        "priorityLabel": "ETH_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dba",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "BTC",
-        "intervalSec": 60,
-        "expirySec": 1788778080,
-        "tradingStartSec": 1788778020,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x71a3d68f0e49f8558a633c6ab9a66f68e0df27c2",
-        "poolAddress": "0xefc9da666f8f0832bf6068675b071946373381e5",
-        "createdAtBlock": 482048514,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x71A3d68f0e49F8558a633c6Ab9A66F68E0df27c2",
-          "pool": "0xeFc9da666f8f0832bF6068675B071946373381E5",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "201",
-          "expirySec": 1788778080,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -4286,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 4,
-        "priorityLabel": "BTC_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015db9",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "ETH",
-        "intervalSec": 60,
-        "expirySec": 1788778020,
-        "tradingStartSec": 1788777960,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x296d852a25b729921a2da2578ee708b8e1a69070",
-        "poolAddress": "0xde6a2857ef95c8af84879a9dc62e8c4c53ee6e85",
-        "createdAtBlock": 482047914,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x296d852a25B729921a2dA2578ee708B8e1a69070",
-          "pool": "0xDe6A2857EF95C8aF84879a9Dc62E8c4C53ee6e85",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "64",
-          "expirySec": 1788778020,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -4346,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 9,
-        "priorityLabel": "ETH_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015db8",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "BTC",
-        "intervalSec": 60,
-        "expirySec": 1788778020,
-        "tradingStartSec": 1788777960,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x9431e9064dcf114a6fcddd870b525d9eb88e39c4",
-        "poolAddress": "0x9e70b3b68923c379256f8970c9abc18870910903",
-        "createdAtBlock": 482047914,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0x9431E9064dcf114A6FcdDD870B525d9EB88E39C4",
-          "pool": "0x9e70b3b68923C379256F8970C9aBC18870910903",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "135",
-          "expirySec": 1788778020,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -4346,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 4,
-        "priorityLabel": "BTC_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015db5",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "ETH",
-        "intervalSec": 300,
-        "expirySec": 1788778200,
-        "tradingStartSec": 1788777900,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0xc795518608e02fbe74f8d5d3fa337c261c84ff13",
-        "poolAddress": "0x48d26fce0e40223ccff6babed003c2d4399e777c",
-        "createdAtBlock": 482047314,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0xc795518608e02fbe74f8D5d3Fa337c261c84ff13",
-          "pool": "0x48d26fCE0E40223cCFF6babED003C2D4399E777C",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "5",
-          "expirySec": 1788778200,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -4166,
+        "remainingSec": 118,
         "requiredHeadroomSec": 180,
         "priorityIndex": 8,
         "priorityLabel": "ETH_5M"
       },
       {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015db4",
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018017",
         "source": "indexer",
         "marketType": "BINARY",
         "asset": "BTC",
         "intervalSec": 300,
-        "expirySec": 1788778200,
-        "tradingStartSec": 1788777900,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0x4b5d73051ed9a5d1c024f6376fc0cd864271c222",
-        "poolAddress": "0xccf43b7bb390004864a026631fbdb52fe7577553",
-        "createdAtBlock": 482047314,
+        "expirySec": 1788953700,
+        "tradingStartSec": 1788953400,
+        "statusFromIndexer": "Trading",
+        "marketAddress": "0x4d7e27a682f3fc4355e824dad67ee7a46fcf3987",
+        "poolAddress": "0x0893219330b49d89c2813e2f5145be5a13c6c26e",
+        "createdAtBlock": 483801851,
         "decision": "REJECTED",
         "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
+          "HEADROOM_INSUFFICIENT",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": true,
+        "proofEligible": false,
+        "compatibilityReasons": [],
+        "proofEligibilityReasons": [
+          "HEADROOM_INSUFFICIENT",
+          "REFERENCE_UNAVAILABLE"
         ],
         "direct": {
           "ok": true,
-          "marketAddress": "0x4b5d73051eD9A5d1c024f6376fC0cD864271c222",
-          "pool": "0xCCF43B7bB390004864a026631FBdB52Fe7577553",
+          "marketAddress": "0x4d7e27A682f3fc4355e824DaD67eE7a46fcF3987",
+          "pool": "0x0893219330b49D89C2813E2f5145be5a13C6c26E",
           "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "872",
-          "expirySec": 1788778200,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
+          "nonce": "35",
+          "expirySec": 1788953700,
+          "status": 1,
+          "statusLabel": "Trading",
+          "readAtBlock": 483803674
         },
-        "remainingSec": -4166,
+        "remainingSec": 118,
         "requiredHeadroomSec": 180,
         "priorityIndex": 3,
         "priorityLabel": "BTC_5M"
       },
       {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015db7",
+        "marketId": "0x000000000000000000000000000000000000000000000000000000000001801e",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 300,
+        "expirySec": 1788953700,
+        "tradingStartSec": 1788953400,
+        "statusFromIndexer": "Trading",
+        "marketAddress": "0xfa64ca9ebd86f4b7d298ab02de317d81f995d36b",
+        "poolAddress": "0x3bae96f1740145919760ac7f62190e1ef0ad5a99",
+        "createdAtBlock": 483801851,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "HEADROOM_INSUFFICIENT",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": true,
+        "proofEligible": false,
+        "compatibilityReasons": [],
+        "proofEligibilityReasons": [
+          "HEADROOM_INSUFFICIENT",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xfA64CA9EBD86F4B7d298aB02dE317D81F995d36B",
+          "pool": "0x3BAe96f1740145919760Ac7f62190e1EF0AD5a99",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "21",
+          "expirySec": 1788953700,
+          "status": 1,
+          "statusLabel": "Trading",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": 118,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 8,
+        "priorityLabel": "ETH_5M"
+      },
+      {
+        "marketId": "0x000000000000000000000000000000000000000000000000000000000001801d",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 300,
+        "expirySec": 1788953700,
+        "tradingStartSec": 1788953400,
+        "statusFromIndexer": "Trading",
+        "marketAddress": "0xcd91ccba31652fbed227470ee544e270b582a9ac",
+        "poolAddress": "0xfaae588b26a30691d05bc678f67bca6cc79e4f5b",
+        "createdAtBlock": 483801851,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "HEADROOM_INSUFFICIENT",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": true,
+        "proofEligible": false,
+        "compatibilityReasons": [],
+        "proofEligibilityReasons": [
+          "HEADROOM_INSUFFICIENT",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xCd91CcBA31652FbeD227470Ee544e270b582A9AC",
+          "pool": "0xfaAE588b26a30691d05BC678f67BCa6CC79e4F5B",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "4",
+          "expirySec": 1788953700,
+          "status": 1,
+          "statusLabel": "Trading",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": 118,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 3,
+        "priorityLabel": "BTC_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018024",
         "source": "indexer",
         "marketType": "BINARY",
         "asset": "ETH",
         "intervalSec": 60,
-        "expirySec": 1788777960,
-        "tradingStartSec": 1788777900,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0xdf310b00f8df5f6e45b282e16ca16362757e8081",
-        "poolAddress": "0xdf8ead90dfc8dd010c456c192b9cef8f326b4885",
-        "createdAtBlock": 482047314,
+        "expirySec": 1788953640,
+        "tradingStartSec": 1788953580,
+        "statusFromIndexer": "Trading",
+        "marketAddress": "0xdf2186ff43fa8b2ac454505ba472e97460845997",
+        "poolAddress": "0x3131acb6695f6b77635be1213d91c36e443afb86",
+        "createdAtBlock": 483803651,
         "decision": "REJECTED",
         "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
+          "HEADROOM_INSUFFICIENT",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": true,
+        "proofEligible": false,
+        "compatibilityReasons": [],
+        "proofEligibilityReasons": [
+          "HEADROOM_INSUFFICIENT",
+          "REFERENCE_UNAVAILABLE"
         ],
         "direct": {
           "ok": true,
-          "marketAddress": "0xdF310B00F8df5f6e45B282e16cA16362757e8081",
-          "pool": "0xDF8eAd90DFc8dd010c456C192b9CEF8F326B4885",
+          "marketAddress": "0xDF2186Ff43FA8B2aC454505BA472e97460845997",
+          "pool": "0x3131aCB6695f6b77635be1213d91C36E443afb86",
           "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "614",
-          "expirySec": 1788777960,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
+          "nonce": "312",
+          "expirySec": 1788953640,
+          "status": 1,
+          "statusLabel": "Trading",
+          "readAtBlock": 483803674
         },
-        "remainingSec": -4406,
+        "remainingSec": 58,
         "requiredHeadroomSec": 180,
         "priorityIndex": 9,
         "priorityLabel": "ETH_1M"
       },
       {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015db6",
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018023",
         "source": "indexer",
         "marketType": "BINARY",
         "asset": "BTC",
         "intervalSec": 60,
-        "expirySec": 1788777960,
-        "tradingStartSec": 1788777900,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0xa626bb56a0354fc2662e2721423f28e367576b58",
-        "poolAddress": "0x5327879e06e70df6cbe67ff44eb204dae68b5e03",
-        "createdAtBlock": 482047314,
+        "expirySec": 1788953640,
+        "tradingStartSec": 1788953580,
+        "statusFromIndexer": "Trading",
+        "marketAddress": "0x7a5f7e220a9b085e7c4df81968d43340d319e5d9",
+        "poolAddress": "0xee566931090fec48cb3746f0b44f4fd6e561a2e5",
+        "createdAtBlock": 483803651,
         "decision": "REJECTED",
         "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
+          "HEADROOM_INSUFFICIENT",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": true,
+        "proofEligible": false,
+        "compatibilityReasons": [],
+        "proofEligibilityReasons": [
+          "HEADROOM_INSUFFICIENT",
+          "REFERENCE_UNAVAILABLE"
         ],
         "direct": {
           "ok": true,
-          "marketAddress": "0xA626bb56a0354Fc2662E2721423F28e367576B58",
-          "pool": "0x5327879E06e70df6CBe67fF44eB204dAe68b5e03",
+          "marketAddress": "0x7A5f7e220A9B085E7C4Df81968d43340d319e5d9",
+          "pool": "0xEE566931090fec48Cb3746F0B44F4FD6e561A2E5",
           "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "5",
-          "expirySec": 1788777960,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
+          "nonce": "75",
+          "expirySec": 1788953640,
+          "status": 1,
+          "statusLabel": "Trading",
+          "readAtBlock": 483803674
         },
-        "remainingSec": -4406,
+        "remainingSec": 58,
         "requiredHeadroomSec": 180,
         "priorityIndex": 4,
         "priorityLabel": "BTC_1M"
       },
       {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015db3",
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018022",
         "source": "indexer",
         "marketType": "BINARY",
         "asset": "ETH",
         "intervalSec": 60,
-        "expirySec": 1788777900,
-        "tradingStartSec": 1788777840,
+        "expirySec": 1788953580,
+        "tradingStartSec": 1788953520,
         "statusFromIndexer": "Finalized",
-        "marketAddress": "0x666cc01c381a42d7271604152647baf60e60d73c",
-        "poolAddress": "0x3166a1b66b5a6b4a9cdb8eff21b29b42fd2f1b90",
-        "createdAtBlock": 482046714,
+        "marketAddress": "0x0351bd45c2768cf3dd38d8f4d4fa58d45b650ba5",
+        "poolAddress": "0x9b97f870b4646b75f0ee6bbd4d0860644370c476",
+        "createdAtBlock": 483803051,
         "decision": "REJECTED",
         "rejectionCodes": [
           "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
           "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
         ],
         "direct": {
           "ok": true,
-          "marketAddress": "0x666CC01C381A42d7271604152647baF60e60D73C",
-          "pool": "0x3166A1B66b5a6b4a9CDb8eff21B29b42fd2F1B90",
+          "marketAddress": "0x0351bD45C2768cF3Dd38d8f4D4fa58D45b650ba5",
+          "pool": "0x9B97F870b4646B75F0Ee6BBD4d0860644370C476",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "58",
+          "expirySec": 1788953580,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -2,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018021",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788953580,
+        "tradingStartSec": 1788953520,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xfb38f2f1d3e1b709ad92294657cbd6eecbd11f6c",
+        "poolAddress": "0xe259e659df538e1816d95aa6d26123242b8a96d1",
+        "createdAtBlock": 483803051,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xFb38f2f1D3e1B709AD92294657cBd6eeCBD11f6C",
+          "pool": "0xe259E659DF538e1816d95aA6D26123242B8a96d1",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "134",
+          "expirySec": 1788953580,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -2,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018020",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788953520,
+        "tradingStartSec": 1788953460,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xfdf69703eb7584cbfeee25de996e027f82c6c254",
+        "poolAddress": "0xee566931090fec48cb3746f0b44f4fd6e561a2e5",
+        "createdAtBlock": 483802451,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xFdf69703eB7584cBfEEE25de996e027f82c6c254",
+          "pool": "0xEE566931090fec48Cb3746F0B44F4FD6e561A2E5",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "74",
+          "expirySec": 1788953520,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -62,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x000000000000000000000000000000000000000000000000000000000001801f",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788953520,
+        "tradingStartSec": 1788953460,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x925d77fe5625148bfcc382bb786837b354da966b",
+        "poolAddress": "0x3131acb6695f6b77635be1213d91c36e443afb86",
+        "createdAtBlock": 483802451,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x925d77fE5625148BFCC382Bb786837b354da966b",
+          "pool": "0x3131aCB6695f6b77635be1213d91C36E443afb86",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "311",
+          "expirySec": 1788953520,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -62,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x000000000000000000000000000000000000000000000000000000000001801a",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788953460,
+        "tradingStartSec": 1788953400,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x42c20fa7efb87186f45e8a96ed05f2a96f9571e9",
+        "poolAddress": "0xe259e659df538e1816d95aa6d26123242b8a96d1",
+        "createdAtBlock": 483801851,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x42c20fA7eFB87186f45E8A96ed05F2A96F9571E9",
+          "pool": "0xe259E659DF538e1816d95aA6D26123242B8a96d1",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "133",
+          "expirySec": 1788953460,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -122,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018019",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788953460,
+        "tradingStartSec": 1788953400,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x03171da80737db54381e31cc4de33cd20af3abd4",
+        "poolAddress": "0x9b97f870b4646b75f0ee6bbd4d0860644370c476",
+        "createdAtBlock": 483801851,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x03171Da80737dB54381E31CC4de33CD20af3ABd4",
+          "pool": "0x9B97F870b4646B75F0Ee6BBD4d0860644370C476",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "57",
+          "expirySec": 1788953460,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -122,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018015",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788953400,
+        "tradingStartSec": 1788953340,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xb81f74ff01cc369a0bd310c5371a53e9ad30ea33",
+        "poolAddress": "0x51b099a6043f4f21135408b3818487fb25653ba5",
+        "createdAtBlock": 483801251,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xB81f74ff01cC369A0Bd310c5371A53E9ad30EA33",
+          "pool": "0x51B099a6043f4f21135408B3818487fb25653BA5",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "121",
+          "expirySec": 1788953400,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -182,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018016",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788953400,
+        "tradingStartSec": 1788953340,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x4f5dca9f3146ea07993618c61ee5e12bcb831038",
+        "poolAddress": "0xee566931090fec48cb3746f0b44f4fd6e561a2e5",
+        "createdAtBlock": 483801251,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x4f5DCa9f3146Ea07993618c61ee5e12bcB831038",
+          "pool": "0xEE566931090fec48Cb3746F0B44F4FD6e561A2E5",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "73",
+          "expirySec": 1788953400,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -182,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x000000000000000000000000000000000000000000000000000000000001800d",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 300,
+        "expirySec": 1788953400,
+        "tradingStartSec": 1788953100,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x39e7abbcc5dc0a6a378a34985da5c2d9252c07e6",
+        "poolAddress": "0x1360bf3911808bd11679b8a19e31ff2a5a419913",
+        "createdAtBlock": 483798851,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x39E7ABBcC5Dc0A6A378A34985Da5C2D9252C07E6",
+          "pool": "0x1360bF3911808bD11679b8a19E31ff2A5a419913",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "23",
+          "expirySec": 1788953400,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -182,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 3,
+        "priorityLabel": "BTC_5M"
+      },
+      {
+        "marketId": "0x000000000000000000000000000000000000000000000000000000000001800a",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 300,
+        "expirySec": 1788953400,
+        "tradingStartSec": 1788953100,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x7eb66fd04684d06197b60cf90675213c599ce3e2",
+        "poolAddress": "0x3131acb6695f6b77635be1213d91c36e443afb86",
+        "createdAtBlock": 483798851,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x7eB66fd04684d06197b60cf90675213c599CE3E2",
+          "pool": "0x3131aCB6695f6b77635be1213d91C36E443afb86",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "310",
+          "expirySec": 1788953400,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -182,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 8,
+        "priorityLabel": "ETH_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018009",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 300,
+        "expirySec": 1788953400,
+        "tradingStartSec": 1788953100,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xa86bc45aa0181522a58b07e5321dfb922529ea45",
+        "poolAddress": "0x68bc148d7698bdbdb8a28df52cd0c0a61ffa6308",
+        "createdAtBlock": 483798851,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xa86BC45AA0181522A58B07e5321Dfb922529EA45",
+          "pool": "0x68bC148d7698BDBDb8A28DF52CD0C0A61FFa6308",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "73",
+          "expirySec": 1788953400,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -182,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 3,
+        "priorityLabel": "BTC_5M"
+      },
+      {
+        "marketId": "0x000000000000000000000000000000000000000000000000000000000001800e",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 300,
+        "expirySec": 1788953400,
+        "tradingStartSec": 1788953100,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xa9bc5f6bcfbf108946c26d05604d79daa7b299c0",
+        "poolAddress": "0x0957c6d772843a30f28b7cd436de9c1d0eaf8517",
+        "createdAtBlock": 483798851,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xA9Bc5F6bcFbf108946C26d05604D79DAA7B299c0",
+          "pool": "0x0957C6D772843a30F28B7Cd436DE9c1d0EAf8517",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "8",
+          "expirySec": 1788953400,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -182,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 8,
+        "priorityLabel": "ETH_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017ff0",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 900,
+        "expirySec": 1788953400,
+        "tradingStartSec": 1788952500,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x1e72be63c0f7df0cc89c4666c77bc18e5aaaa7d7",
+        "poolAddress": "0xf9a897be4b78d51e35bcee93938af2bc988dd317",
+        "createdAtBlock": 483792853,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x1E72Be63c0f7DF0cc89C4666c77bC18e5aaaA7d7",
+          "pool": "0xF9a897be4b78D51e35BceE93938af2BC988dd317",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "26",
+          "expirySec": 1788953400,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -182,
+        "requiredHeadroomSec": 225,
+        "priorityIndex": 7,
+        "priorityLabel": "ETH_15M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fef",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 900,
+        "expirySec": 1788953400,
+        "tradingStartSec": 1788952500,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xb45c60bc74cd2b609f26c415d3a5f466ffd73bcf",
+        "poolAddress": "0xc3f0bb8cd90d3ffa6a3e4982bcd6698f27af5cc8",
+        "createdAtBlock": 483792853,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xB45C60BC74Cd2b609F26c415D3A5F466fFd73bCf",
+          "pool": "0xC3F0Bb8cD90d3fFa6a3e4982bCD6698f27Af5cc8",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "149",
+          "expirySec": 1788953400,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -182,
+        "requiredHeadroomSec": 225,
+        "priorityIndex": 2,
+        "priorityLabel": "BTC_15M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018014",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788953340,
+        "tradingStartSec": 1788953280,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xe0cda181947ecd293a804021bc31f70aaf612bc9",
+        "poolAddress": "0x0893219330b49d89c2813e2f5145be5a13c6c26e",
+        "createdAtBlock": 483800651,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xE0CdA181947ecD293a804021BC31F70AAF612BC9",
+          "pool": "0x0893219330b49D89C2813E2f5145be5a13C6c26E",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "34",
+          "expirySec": 1788953340,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -242,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018013",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788953340,
+        "tradingStartSec": 1788953280,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x80124f53430fbfb319764e72d84e3f050bddaaa6",
+        "poolAddress": "0xc7cfc964eedbf526be8dd6ec5cd2ab3f5f7e28fd",
+        "createdAtBlock": 483800651,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x80124f53430FBFb319764e72D84e3F050BdDaAa6",
+          "pool": "0xc7cfC964eEDBf526bE8Dd6eC5Cd2aB3f5F7E28Fd",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "65",
+          "expirySec": 1788953340,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -242,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018012",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788953280,
+        "tradingStartSec": 1788953220,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xd660d6d31285131a57ad22f724444b10bbe34c56",
+        "poolAddress": "0x51b099a6043f4f21135408b3818487fb25653ba5",
+        "createdAtBlock": 483800051,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xd660d6d31285131A57Ad22f724444b10bBE34C56",
+          "pool": "0x51B099a6043f4f21135408B3818487fb25653BA5",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "120",
+          "expirySec": 1788953280,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -302,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018011",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788953280,
+        "tradingStartSec": 1788953220,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xc53f82bcd57419920f6b1666a40bfb23f75fc59b",
+        "poolAddress": "0xee566931090fec48cb3746f0b44f4fd6e561a2e5",
+        "createdAtBlock": 483800051,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xc53F82BCd57419920f6B1666A40Bfb23F75FC59B",
+          "pool": "0xEE566931090fec48Cb3746F0B44F4FD6e561A2E5",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "72",
+          "expirySec": 1788953280,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -302,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018010",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788953220,
+        "tradingStartSec": 1788953160,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x1f189b28f0d11ddaa7be6084df20e1b00eb2f2f3",
+        "poolAddress": "0xc7cfc964eedbf526be8dd6ec5cd2ab3f5f7e28fd",
+        "createdAtBlock": 483799451,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x1f189B28F0d11ddAA7bE6084Df20e1B00EB2F2F3",
+          "pool": "0xc7cfC964eEDBf526bE8Dd6eC5Cd2aB3f5F7E28Fd",
           "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
           "nonce": "64",
-          "expirySec": 1788777900,
+          "expirySec": 1788953220,
           "status": 4,
           "statusLabel": "4",
-          "readAtBlock": 482091965
+          "readAtBlock": 483803674
         },
-        "remainingSec": -4466,
+        "remainingSec": -362,
         "requiredHeadroomSec": 180,
         "priorityIndex": 9,
         "priorityLabel": "ETH_1M"
       },
       {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015db2",
+        "marketId": "0x000000000000000000000000000000000000000000000000000000000001800f",
         "source": "indexer",
         "marketType": "BINARY",
         "asset": "BTC",
         "intervalSec": 60,
-        "expirySec": 1788777900,
-        "tradingStartSec": 1788777840,
+        "expirySec": 1788953220,
+        "tradingStartSec": 1788953160,
         "statusFromIndexer": "Finalized",
-        "marketAddress": "0xa6e86a27ea0e8f4c4c970ecc9fef5a56ba1f66c2",
-        "poolAddress": "0x31fddb37b693b2a6f9bd3c7e2b8ab924e487a764",
-        "createdAtBlock": 482046714,
+        "marketAddress": "0xc6c35accf1dcafb48b6f87a4544e3729ed465271",
+        "poolAddress": "0x0893219330b49d89c2813e2f5145be5a13c6c26e",
+        "createdAtBlock": 483799451,
         "decision": "REJECTED",
         "rejectionCodes": [
           "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
           "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
         ],
         "direct": {
           "ok": true,
-          "marketAddress": "0xa6e86A27eA0e8f4C4c970ecC9fef5a56bA1F66c2",
-          "pool": "0x31FDdB37b693b2a6F9bD3c7e2B8Ab924E487a764",
+          "marketAddress": "0xc6C35acCf1DcafB48b6F87a4544e3729ED465271",
+          "pool": "0x0893219330b49D89C2813E2f5145be5a13C6c26E",
           "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "601",
-          "expirySec": 1788777900,
+          "nonce": "33",
+          "expirySec": 1788953220,
           "status": 4,
           "statusLabel": "4",
-          "readAtBlock": 482091965
+          "readAtBlock": 483803674
         },
-        "remainingSec": -4466,
+        "remainingSec": -362,
         "requiredHeadroomSec": 180,
         "priorityIndex": 4,
         "priorityLabel": "BTC_1M"
       },
       {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015db1",
+        "marketId": "0x000000000000000000000000000000000000000000000000000000000001800c",
         "source": "indexer",
         "marketType": "BINARY",
         "asset": "ETH",
         "intervalSec": 60,
-        "expirySec": 1788777840,
-        "tradingStartSec": 1788777780,
+        "expirySec": 1788953160,
+        "tradingStartSec": 1788953100,
         "statusFromIndexer": "Finalized",
-        "marketAddress": "0xcd86d96c919f7c296cc89944508860d985588638",
-        "poolAddress": "0x7c702b7a6c1f2ae6517e56bf931801ee599ee5e1",
-        "createdAtBlock": 482046114,
+        "marketAddress": "0x3010fdbadae5b3e5b836937044f6ed98661856ee",
+        "poolAddress": "0xee566931090fec48cb3746f0b44f4fd6e561a2e5",
+        "createdAtBlock": 483798851,
         "decision": "REJECTED",
         "rejectionCodes": [
           "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
           "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
         ],
         "direct": {
           "ok": true,
-          "marketAddress": "0xCD86D96C919F7c296Cc89944508860D985588638",
-          "pool": "0x7c702b7a6C1F2AE6517e56bf931801eE599Ee5E1",
+          "marketAddress": "0x3010FdbadAE5B3e5b836937044F6Ed98661856eE",
+          "pool": "0xEE566931090fec48Cb3746F0B44F4FD6e561A2E5",
           "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "364",
-          "expirySec": 1788777840,
+          "nonce": "71",
+          "expirySec": 1788953160,
           "status": 4,
           "statusLabel": "4",
-          "readAtBlock": 482091965
+          "readAtBlock": 483803674
         },
-        "remainingSec": -4526,
+        "remainingSec": -422,
         "requiredHeadroomSec": 180,
         "priorityIndex": 9,
         "priorityLabel": "ETH_1M"
       },
       {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015db0",
+        "marketId": "0x000000000000000000000000000000000000000000000000000000000001800b",
         "source": "indexer",
         "marketType": "BINARY",
         "asset": "BTC",
         "intervalSec": 60,
-        "expirySec": 1788777840,
-        "tradingStartSec": 1788777780,
+        "expirySec": 1788953160,
+        "tradingStartSec": 1788953100,
         "statusFromIndexer": "Finalized",
-        "marketAddress": "0xbaf3944d3d61272a8d02b7959ffca2ef60cd40cc",
-        "poolAddress": "0x9a4edaa91c3a92417f14f4ef7a1b7348c65404a0",
-        "createdAtBlock": 482046114,
+        "marketAddress": "0xb6bdb8baff5da377ab89318b22281c2b71a523ee",
+        "poolAddress": "0x51b099a6043f4f21135408b3818487fb25653ba5",
+        "createdAtBlock": 483798851,
         "decision": "REJECTED",
         "rejectionCodes": [
           "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
           "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
         ],
         "direct": {
           "ok": true,
-          "marketAddress": "0xBAf3944D3d61272a8d02B7959Ffca2eF60cd40cC",
-          "pool": "0x9a4eDaA91C3A92417f14f4eF7A1B7348c65404A0",
+          "marketAddress": "0xB6BdB8bAFF5dA377Ab89318B22281C2b71a523Ee",
+          "pool": "0x51B099a6043f4f21135408B3818487fb25653BA5",
           "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "401",
-          "expirySec": 1788777840,
+          "nonce": "119",
+          "expirySec": 1788953160,
           "status": 4,
           "statusLabel": "4",
-          "readAtBlock": 482091965
+          "readAtBlock": 483803674
         },
-        "remainingSec": -4526,
+        "remainingSec": -422,
         "requiredHeadroomSec": 180,
         "priorityIndex": 4,
         "priorityLabel": "BTC_1M"
       },
       {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015daf",
-        "source": "indexer",
-        "marketType": "BINARY",
-        "asset": "ETH",
-        "intervalSec": 60,
-        "expirySec": 1788777780,
-        "tradingStartSec": 1788777720,
-        "statusFromIndexer": "Finalized",
-        "marketAddress": "0xf479451c8fd4fa747a88eaed618abcb35ae03cc0",
-        "poolAddress": "0x5032d8c4c8dc96cbd0d97df774681ccbe598503b",
-        "createdAtBlock": 482045515,
-        "decision": "REJECTED",
-        "rejectionCodes": [
-          "ONCHAIN_NOT_TRADING",
-          "EXPIRED"
-        ],
-        "direct": {
-          "ok": true,
-          "marketAddress": "0xf479451c8fd4FA747a88EAed618abCB35aE03CC0",
-          "pool": "0x5032d8c4C8dC96cbd0d97Df774681cCbe598503b",
-          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "9",
-          "expirySec": 1788777780,
-          "status": 4,
-          "statusLabel": "4",
-          "readAtBlock": 482091965
-        },
-        "remainingSec": -4586,
-        "requiredHeadroomSec": 180,
-        "priorityIndex": 9,
-        "priorityLabel": "ETH_1M"
-      },
-      {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dae",
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018007",
         "source": "indexer",
         "marketType": "BINARY",
         "asset": "BTC",
         "intervalSec": 60,
-        "expirySec": 1788777780,
-        "tradingStartSec": 1788777720,
+        "expirySec": 1788953100,
+        "tradingStartSec": 1788953040,
         "statusFromIndexer": "Finalized",
-        "marketAddress": "0xbc04609c9b7e67b21e61fd9650016b9edad6d58e",
-        "poolAddress": "0x6a0a5471bc3015031d720e6d5fe98bc7894e7d38",
-        "createdAtBlock": 482045515,
+        "marketAddress": "0xe74b0342541bd8eb6454353ec59c808702d27e50",
+        "poolAddress": "0x9b97f870b4646b75f0ee6bbd4d0860644370c476",
+        "createdAtBlock": 483798251,
         "decision": "REJECTED",
         "rejectionCodes": [
           "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
           "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
         ],
         "direct": {
           "ok": true,
-          "marketAddress": "0xbc04609c9b7E67B21e61fd9650016B9EdaD6d58E",
-          "pool": "0x6a0a5471bc3015031D720e6d5fE98bc7894E7D38",
+          "marketAddress": "0xE74B0342541Bd8eb6454353EC59c808702D27E50",
+          "pool": "0x9B97F870b4646B75F0Ee6BBD4d0860644370C476",
           "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "7",
-          "expirySec": 1788777780,
+          "nonce": "56",
+          "expirySec": 1788953100,
           "status": 4,
           "statusLabel": "4",
-          "readAtBlock": 482091965
+          "readAtBlock": 483803674
         },
-        "remainingSec": -4586,
+        "remainingSec": -482,
         "requiredHeadroomSec": 180,
         "priorityIndex": 4,
         "priorityLabel": "BTC_1M"
       },
       {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dad",
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018008",
         "source": "indexer",
         "marketType": "BINARY",
         "asset": "ETH",
         "intervalSec": 60,
-        "expirySec": 1788777720,
-        "tradingStartSec": 1788777660,
+        "expirySec": 1788953100,
+        "tradingStartSec": 1788953040,
         "statusFromIndexer": "Finalized",
-        "marketAddress": "0x26ca3d80fefcc2e180ba29cd0fff7236d062f20f",
-        "poolAddress": "0xd5bed053ffd61feb27ad515afa527fa73a96d5d6",
-        "createdAtBlock": 482044915,
+        "marketAddress": "0x442343840cc427d4024ce44a2778cf21d08728d8",
+        "poolAddress": "0xc7cfc964eedbf526be8dd6ec5cd2ab3f5f7e28fd",
+        "createdAtBlock": 483798251,
         "decision": "REJECTED",
         "rejectionCodes": [
           "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
           "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
         ],
         "direct": {
           "ok": true,
-          "marketAddress": "0x26CA3D80fefcc2e180BA29cd0ffF7236d062F20f",
-          "pool": "0xD5beD053Ffd61FeB27ad515Afa527FA73A96d5D6",
+          "marketAddress": "0x442343840CC427D4024ce44A2778Cf21D08728D8",
+          "pool": "0xc7cfC964eEDBf526bE8Dd6eC5Cd2aB3f5F7E28Fd",
           "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "288",
-          "expirySec": 1788777720,
+          "nonce": "63",
+          "expirySec": 1788953100,
           "status": 4,
           "statusLabel": "4",
-          "readAtBlock": 482091965
+          "readAtBlock": 483803674
         },
-        "remainingSec": -4646,
+        "remainingSec": -482,
         "requiredHeadroomSec": 180,
         "priorityIndex": 9,
         "priorityLabel": "ETH_1M"
       },
       {
-        "marketId": "0x0000000000000000000000000000000000000000000000000000000000015dac",
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017ffb",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 300,
+        "expirySec": 1788953100,
+        "tradingStartSec": 1788952800,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x89848c8943c1544374c8d22e6d014f2baf9a017e",
+        "poolAddress": "0xe259e659df538e1816d95aa6d26123242b8a96d1",
+        "createdAtBlock": 483795852,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x89848C8943c1544374C8d22E6D014f2baF9A017e",
+          "pool": "0xe259E659DF538e1816d95aA6D26123242B8a96d1",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "132",
+          "expirySec": 1788953100,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -482,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 3,
+        "priorityLabel": "BTC_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fff",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 300,
+        "expirySec": 1788953100,
+        "tradingStartSec": 1788952800,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x2930af478dfb7711c8e62379593518555e919ddf",
+        "poolAddress": "0x5aa16cce07142cf52b230be067a333a41f324253",
+        "createdAtBlock": 483795852,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x2930AF478dFb7711C8e62379593518555e919Ddf",
+          "pool": "0x5Aa16cce07142Cf52B230BE067a333A41F324253",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "11",
+          "expirySec": 1788953100,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -482,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 3,
+        "priorityLabel": "BTC_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018000",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 300,
+        "expirySec": 1788953100,
+        "tradingStartSec": 1788952800,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xa5ff59f7b386f8ae6fdf53ead51c2b8ddbe46b72",
+        "poolAddress": "0xd56da1640ceab0b08ee3c65010f4c43b2970e4f0",
+        "createdAtBlock": 483795852,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xA5FF59F7b386F8aE6FdF53eAD51c2B8DdbE46b72",
+          "pool": "0xD56Da1640CeAB0B08ee3c65010F4c43b2970E4f0",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "41",
+          "expirySec": 1788953100,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -482,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 8,
+        "priorityLabel": "ETH_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017ffc",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 300,
+        "expirySec": 1788953100,
+        "tradingStartSec": 1788952800,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x73dacc2c35c228befe2d6ae7a099912cb9ac9969",
+        "poolAddress": "0x0893219330b49d89c2813e2f5145be5a13c6c26e",
+        "createdAtBlock": 483795852,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x73DacC2c35c228bEfe2D6Ae7A099912CB9ac9969",
+          "pool": "0x0893219330b49D89C2813E2f5145be5a13C6c26E",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "32",
+          "expirySec": 1788953100,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -482,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 8,
+        "priorityLabel": "ETH_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018005",
         "source": "indexer",
         "marketType": "BINARY",
         "asset": "BTC",
         "intervalSec": 60,
-        "expirySec": 1788777720,
-        "tradingStartSec": 1788777660,
+        "expirySec": 1788953040,
+        "tradingStartSec": 1788952980,
         "statusFromIndexer": "Finalized",
-        "marketAddress": "0x73ac3dff40df52a3ffc1058212d8545a30f95862",
-        "poolAddress": "0x70394da92fa94424ea25b55d2979e3c852a2eecd",
-        "createdAtBlock": 482044915,
+        "marketAddress": "0x2c9c55d5f961927768fc2c376befb28a4a67cd17",
+        "poolAddress": "0x9b97f870b4646b75f0ee6bbd4d0860644370c476",
+        "createdAtBlock": 483797652,
         "decision": "REJECTED",
         "rejectionCodes": [
           "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
           "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
         ],
         "direct": {
           "ok": true,
-          "marketAddress": "0x73AC3Dff40DF52A3FfC1058212D8545a30F95862",
-          "pool": "0x70394da92Fa94424EA25b55d2979e3C852A2EECd",
+          "marketAddress": "0x2c9c55D5f961927768Fc2c376beFb28A4a67Cd17",
+          "pool": "0x9B97F870b4646B75F0Ee6BBD4d0860644370C476",
           "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
-          "nonce": "25",
-          "expirySec": 1788777720,
+          "nonce": "55",
+          "expirySec": 1788953040,
           "status": 4,
           "statusLabel": "4",
-          "readAtBlock": 482091965
+          "readAtBlock": 483803674
         },
-        "remainingSec": -4646,
+        "remainingSec": -542,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018006",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788953040,
+        "tradingStartSec": 1788952980,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x03e8e7a35a801f981d89821ce62ef557cfa611ba",
+        "poolAddress": "0xc7cfc964eedbf526be8dd6ec5cd2ab3f5f7e28fd",
+        "createdAtBlock": 483797652,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x03E8E7A35a801f981D89821Ce62Ef557cfA611bA",
+          "pool": "0xc7cfC964eEDBf526bE8Dd6eC5Cd2aB3f5F7E28Fd",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "62",
+          "expirySec": 1788953040,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -542,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018003",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788952980,
+        "tradingStartSec": 1788952920,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x7fed1d5f1a2a3f71ce8f664975cf07a54397a5e6",
+        "poolAddress": "0x68bc148d7698bdbdb8a28df52cd0c0a61ffa6308",
+        "createdAtBlock": 483797052,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x7Fed1D5F1A2A3F71ce8F664975cF07a54397A5e6",
+          "pool": "0x68bC148d7698BDBDb8A28DF52CD0C0A61FFa6308",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "72",
+          "expirySec": 1788952980,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -602,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018004",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788952980,
+        "tradingStartSec": 1788952920,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xa32f07638ef25d22e8d657b45e22acca2db56bce",
+        "poolAddress": "0xc7cfc964eedbf526be8dd6ec5cd2ab3f5f7e28fd",
+        "createdAtBlock": 483797052,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xa32f07638ef25d22E8D657B45e22aCca2Db56bCE",
+          "pool": "0xc7cfC964eEDBf526bE8Dd6eC5Cd2aB3f5F7E28Fd",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "61",
+          "expirySec": 1788952980,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -602,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018002",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788952920,
+        "tradingStartSec": 1788952860,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xe4c839e6ab6bce664811f5cdb8df428205dbaa23",
+        "poolAddress": "0x9b97f870b4646b75f0ee6bbd4d0860644370c476",
+        "createdAtBlock": 483796452,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xe4c839E6ab6Bce664811f5cdB8Df428205DbAA23",
+          "pool": "0x9B97F870b4646B75F0Ee6BBD4d0860644370C476",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "54",
+          "expirySec": 1788952920,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -662,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000018001",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788952920,
+        "tradingStartSec": 1788952860,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xf6511e5e12eae1647013db2a572ff7c9ca8308da",
+        "poolAddress": "0x3131acb6695f6b77635be1213d91c36e443afb86",
+        "createdAtBlock": 483796452,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xf6511E5e12EAE1647013DB2a572Ff7c9Ca8308da",
+          "pool": "0x3131aCB6695f6b77635be1213d91C36E443afb86",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "309",
+          "expirySec": 1788952920,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -662,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017ffd",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788952860,
+        "tradingStartSec": 1788952800,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x41ed65da285b82524a6a6cb00168d8cdd9a926d0",
+        "poolAddress": "0xc7cfc964eedbf526be8dd6ec5cd2ab3f5f7e28fd",
+        "createdAtBlock": 483795852,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x41eD65DA285B82524A6A6cB00168D8cdd9a926d0",
+          "pool": "0xc7cfC964eEDBf526bE8Dd6eC5Cd2aB3f5F7E28Fd",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "60",
+          "expirySec": 1788952860,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -722,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017ffe",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788952860,
+        "tradingStartSec": 1788952800,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x8543ea68a48d5b1d7b4e280d4b7b50790ed1dd6c",
+        "poolAddress": "0x68bc148d7698bdbdb8a28df52cd0c0a61ffa6308",
+        "createdAtBlock": 483795852,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x8543ea68A48d5b1d7B4e280d4B7B50790Ed1DD6C",
+          "pool": "0x68bC148d7698BDBDb8A28DF52CD0C0A61FFa6308",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "71",
+          "expirySec": 1788952860,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -722,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017ffa",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788952800,
+        "tradingStartSec": 1788952740,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x88b9f2e9a0e6c9ba2bd45484b2dd1efb54ac0810",
+        "poolAddress": "0x9b97f870b4646b75f0ee6bbd4d0860644370c476",
+        "createdAtBlock": 483795252,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x88B9F2e9A0E6c9BA2Bd45484b2dd1EFB54aC0810",
+          "pool": "0x9B97F870b4646B75F0Ee6BBD4d0860644370C476",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "53",
+          "expirySec": 1788952800,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -782,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017ff9",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788952800,
+        "tradingStartSec": 1788952740,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xb7477df6c55ba013f7bccaa4be4874a6beafa17d",
+        "poolAddress": "0x51b099a6043f4f21135408b3818487fb25653ba5",
+        "createdAtBlock": 483795252,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xB7477dF6C55BA013F7BCCaa4be4874a6bEAfA17D",
+          "pool": "0x51B099a6043f4f21135408B3818487fb25653BA5",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "118",
+          "expirySec": 1788952800,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -782,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fec",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 300,
+        "expirySec": 1788952800,
+        "tradingStartSec": 1788952500,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x6c2cfb33a1471afd4a7a9be40461b0f05695770c",
+        "poolAddress": "0x3131acb6695f6b77635be1213d91c36e443afb86",
+        "createdAtBlock": 483792853,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x6C2cfb33A1471AfD4A7a9BE40461b0F05695770c",
+          "pool": "0x3131aCB6695f6b77635be1213d91C36E443afb86",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "308",
+          "expirySec": 1788952800,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -782,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 8,
+        "priorityLabel": "ETH_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017ff2",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 300,
+        "expirySec": 1788952800,
+        "tradingStartSec": 1788952500,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x1f70065b5dc59f0fb93149f96b08a65b91341803",
+        "poolAddress": "0xdc34cec6e50f056f4b0491a32128cd86a7b686b7",
+        "createdAtBlock": 483792853,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x1F70065b5dc59f0Fb93149F96b08A65b91341803",
+          "pool": "0xdc34CeC6E50f056F4B0491A32128Cd86A7B686b7",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "3",
+          "expirySec": 1788952800,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -782,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 8,
+        "priorityLabel": "ETH_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017feb",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 300,
+        "expirySec": 1788952800,
+        "tradingStartSec": 1788952500,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xe5dbc5876cb96c82001fa8d61cfea5de97cec7fb",
+        "poolAddress": "0xee566931090fec48cb3746f0b44f4fd6e561a2e5",
+        "createdAtBlock": 483792853,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xe5DBc5876cb96c82001FA8d61CFEa5De97ceC7fb",
+          "pool": "0xEE566931090fec48Cb3746F0B44F4FD6e561A2E5",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "70",
+          "expirySec": 1788952800,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -782,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 3,
+        "priorityLabel": "BTC_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017ff1",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 300,
+        "expirySec": 1788952800,
+        "tradingStartSec": 1788952500,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x2c93139de794db047d9edd354bbcafd0174af055",
+        "poolAddress": "0xc09e4a5bdee2899962727125fb5eaeb896798e46",
+        "createdAtBlock": 483792853,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x2c93139dE794Db047D9EdD354bbcafD0174Af055",
+          "pool": "0xC09e4a5bDee2899962727125fB5eaEB896798e46",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "118",
+          "expirySec": 1788952800,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -782,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 3,
+        "priorityLabel": "BTC_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017ff7",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788952740,
+        "tradingStartSec": 1788952680,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xc3fc44cc8560cc083dbe2e240364ccf9176ea1bd",
+        "poolAddress": "0x0893219330b49d89c2813e2f5145be5a13c6c26e",
+        "createdAtBlock": 483794653,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xC3fc44CC8560cc083DBe2e240364cCf9176EA1BD",
+          "pool": "0x0893219330b49D89C2813E2f5145be5a13C6c26E",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "31",
+          "expirySec": 1788952740,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -842,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017ff8",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788952740,
+        "tradingStartSec": 1788952680,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xe884c6d571f23e066b9a17de375e44180e98f63d",
+        "poolAddress": "0xe259e659df538e1816d95aa6d26123242b8a96d1",
+        "createdAtBlock": 483794653,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xe884C6d571f23E066b9A17dE375e44180e98F63D",
+          "pool": "0xe259E659DF538e1816d95aA6D26123242B8a96d1",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "131",
+          "expirySec": 1788952740,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -842,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017ff5",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788952680,
+        "tradingStartSec": 1788952620,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xac5438f0cda41ef1facd3f42146ccdc31381a76f",
+        "poolAddress": "0x9b97f870b4646b75f0ee6bbd4d0860644370c476",
+        "createdAtBlock": 483794053,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xaC5438f0cda41EF1FaCd3f42146CCdc31381A76f",
+          "pool": "0x9B97F870b4646B75F0Ee6BBD4d0860644370C476",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "52",
+          "expirySec": 1788952680,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -902,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017ff6",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788952680,
+        "tradingStartSec": 1788952620,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x0998f0499ab9247ae136b97c51934e6de4097662",
+        "poolAddress": "0x51b099a6043f4f21135408b3818487fb25653ba5",
+        "createdAtBlock": 483794053,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x0998F0499AB9247Ae136b97c51934E6dE4097662",
+          "pool": "0x51B099a6043f4f21135408B3818487fb25653BA5",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "117",
+          "expirySec": 1788952680,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -902,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017ff4",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788952620,
+        "tradingStartSec": 1788952560,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x0f06c0f8109359b51425e3608d70b2fa08dc676b",
+        "poolAddress": "0x0893219330b49d89c2813e2f5145be5a13c6c26e",
+        "createdAtBlock": 483793453,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x0F06c0f8109359B51425e3608D70B2Fa08DC676b",
+          "pool": "0x0893219330b49D89C2813E2f5145be5a13C6c26E",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "30",
+          "expirySec": 1788952620,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -962,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017ff3",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788952620,
+        "tradingStartSec": 1788952560,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xb80e91ff33d13426f362e7e8c3f83d7fea1f17da",
+        "poolAddress": "0xe259e659df538e1816d95aa6d26123242b8a96d1",
+        "createdAtBlock": 483793453,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0xb80E91fF33d13426F362E7e8c3F83D7fEA1f17Da",
+          "pool": "0xe259E659DF538e1816d95aA6D26123242B8a96d1",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "130",
+          "expirySec": 1788952620,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -962,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fee",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788952560,
+        "tradingStartSec": 1788952500,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x5be0c8c610e314ee2decea99c020281f20a0a8da",
+        "poolAddress": "0x9b97f870b4646b75f0ee6bbd4d0860644370c476",
+        "createdAtBlock": 483792853,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "ONCHAIN_NOT_TRADING",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": true,
+          "marketAddress": "0x5be0c8c610e314EE2deCEa99C020281f20a0A8DA",
+          "pool": "0x9B97F870b4646B75F0Ee6BBD4d0860644370C476",
+          "collateral": "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E",
+          "nonce": "51",
+          "expirySec": 1788952560,
+          "status": 4,
+          "statusLabel": "4",
+          "readAtBlock": 483803674
+        },
+        "remainingSec": -1022,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fed",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788952560,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x5a89a9b712b70fcb04b9a9e9a777c4a693fb067d",
+        "poolAddress": "0x51b099a6043f4f21135408b3818487fb25653ba5",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1022,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fea",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788952500,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xa52d423f95044b427e583563e86909160c519ae0",
+        "poolAddress": "0x0893219330b49d89c2813e2f5145be5a13c6c26e",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1082,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fe9",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788952500,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xb788d62e43504a75ea7eb11d53d51a75d12116e9",
+        "poolAddress": "0xc7cfc964eedbf526be8dd6ec5cd2ab3f5f7e28fd",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1082,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fdd",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 300,
+        "expirySec": 1788952500,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xf5ce7282dbca4796c6802012f57b821baa49b46a",
+        "poolAddress": "0x68bc148d7698bdbdb8a28df52cd0c0a61ffa6308",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1082,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 3,
+        "priorityLabel": "BTC_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fde",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 300,
+        "expirySec": 1788952500,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x488635bcb3e2a71d9612e1fecf7756a019481177",
+        "poolAddress": "0xe259e659df538e1816d95aa6d26123242b8a96d1",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1082,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 8,
+        "priorityLabel": "ETH_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fe2",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 300,
+        "expirySec": 1788952500,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xedfcc0f67adec1b9e18a5eccaeaa52b750530541",
+        "poolAddress": "0x8bbeeb8a47782b429abb37ee58ac93346c2d638b",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1082,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 8,
+        "priorityLabel": "ETH_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fe1",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 300,
+        "expirySec": 1788952500,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xcbb0db3a39d94a81793eb92d61d857f12f982e30",
+        "poolAddress": "0x8f48c06fa0c97cfeb69ffe1515d43da07103157c",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1082,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 3,
+        "priorityLabel": "BTC_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fc3",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 900,
+        "expirySec": 1788952500,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x3d866d70ed3131751faf16f7631a06376dfee622",
+        "poolAddress": "0x961d09dff45652722255121719fb795c9010515f",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1082,
+        "requiredHeadroomSec": 225,
+        "priorityIndex": 2,
+        "priorityLabel": "BTC_15M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fe8",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788952440,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x839e5f43eba125c5a358f5050b59c0c6de2783bb",
+        "poolAddress": "0xee566931090fec48cb3746f0b44f4fd6e561a2e5",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1142,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fe7",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788952440,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x91b921621aea7d1ecf246b8060b03dc1092709ad",
+        "poolAddress": "0x3131acb6695f6b77635be1213d91c36e443afb86",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1142,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fe5",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788952380,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xc938a5cf5e34d5b6770c301d47b2c8db438890d4",
+        "poolAddress": "0x0893219330b49d89c2813e2f5145be5a13c6c26e",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1202,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fe6",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788952380,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x0eebe335c86dbf06fe8ac1047c12618ac4c9543f",
+        "poolAddress": "0xc7cfc964eedbf526be8dd6ec5cd2ab3f5f7e28fd",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1202,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fe4",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788952320,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xff017cb9c76e0b11ef0a9fe1e46ba42c5efae3e9",
+        "poolAddress": "0x3131acb6695f6b77635be1213d91c36e443afb86",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1262,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fe3",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788952320,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x2b43b8a97e5dd499c9058f87c4af87da0a4a20a6",
+        "poolAddress": "0xee566931090fec48cb3746f0b44f4fd6e561a2e5",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1262,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fe0",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788952260,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xc3aa50201910085fabf4187da449d506ede4dc3a",
+        "poolAddress": "0x0893219330b49d89c2813e2f5145be5a13c6c26e",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1322,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fdf",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788952260,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x85646990be87dd6febe972b19bdb54047e189e8c",
+        "poolAddress": "0xc7cfc964eedbf526be8dd6ec5cd2ab3f5f7e28fd",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1322,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fdc",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788952200,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x34a5b1a66120623e74803925f2a90df476f676f5",
+        "poolAddress": "0x3131acb6695f6b77635be1213d91c36e443afb86",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1382,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fdb",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788952200,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x6aeef73d78ec7b9a13532043e83fe86b67863438",
+        "poolAddress": "0x51b099a6043f4f21135408b3818487fb25653ba5",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1382,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fd0",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 300,
+        "expirySec": 1788952200,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xdcb2e09ef2fc9dff6776f01238bb86ad614cbc3a",
+        "poolAddress": "0xee566931090fec48cb3746f0b44f4fd6e561a2e5",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1382,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 8,
+        "priorityLabel": "ETH_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fcf",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 300,
+        "expirySec": 1788952200,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xa3e197529178608e6eed2692e2050edeba451e54",
+        "poolAddress": "0x9b97f870b4646b75f0ee6bbd4d0860644370c476",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1382,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 3,
+        "priorityLabel": "BTC_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fd3",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 300,
+        "expirySec": 1788952200,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xbb0193f6690727f49737049789c1f81bd139c89c",
+        "poolAddress": "0x62ab4e12a5d037a3e8695c3c62584c43ab722efb",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1382,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 3,
+        "priorityLabel": "BTC_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fd4",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 300,
+        "expirySec": 1788952200,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x4e13f2f2800b5530ae2918f46670e90499c2cec4",
+        "poolAddress": "0x3ae79c8a2c3197b57af3715b74ba1e96bce82607",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1382,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 8,
+        "priorityLabel": "ETH_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fd9",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788952140,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x7856c899d55265e3919eeb28a67347ca26eacb33",
+        "poolAddress": "0xe259e659df538e1816d95aa6d26123242b8a96d1",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1442,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fda",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788952140,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x0869f3f8001036e0c15f0ba90985b662d1c78e64",
+        "poolAddress": "0x68bc148d7698bdbdb8a28df52cd0c0a61ffa6308",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1442,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fd8",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788952080,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x6d5444d99007ecac344df3e3e49721434d74aaa5",
+        "poolAddress": "0x51b099a6043f4f21135408b3818487fb25653ba5",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1502,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fd7",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788952080,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xdd66d0d803941948579650878f3dca644ffb986f",
+        "poolAddress": "0x3131acb6695f6b77635be1213d91c36e443afb86",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1502,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fd5",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788952020,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xcd75de918370ffb06d2d8a29e53120e8f97ca369",
+        "poolAddress": "0x68bc148d7698bdbdb8a28df52cd0c0a61ffa6308",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1562,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fd6",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788952020,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xb14c517ac3243779ef3f4b117f531c22afdd3239",
+        "poolAddress": "0xe259e659df538e1816d95aa6d26123242b8a96d1",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1562,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fd1",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788951960,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x6615b0e3fe2fa435b2e5ff9d3c0b0e58d493ef37",
+        "poolAddress": "0x51b099a6043f4f21135408b3818487fb25653ba5",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1622,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fd2",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788951960,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x3bd611a4fe2a7550c995ea0a2d7ba3d33a4e7902",
+        "poolAddress": "0x3131acb6695f6b77635be1213d91c36e443afb86",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1622,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fce",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788951900,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xd92f6845f41659bdcf940845220f44c5e3e0c40a",
+        "poolAddress": "0xe259e659df538e1816d95aa6d26123242b8a96d1",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1682,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fcd",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788951900,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xde0fbc550f7ee100d49a8f167e694d60a3cdc0c0",
+        "poolAddress": "0xc7cfc964eedbf526be8dd6ec5cd2ab3f5f7e28fd",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1682,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fc5",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 300,
+        "expirySec": 1788951900,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xedc25f2e34c4d8cd8ab1181665b6682fcf633c36",
+        "poolAddress": "0x17e40b83766bba9a6460ca04373d56b863348de0",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1682,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 3,
+        "priorityLabel": "BTC_5M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fcc",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788951840,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x2012b99e45925ea593ac1f435ef30da457b5f88b",
+        "poolAddress": "0x9b97f870b4646b75f0ee6bbd4d0860644370c476",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1742,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fcb",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788951840,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x064a48eced10d9564367c6245adaa15f946b1902",
+        "poolAddress": "0xee566931090fec48cb3746f0b44f4fd6e561a2e5",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1742,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fca",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788951780,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xfc561ceb0ddd4311df207987dfb698ec3267277a",
+        "poolAddress": "0xc7cfc964eedbf526be8dd6ec5cd2ab3f5f7e28fd",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1802,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fc9",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788951780,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x3796c4c2c672f84ef9f67868be0d49e7b75a20d4",
+        "poolAddress": "0xe259e659df538e1816d95aa6d26123242b8a96d1",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1802,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fc8",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788951720,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x6b87679185249e60062b421cd8c9bb1400e17784",
+        "poolAddress": "0xee566931090fec48cb3746f0b44f4fd6e561a2e5",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1862,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fc7",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788951720,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x9a32f1efaa974bc69f2728378ae82b4a05ffecd4",
+        "poolAddress": "0x9b97f870b4646b75f0ee6bbd4d0860644370c476",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1862,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 4,
+        "priorityLabel": "BTC_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fc0",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "ETH",
+        "intervalSec": 60,
+        "expirySec": 1788951660,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0x95df75419a5d4de420fd265c8a235723564d2ec0",
+        "poolAddress": "0xe259e659df538e1816d95aa6d26123242b8a96d1",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1922,
+        "requiredHeadroomSec": 180,
+        "priorityIndex": 9,
+        "priorityLabel": "ETH_1M"
+      },
+      {
+        "marketId": "0x0000000000000000000000000000000000000000000000000000000000017fbf",
+        "source": "indexer",
+        "marketType": "BINARY",
+        "asset": "BTC",
+        "intervalSec": 60,
+        "expirySec": 1788951660,
+        "tradingStartSec": null,
+        "statusFromIndexer": "Finalized",
+        "marketAddress": "0xf1da28461310cc9bf273627bb4ea35408e0d2a77",
+        "poolAddress": "0xc7cfc964eedbf526be8dd6ec5cd2ab3f5f7e28fd",
+        "createdAtBlock": null,
+        "decision": "REJECTED",
+        "rejectionCodes": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED",
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "compatible": false,
+        "proofEligible": false,
+        "compatibilityReasons": [
+          "DIRECT_READ_FAILED",
+          "EXPIRED"
+        ],
+        "proofEligibilityReasons": [
+          "REFERENCE_UNAVAILABLE"
+        ],
+        "direct": {
+          "ok": false,
+          "error": "market_TIMEOUT"
+        },
+        "remainingSec": -1922,
         "requiredHeadroomSec": 180,
         "priorityIndex": 4,
         "priorityLabel": "BTC_1M"
       }
     ],
+    "counts": {
+      "discoverable": 101,
+      "directRead": 59,
+      "currentlyTrading": 10,
+      "compatible": 10,
+      "proofEligible": 0
+    },
     "meta": {
       "indexer": "https://dev.smk.somnia.host/v1/graphql",
       "directValidation": true,
-      "rowsReturned": 100,
-      "rowsProbed": 40,
+      "discoveryComplete": false,
+      "fallbackSupported": true,
+      "paginationExhausted": false,
+      "logFallbackComplete": false,
+      "rowsReturned": 1246,
+      "logFallbackRows": 246,
+      "logFallbackError": "BOUNDED_LOG_LOOKBACK_NOT_EXHAUSTIVE",
+      "rowsDiscovered": 101,
+      "rowsProbed": 100,
       "deployedAddresses": {
         "registryV2": "0x1eD3B2310F369977ef82569498d5F678f8B73104",
         "executorV2": "0x6e6Bf80Dc412f4DFCb59C15494C83785d54fb66d"
@@ -1473,12 +4160,12 @@
       ]
     }
   },
-  "status": "BLOCKED_NO_ELIGIBLE_LIVE_MARKET",
-  "blocker": "BLOCKED_NO_ELIGIBLE_LIVE_MARKET",
+  "status": "DISCOVERY_INCOMPLETE",
+  "blocker": "DISCOVERY_INCOMPLETE",
   "selection": {
     "selectedMarketId": null,
     "priorityLabel": null,
-    "reason": "No candidate passed direct binding, Trading status, allowed asset/cadence, historical exclusion, and profile headroom gates."
+    "reason": "Discovery did not complete with a supported paginated indexer plus MarketCreated-log fallback; no exhaustive market claim was inferred."
   },
   "packet": null,
   "gas": null,

@@ -60,6 +60,19 @@ export type GateStatus =
   | "BLOCKED_OWNER_NONCE_READ_FAILED"
   | "BLOCKED_LIVE_READ_FAILED";
 
+export type DiscoveryOutcomeInput = {
+  discoveryComplete: boolean;
+  compatible: number;
+  proofEligible: number;
+};
+
+export function discoveryOutcome(input: DiscoveryOutcomeInput): GateStatus {
+  if (!input.discoveryComplete) return "DISCOVERY_INCOMPLETE";
+  if (input.proofEligible > 0) return "READY_FOR_BOUNDED_LIVE_WRITE";
+  if (input.compatible > 0) return "LIVE_MARKETS_FOUND_NONE_PROOF_ELIGIBLE";
+  return "NO_LIVE_COMPATIBLE_MARKET";
+}
+
 export type ProfileName = "A" | "B";
 
 export interface NetworkEvidence {
@@ -267,8 +280,19 @@ export interface LiveGateEvidence {
     broadcasts: false;
   };
   rules: {
-    allowedAssets: ["BTC", "ETH"];
-    allowedCadencesSec: [60, 300, 900, 3600, 14400];
+    compatibility: {
+      marketType: "BINARY";
+      requiredFields: ["marketId", "marketAddress", "pool", "status", "expiry", "probability/book"];
+      directStatusRequired: "Trading";
+      expiryRequired: "GREATER_THAN_OBSERVED_CHAIN_TIMESTAMP";
+    };
+    proofProfile: {
+      preferredAssets: string[];
+      allowOtherCompatibleAssets: true;
+      preferredCadencesSec: number[];
+      headroomRule: string;
+      requireBookReference: true;
+    };
     priority: typeof MARKET_PRIORITY;
     historicalMarketExcluded: string;
     statusAuthority: "DIRECT_ONCHAIN";
@@ -278,7 +302,7 @@ export interface LiveGateEvidence {
   discovery: {
     sourceHierarchy: ["DIRECT_CHAIN_READS", "PINNED_SDK_ABI_TYPES", "INDEXER_ASSISTANCE", "MARKET_CREATED_LOG_FALLBACK"];
     candidatesObserved: CandidateEvidence[];
-    counts: { discoverable: number; compatible: number; proofEligible: number };
+    counts: { discoverable: number; directRead: number; currentlyTrading: number; compatible: number; proofEligible: number };
     meta: Record<string, unknown>;
   };
   selection: {
@@ -571,8 +595,19 @@ export function evaluateLiveGate(input: GateEvaluationInput): LiveGateEvidence {
       broadcasts: false,
     },
     rules: {
-      allowedAssets: ["BTC", "ETH"],
-      allowedCadencesSec: [60, 300, 900, 3600, 14400],
+      compatibility: {
+        marketType: "BINARY",
+        requiredFields: ["marketId", "marketAddress", "pool", "status", "expiry", "probability/book"],
+        directStatusRequired: "Trading",
+        expiryRequired: "GREATER_THAN_OBSERVED_CHAIN_TIMESTAMP",
+      },
+      proofProfile: {
+        preferredAssets: ["BTC", "ETH"],
+        allowOtherCompatibleAssets: true,
+        preferredCadencesSec: [60, 300, 900, 3600, 14400],
+        headroomRule: profile.minimumHeadroomRule,
+        requireBookReference: true,
+      },
       priority: MARKET_PRIORITY,
       historicalMarketExcluded: EXCLUDED_HISTORICAL_MARKET_ID,
       statusAuthority: "DIRECT_ONCHAIN",
@@ -583,7 +618,9 @@ export function evaluateLiveGate(input: GateEvaluationInput): LiveGateEvidence {
       sourceHierarchy: ["DIRECT_CHAIN_READS", "PINNED_SDK_ABI_TYPES", "INDEXER_ASSISTANCE", "MARKET_CREATED_LOG_FALLBACK"],
       candidatesObserved: records,
       counts: {
-        discoverable: records.length,
+        discoverable: Number(input.discoveryMeta?.rowsDiscovered ?? records.length),
+        directRead: records.filter((record) => record.direct.ok).length,
+        currentlyTrading: records.filter((record) => record.direct.ok && record.direct.status === 1).length,
         compatible: records.filter((record) => record.compatible).length,
         proofEligible: records.filter((record) => record.proofEligible).length,
       },
@@ -593,7 +630,7 @@ export function evaluateLiveGate(input: GateEvaluationInput): LiveGateEvidence {
     owner: ownerOutput,
   };
 
-  if (input.discoveryMeta?.discoveryComplete === false) {
+  if (input.discoveryMeta?.discoveryComplete === false && selected == null) {
     const status: GateStatus = input.discoveryMeta.fatalCode === "DISCOVERY_FAILED" ? "DISCOVERY_FAILED" : "DISCOVERY_INCOMPLETE";
     return {
       ...base,
@@ -817,8 +854,12 @@ export function renderLiveGateMarkdown(evidence: LiveGateEvidence): string {
     "",
     "## Rules",
     "",
-    `- Asset allowlist: \`${evidence.rules.allowedAssets.join(", ")}\``,
-    `- Cadence allowlist: \`${evidence.rules.allowedCadencesSec.join(", ")}\` seconds`,
+    `- Structural compatibility: binary Event Contract with readable marketId, market, pool, status, expiry, and book/probability fields`,
+    `- Direct status: \`${evidence.rules.compatibility.directStatusRequired}\``,
+    `- Expiry: \`${evidence.rules.compatibility.expiryRequired}\``,
+    `- Proof preferences: \`${evidence.rules.proofProfile.preferredAssets.join(", ")}\`; other compatible assets allowed: \`${evidence.rules.proofProfile.allowOtherCompatibleAssets}\``,
+    `- Proof headroom: \`${evidence.rules.proofProfile.headroomRule}\``,
+    `- Reference required for proof eligibility: \`${evidence.rules.proofProfile.requireBookReference}\``,
     `- Priority: \`${evidence.rules.priority.map((p) => p.label).join(" -> ")}\``,
     `- Historical exclusion: \`${evidence.rules.historicalMarketExcluded}\``,
     `- Status authority: \`${evidence.rules.statusAuthority}\``,
