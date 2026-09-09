@@ -197,11 +197,25 @@ describe("M4.3.2B live gate decision", () => {
       book: { ok: true, quoteDecimals: 6, oneCollateralRaw: "1000000", tickSizeRaw: "1000", lotSizeRaw: "1000", minQuantityRaw: "1000", bestBidRaw: null, bestAskRaw: null },
     })]));
 
-    expect(evidence.status).toBe("LIVE_MARKETS_FOUND_NONE_PROOF_ELIGIBLE");
+    expect(evidence.status).toBe("READY_FOR_BOUNDED_LIVE_WRITE");
     expect(evidence.discovery.candidatesObserved[0]?.compatible).toBe(true);
-    expect(evidence.discovery.candidatesObserved[0]?.proofEligible).toBe(false);
-    expect(evidence.discovery.candidatesObserved[0]?.rejectionCodes).toContain("REFERENCE_UNAVAILABLE");
-    expect(evidence.packet).toBeNull();
+    expect(evidence.discovery.candidatesObserved[0]?.proofEligible).toBe(true);
+    expect(evidence.discovery.candidatesObserved[0]?.rejectionCodes).not.toContain("REFERENCE_UNAVAILABLE");
+    expect(evidence.packet).not.toBeNull();
+  });
+
+  it("allows a safe Trading candidate when market reference is unavailable", () => {
+    const evidence = evaluateLiveGate(input([makeProbe(marketId(1700), "BTC", 3600, 8000, {
+      book: { ok: false, error: "BOOK_UNAVAILABLE", quoteDecimals: null, oneCollateralRaw: null, tickSizeRaw: null, lotSizeRaw: null, minQuantityRaw: null, bestBidRaw: null, bestAskRaw: null },
+    })]));
+    const candidate = evidence.discovery.candidatesObserved[0];
+
+    expect(candidate?.compatible).toBe(true);
+    expect(candidate?.proofEligible).toBe(true);
+    expect(candidate?.rejectionCodes).not.toContain("REFERENCE_UNAVAILABLE");
+    expect(evidence.selection.selectedMarketId).toBe(marketId(1700));
+    expect(evidence.packet?.market.reference.referenceValid).toBe(false);
+    expect(evidence.packet?.market.reference.referenceUnavailable).toBe(true);
   });
 
   it("does not let the first 40 stale rows hide a later live candidate", () => {

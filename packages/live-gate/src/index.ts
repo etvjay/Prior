@@ -291,7 +291,8 @@ export interface LiveGateEvidence {
       allowOtherCompatibleAssets: true;
       preferredCadencesSec: number[];
       headroomRule: string;
-      requireBookReference: true;
+      requireBookReference: boolean;
+      referencePolicy?: string;
     };
     priority: typeof MARKET_PRIORITY;
     historicalMarketExcluded: string;
@@ -543,7 +544,8 @@ export function evaluateLiveGate(input: GateEvaluationInput): LiveGateEvidence {
       proofEligibilityReasons.push("HEADROOM_INSUFFICIENT");
     }
     const reference = deriveBookReference(probe.book);
-    if (!reference.referenceValid) proofEligibilityReasons.push("REFERENCE_UNAVAILABLE");
+    // M4.3 reference data is optional for the zero-action proof. Preserve the
+    // unavailable state in the packet; never turn it into a fabricated value.
     const dedupedRejections = [...new Set(rejectionCodes)];
     const compatible = compatibilityReasons.length === 0;
     const proofEligible = compatible && proofEligibilityReasons.length === 0;
@@ -606,7 +608,8 @@ export function evaluateLiveGate(input: GateEvaluationInput): LiveGateEvidence {
         allowOtherCompatibleAssets: true,
         preferredCadencesSec: [60, 300, 900, 3600, 14400],
         headroomRule: profile.minimumHeadroomRule,
-        requireBookReference: true,
+        requireBookReference: false,
+        referencePolicy: "OPTIONAL_FOR_M4_3_ZERO_ACTION",
       },
       priority: MARKET_PRIORITY,
       historicalMarketExcluded: EXCLUDED_HISTORICAL_MARKET_ID,
