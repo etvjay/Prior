@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "baseUrl": "../..",
+    "paths": { "@prior/agent-integration": ["packages/agent-integration/src/index.ts"] }
+  },
+  "include": ["src/index.ts", "src/live-read.ts"],
+  "exclude": ["src/**/*.test.ts"]
+}
