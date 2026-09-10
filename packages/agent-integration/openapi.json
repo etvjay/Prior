@@ -195,10 +195,10 @@
             "name": "limit",
             "schema": {
               "type": "integer",
-              "minimum": 1,
-              "maximum": 100
+              "minimum": 1
             },
-            "required": false
+            "required": false,
+            "description": "Positive safe integer; values above the service page size are clamped to 100."
           },
           {
             "in": "query",
@@ -356,10 +356,10 @@
             "name": "limit",
             "schema": {
               "type": "integer",
-              "minimum": 1,
-              "maximum": 100
+              "minimum": 1
             },
-            "required": false
+            "required": false,
+            "description": "Positive safe integer; values above the service page size are clamped to 100."
           },
           {
             "in": "query",
@@ -664,6 +664,16 @@
           },
           "422": {
             "description": "Structured integration error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload exceeds 1 MiB",
             "content": {
               "application/json": {
                 "schema": {
