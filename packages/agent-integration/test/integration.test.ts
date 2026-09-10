@@ -43,8 +43,11 @@ describe("Prior integration equivalence and refusal boundaries", () => {
     const h = await createPriorHttpServer(); handles.push(h);
     const headers = { "x-prior-scope": "prior:read" };
     const nan = await fetch(`${h.url}/v1/markets?limit=NaN&offset=0`, { headers }); expect(nan.status).toBe(400); expect((await nan.json()).code).toBe("MALFORMED_INPUT");
-    const malformed = await fetch(`${h.url}/v1/markets/%E0%A4%A`, { headers }); expect(malformed.status).toBe(400); expect((await malformed.json()).code).toBe("MALFORMED_INPUT");
-    const denied = await expect(new PriorMcpCore(h.service).readResource("prior://capabilities")).rejects.toMatchObject({ code: "SCOPE_REQUIRED" }); void denied;
+    const emptyOffset = await fetch(`${h.url}/v1/markets?limit=1&offset=`, { headers }); expect(emptyOffset.status).toBe(400);
+    const exponent = await fetch(`${h.url}/v1/markets?limit=1e2`, { headers }); expect(exponent.status).toBe(400);
+    const unsafe = await fetch(`${h.url}/v1/markets?limit=9007199254740992`, { headers }); expect(unsafe.status).toBe(400);
+    await expect(new PriorMcpCore(h.service).readResource("prior://capabilities")).rejects.toMatchObject({ code: "SCOPE_REQUIRED" });
+    await expect(new PriorMcpCore(h.service).readResource("prior://market/%E0%A4%A")).rejects.toMatchObject({ code: "MALFORMED_INPUT" });
     const markets = await h.service.listMarkets(read); expect(markets.items).toHaveLength(1); expect(markets.items[0]?.marketId).toBe(FIXTURE_MARKET_ID);
   });
 });

@@ -9,6 +9,7 @@ function auth(request: IncomingMessage): AuthContext { const raw = request.heade
 function send(response: ServerResponse, status: number, body: unknown): void { response.statusCode = status; response.setHeader("content-type", "application/json; charset=utf-8"); response.end(JSON.stringify(body)); }
 async function readBody(request: IncomingMessage): Promise<unknown> { const chunks: Buffer[] = []; let size = 0; for await (const chunk of request) { const b = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk); size += b.length; if (size > 1_000_000) throw new IntegrationError("PAYLOAD_TOO_LARGE", "payload exceeds 1 MiB", 413); chunks.push(b); } try { return JSON.parse(Buffer.concat(chunks).toString("utf8")); } catch { throw new IntegrationError("MALFORMED_INPUT", "request body must be JSON", 400); } }
 function routeId(pathname: string, prefix: string): string | undefined { if (!pathname.startsWith(prefix)) return undefined; try { return decodeURIComponent(pathname.slice(prefix.length)); } catch { throw new IntegrationError("MALFORMED_INPUT", "path identifier is not valid percent-encoding", 400); } }
+function pageParam(url: URL, name: "limit" | "offset", fallback: number): number { const raw = url.searchParams.get(name); if (raw === null) return fallback; if (!/^(0|[1-9][0-9]*)$/.test(raw)) throw new IntegrationError("MALFORMED_INPUT", `${name} must be a finite integer in canonical decimal form`, 400); const value = Number(raw); if (!Number.isSafeInteger(value)) throw new IntegrationError("MALFORMED_INPUT", `${name} is outside the safe integer range`, 400); return value; }
 
 export async function createPriorHttpServer(options: PriorHttpOptions = {}): Promise<PriorHttpHandle> {
   const service = options.service ?? new PriorApplicationService(); const host = options.host ?? "127.0.0.1"; const port = options.port ?? 0;
@@ -17,9 +18,9 @@ export async function createPriorHttpServer(options: PriorHttpOptions = {}): Pro
       const url = new URL(request.url ?? "/", `http://${host}`); const context = auth(request);
       if (request.method === "GET" && url.pathname === "/health") return send(response, 200, { ok: true, service: "prior-agent-integration", version: "v1" });
       if (request.method === "GET" && url.pathname === "/v1/capabilities") return send(response, 200, service.capabilities(context));
-      if (request.method === "GET" && url.pathname === "/v1/circuits") return send(response, 200, service.listCircuits(context, Number(url.searchParams.get("limit") ?? 50), Number(url.searchParams.get("offset") ?? 0)));
+      if (request.method === "GET" && url.pathname === "/v1/circuits") return send(response, 200, service.listCircuits(context, pageParam(url, "limit", 50), pageParam(url, "offset", 0)));
       const circuitId = routeId(url.pathname, "/v1/circuits/"); if (request.method === "GET" && circuitId) return send(response, 200, service.getCircuit(circuitId, context));
-      if (request.method === "GET" && url.pathname === "/v1/markets") return send(response, 200, service.listMarkets(context, Number(url.searchParams.get("limit") ?? 50), Number(url.searchParams.get("offset") ?? 0)));
+      if (request.method === "GET" && url.pathname === "/v1/markets") return send(response, 200, service.listMarkets(context, pageParam(url, "limit", 50), pageParam(url, "offset", 0)));
       const marketId = routeId(url.pathname, "/v1/markets/"); if (request.method === "GET" && marketId) return send(response, 200, service.getMarket(marketId, context));
       const forecastId = routeId(url.pathname, "/v1/forecasts/"); if (request.method === "GET" && forecastId) return send(response, 200, service.getForecast(forecastId, context));
       if (request.method === "GET" && url.pathname === "/v1/forecast-requests/next") return send(response, 200, service.getForecastRequest(url.searchParams.get("providerId") ?? "", url.searchParams.get("sessionId") ?? "", context));
