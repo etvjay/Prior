@@ -449,13 +449,15 @@ export async function createForecastProviderServer(options: ForecastProviderServ
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const port = Number(process.env.PORT ?? "8791");
-  const handle = await createForecastProviderServer({ port });
-  console.log(`FORECAST_PROVIDER_SERVER_READY=${handle.url}`);
-  const close = async () => {
-    await handle.close();
-    process.exit(0);
-  };
-  process.once("SIGINT", () => void close());
-  process.once("SIGTERM", () => void close());
+  void (async () => {
+    const port = Number(process.env.PORT ?? "8791");
+    const handle = await createForecastProviderServer({ port });
+    console.log(`FORECAST_PROVIDER_SERVER_READY=${handle.url}`);
+    const close = async () => {
+      await handle.close();
+      process.exit(0);
+    };
+    process.once("SIGINT", () => void close());
+    process.once("SIGTERM", () => void close());
+  })();
 }

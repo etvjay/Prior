@@ -81,6 +81,28 @@ importers:
         specifier: 5.7.2
         version: 5.7.2
 
+  packages/agent-integration:
+    dependencies:
+      '@prior/core':
+        specifier: workspace:*
+        version: link:../core
+      '@prior/forecast-protocol':
+        specifier: workspace:*
+        version: link:../forecast-protocol
+      '@prior/forecast-provider-server':
+        specifier: workspace:*
+        version: link:../forecast-provider-server
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.5
+        version: 22.10.5
+      typescript:
+        specifier: 5.7.2
+        version: 5.7.2
+      vitest:
+        specifier: 2.1.8
+        version: 2.1.8(@types/node@22.10.5)
+
   packages/core:
     dependencies:
       viem:
