@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "prior-agent-readonly",
+  "main": "workers/prior-agent-readonly/src/index.ts",
+  "compatibility_date": "2026-09-10",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "alias": {
+    "@prior/agent-integration": "./packages/agent-integration/src/index.ts",
+    "@prior/core": "./packages/core/src/index.ts",
+    "@prior/forecast-protocol": "./packages/forecast-protocol/src/index.ts",
+    "@prior/forecast-provider-server": "./packages/forecast-provider-server/src/index.ts"
+  }
+}
