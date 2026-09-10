@@ -35,6 +35,8 @@ describe("Worker live canonical read adapter", () => {
     expect(circuit).toMatchObject({ circuitId: hex32(1), status: "ACTIVE", completed: 1, abstained: 1, reservedSpend: "50" });
     const forecast = parseForecastRead([hex32(4), hex32(5), address(6), 7234, 4200, true, 10n, 11n, 300, 0, 0, 1, 0, 0, 0, 0]);
     expect(forecast).toMatchObject({ forecastId: hex32(4), marketId: hex32(5), pUpBps: 7234, status: "COMMITTED" });
+    const named = parseForecastRead({ trialId: hex32(4), marketId: hex32(5), forecaster: address(6), pUpBps: 7234, referenceUpBps: 4200, referenceValid: true, committedAt: 10n, committedBlock: 11n, secondsToExpiry: 300, tradeTag: 0n, actionIntent: 0, status: 1, outcome: 0, forecastBrier: 0, marketBrier: 0, marketScoreDelta: 0n });
+    expect(named).toMatchObject({ forecastId: hex32(4), marketId: hex32(5), pUpBps: 7234, status: "COMMITTED" });
   });
 
   it("fails closed on wrong chain, malformed RPC responses, and upstream errors", async () => {
