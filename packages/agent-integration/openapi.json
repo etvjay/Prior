@@ -1,17 +1,307 @@
 {
   "openapi": "3.0.3",
-  "info": { "title": "Prior Agent Integration", "version": "0.1.0" },
-  "servers": [{ "url": "/" }],
-  "security": [{ "priorScopes": [] }],
-  "components": { "securitySchemes": { "priorScopes": { "type": "apiKey", "in": "header", "name": "x-prior-scope", "description": "Comma-separated prior:read and/or prior:forecast:submit scopes" } } },
+  "info": {
+    "title": "Prior Agent Integration",
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "security": [
+    {
+      "priorScopes": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "priorScopes": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-prior-scope",
+        "description": "Comma-separated prior:read and/or prior:forecast:submit scopes"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Page": {
+        "type": "object",
+        "required": [
+          "items",
+          "limit",
+          "offset",
+          "nextOffset"
+        ],
+        "properties": {
+          "items": {
+            "type": "array"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "nextOffset": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  },
   "paths": {
-    "/v1/capabilities": { "get": { "operationId": "getCapabilities", "responses": { "200": { "description": "Capabilities" } } } },
-    "/v1/circuits": { "get": { "operationId": "listCircuits", "responses": { "200": { "description": "Bounded circuit page" } } } },
-    "/v1/circuits/{circuitId}": { "get": { "operationId": "getCircuit", "parameters": [{ "in": "path", "name": "circuitId", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Circuit state" } } } },
-    "/v1/markets": { "get": { "operationId": "listMarkets", "responses": { "200": { "description": "Bounded market page" } } } },
-    "/v1/markets/{marketId}": { "get": { "operationId": "getMarket", "parameters": [{ "in": "path", "name": "marketId", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Market state" } } } },
-    "/v1/forecasts/{forecastId}": { "get": { "operationId": "getForecast", "parameters": [{ "in": "path", "name": "forecastId", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Forecast state" } } } },
-    "/v1/forecast-requests/next": { "get": { "operationId": "getForecastRequest", "parameters": [{ "in": "query", "name": "providerId", "required": true, "schema": { "type": "string" } }, { "in": "query", "name": "sessionId", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Scoped provider request" } } } },
-    "/v1/forecast-submissions": { "post": { "operationId": "submitSignedForecast", "description": "Existing signed/provider relay boundary; no arbitrary execution.", "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } }, "responses": { "200": { "description": "Accepted offchain record" }, "409": { "description": "Conflicting identity" } } } }
+    "/v1/capabilities": {
+      "get": {
+        "operationId": "getCapabilities",
+        "responses": {
+          "200": {
+            "description": "Capabilities"
+          }
+        }
+      }
+    },
+    "/v1/circuits": {
+      "get": {
+        "operationId": "listCircuits",
+        "responses": {
+          "200": {
+            "description": "Bounded circuit page"
+          },
+          "400": {
+            "description": "Malformed pagination",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "required": false
+          }
+        ]
+      }
+    },
+    "/v1/circuits/{circuitId}": {
+      "get": {
+        "operationId": "getCircuit",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "circuitId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Circuit state"
+          }
+        }
+      }
+    },
+    "/v1/markets": {
+      "get": {
+        "operationId": "listMarkets",
+        "responses": {
+          "200": {
+            "description": "Bounded market page"
+          },
+          "400": {
+            "description": "Malformed pagination",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "required": false
+          }
+        ]
+      }
+    },
+    "/v1/markets/{marketId}": {
+      "get": {
+        "operationId": "getMarket",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "marketId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Market state"
+          }
+        }
+      }
+    },
+    "/v1/forecasts/{forecastId}": {
+      "get": {
+        "operationId": "getForecast",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "forecastId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Forecast state"
+          }
+        }
+      }
+    },
+    "/v1/forecast-requests/next": {
+      "get": {
+        "operationId": "getForecastRequest",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "providerId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sessionId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Scoped provider request"
+          }
+        }
+      }
+    },
+    "/v1/forecast-submissions": {
+      "post": {
+        "operationId": "submitSignedForecast",
+        "description": "Existing signed/provider relay boundary. This local package accepts FIXTURE_KECCAK_V1 only; EIP712_V2 is handled by the existing Forecast Provider server boundary. No arbitrary execution.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Accepted offchain record"
+          },
+          "409": {
+            "description": "Conflicting identity"
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "description": "Service health"
+          }
+        }
+      }
+    },
+    "/v1/execution-requests": {
+      "post": {
+        "operationId": "refuseExecution",
+        "description": "Always refused; arbitrary economic execution is not exposed.",
+        "responses": {
+          "403": {
+            "description": "Capability denied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

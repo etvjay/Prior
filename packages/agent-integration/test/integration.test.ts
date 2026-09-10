@@ -35,8 +35,16 @@ describe("Prior integration equivalence and refusal boundaries", () => {
     expect(first.status).toBe(200); const accepted = await first.json();
     const replay = await fetch(`${h.url}/v1/forecast-submissions`, { method: "POST", headers: { "content-type": "application/json", "x-prior-scope": "prior:forecast:submit" }, body: JSON.stringify(payload) });
     expect(replay.status).toBe(200); expect(await replay.json()).toEqual(accepted);
-    const conflict = { ...payload, probabilityUpBps: payload.probabilityUpBps + 1 };
+    const conflict = createFixtureForecastSubmission(await (await fetch(`${h.url}/v1/forecast-requests/next?providerId=${FIXTURE_PROVIDER_A.provider.providerId}&sessionId=${FIXTURE_PROVIDER_A.sessionId}`, { headers: { "x-prior-scope": "prior:read" } })).json(), { probabilityUpBps: payload.probabilityUpBps + 1, generatedAt: "201", validUntil: "400" });
     const conflicting = await fetch(`${h.url}/v1/forecast-submissions`, { method: "POST", headers: { "content-type": "application/json", "x-prior-scope": "prior:forecast:submit" }, body: JSON.stringify(conflict) });
-    expect(conflicting.status).toBe(422);
+    expect(conflicting.status).toBe(409);
+  });
+  it("rejects malformed pagination/path input, protects capability resources, and deduplicates fixture identities", async () => {
+    const h = await createPriorHttpServer(); handles.push(h);
+    const headers = { "x-prior-scope": "prior:read" };
+    const nan = await fetch(`${h.url}/v1/markets?limit=NaN&offset=0`, { headers }); expect(nan.status).toBe(400); expect((await nan.json()).code).toBe("MALFORMED_INPUT");
+    const malformed = await fetch(`${h.url}/v1/markets/%E0%A4%A`, { headers }); expect(malformed.status).toBe(400); expect((await malformed.json()).code).toBe("MALFORMED_INPUT");
+    const denied = await expect(new PriorMcpCore(h.service).readResource("prior://capabilities")).rejects.toMatchObject({ code: "SCOPE_REQUIRED" }); void denied;
+    const markets = await h.service.listMarkets(read); expect(markets.items).toHaveLength(1); expect(markets.items[0]?.marketId).toBe(FIXTURE_MARKET_ID);
   });
 });
