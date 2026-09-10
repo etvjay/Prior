@@ -6,7 +6,7 @@ export const SHANNON_CHAIN_ID = 50312;
 export const SHANNON_ADDRESSES = Object.freeze({
   binaryModule: "0x3ecC694Cef705358864a646142ac17A90E29e388" as Address,
   rftRegistry: "0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41" as Address,
-  circuitRegistry: "0xf92609D45f164DaB74dC51Cd59B583DA95e3C460" as Address,
+  circuitRegistry: "0x1eD3B2310F369977ef82569498d5F678f8B73104" as Address,
 });
 const DEFAULT_RPC = "https://dream-rpc.somnia.network";
 

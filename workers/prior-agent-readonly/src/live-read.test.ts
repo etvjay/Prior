@@ -50,6 +50,6 @@ describe("Worker live canonical read adapter", () => {
   it("binds reads to canonical Shannon deployment addresses", () => {
     expect(SHANNON_ADDRESSES.binaryModule).toBe("0x3ecC694Cef705358864a646142ac17A90E29e388");
     expect(SHANNON_ADDRESSES.rftRegistry).toBe("0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41");
-    expect(SHANNON_ADDRESSES.circuitRegistry).toBe("0xf92609D45f164DaB74dC51Cd59B583DA95e3C460");
+    expect(SHANNON_ADDRESSES.circuitRegistry).toBe("0x1eD3B2310F369977ef82569498d5F678f8B73104");
   });
 });
