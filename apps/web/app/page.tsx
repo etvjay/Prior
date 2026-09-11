@@ -33,17 +33,27 @@ function PlainLanguageIntro() {
 
 function HowItWorks() {
   return (
-    <section className="how-it-works" id="how-it-works" aria-labelledby="how-it-works-title">
-      <div>
-        <p className="plain-kicker">Three things to remember</p>
-        <h2 id="how-it-works-title">A prediction is not permission.</h2>
+    <section className="how-it-works continuity-section" id="how-it-works" aria-labelledby="how-it-works-title">
+      <div className="continuity-heading">
+        <div>
+          <p className="plain-kicker">One intent, repeated iterations</p>
+          <h2 id="how-it-works-title">The Circuit persists. The evidence changes.</h2>
+        </div>
+        <p>A Forecast belongs to one market. An RFT carries that Forecast from commitment through resolution. The Circuit connects each iteration without recreating the intent.</p>
       </div>
-      <div className="plain-cards">
-        <article><span>01</span><h3>Record the belief</h3><p>The prediction is saved with a timestamp, so it cannot be quietly changed after the answer.</p></article>
-        <article><span>02</span><h3>Set the boundary</h3><p>A Circuit is a written rule for who matters, when they matter, and what may happen next.</p></article>
-        <article><span>03</span><h3>Inspect the result</h3><p>Compare the original belief with the market, the outcome, and any action separately.</p></article>
+      <div className="continuity-map" aria-label="One persistent Circuit connected to three market evidence iterations">
+        <div className="continuity-spine"><span className="continuity-spine-dot" /><strong>CIRCUIT</strong><small>persistent bounded intent</small><i /></div>
+        <ol className="continuity-iterations">
+          <li><span className="continuity-number">01</span><div className="continuity-market"><small>MARKET 1 · BTC 15M</small><strong>Forecast</strong><b>72% UP</b><span>RFT · resolved evidence</span></div><em>DONE</em></li>
+          <li className="is-current"><span className="continuity-number">02</span><div className="continuity-market"><small>MARKET 2 · BTC 15M</small><strong>Forecast</strong><b>64% UP</b><span>RFT · policy evaluation</span></div><em>CURRENT</em></li>
+          <li className="is-next"><span className="continuity-number">03</span><div className="continuity-market"><small>MARKET 3 · BTC 15M</small><strong>Next eligible market</strong><b>—</b><span>new Forecast when it opens</span></div><em>NEXT</em></li>
+        </ol>
       </div>
-      <p className="plain-note">PRIOR does not claim that one prediction proves an AI is good. It gives you a record you can inspect.</p>
+      <div className="continuity-definitions">
+        <p><span>FORECAST</span>one belief about one market</p>
+        <p><span>RFT</span>the evidence trail of that belief</p>
+        <p><span>CIRCUIT</span>the intent spanning many markets</p>
+      </div>
     </section>
   );
 }
