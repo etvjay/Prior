@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { LandingScenes } from "./LandingScenes";
 
 function PlainLanguageIntro() {
   return (
@@ -152,8 +151,6 @@ export default function LandingPage() {
         <RoleSeparation />
         <ResolutionEvidence />
         <AuthorityBoundary />
-        <div className="deep-dive-heading"><span>FOR PEOPLE WHO WANT THE FULL MODEL</span><h2>How belief becomes evidence.</h2></div>
-        <LandingScenes />
       </main>
     </>
   );
