@@ -1,0 +1,174 @@
+{
+  "milestone": "M4.3",
+  "status": "END_TO_END_VERIFIED",
+  "classification": "SHANNON_WRITE_VERIFIED",
+  "network": {
+    "chainId": 50312,
+    "rpc": "https://dream-rpc.somnia.network"
+  },
+  "market": {
+    "marketId": "0x0000000000000000000000000000000000000000000000000000000000018e83",
+    "asset": "BTC",
+    "intervalSec": 3600,
+    "marketAddress": "0xD16C9231C04a9D1eb841B763bf7e3971840aD176",
+    "pool": "0x8EB893Db72752b1d2b3AC11F625af90dB1BEB404",
+    "tradingStart": 1789027200,
+    "expiry": 1789030800,
+    "referenceValid": false,
+    "referenceUnavailable": true
+  },
+  "owner": "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55",
+  "forecaster": "0x233FE0d8D75e15b668b94eFD0e6DE50A8e50D364",
+  "circuitId": "0x6cdfdf64cc70b5bb2e6519ab1dc0372e3ed7fdfb6d16a0ca0043f7aea4f23437",
+  "circuitIntent": {
+    "marketClass": 1,
+    "targetWindows": 1,
+    "totalBudget": "1",
+    "maxPerMarket": "1",
+    "startsAt": "1789027200",
+    "expiresAt": "1789034400",
+    "allowedActionsBitmap": "0",
+    "executionAuthority": "NONE",
+    "capitalAuthority": "NONE",
+    "economicCollateral": "0"
+  },
+  "forecast": {
+    "requestId": "0x7078bb2eaaf60d91eaa18c58d90da8b4fb4e4a7d333dda2b45ed02ea92a167b7",
+    "probabilityUpBps": 5000,
+    "signatureScheme": "EIP712_V2",
+    "signature": "0x0dd5c27d45d79e8d975fb138cfb1d9188838c763487503d0d083a0968237399f6ce11d05461ebc7b8f6ed3d43c4cb2fa5060d37aeeb2aff23bf3b25ba5d7be031c",
+    "recovered": "0x233FE0d8D75e15b668b94eFD0e6DE50A8e50D364",
+    "externalProviderParticipation": "VERIFIED"
+  },
+  "receipts": {
+    "create": {
+      "status": "success",
+      "tx": "0x9e0f8b6a14b091b83706a7c2c4ed9e8aeea11756f8eef621a38db83297f2bc31"
+    },
+    "authorize": {
+      "status": "success",
+      "tx": "0x67fa524e1e143fda4bae5775874ffe065a50d4e8f84ce44d5973d86126f2a634"
+    },
+    "activate": {
+      "status": "success",
+      "tx": "0xce952e43e2762079e9593b213bcfca622eb3531f8fefe8e89682516250cdc8a4"
+    },
+    "commit": {
+      "status": "success",
+      "tx": "0x015a5ee24027d16afe548ed5cabfd9a75df3fba258f6723dd433af7283340cb3",
+      "block": "484544479",
+      "gasUsed": "1118158"
+    },
+    "bind": {
+      "status": "success",
+      "tx": "0xb895210b345d9802691f9833f495115923c3e4426e4e4d2a7a80faaa4ac98170",
+      "block": "484544492",
+      "gasUsed": "1296764"
+    },
+    "finalize": {
+      "status": "success",
+      "tx": "0x7a3b71fd72d05178f20ee393975706e318338563221f6124f2b01ca03aae47ee",
+      "block": "484576082",
+      "gasUsed": "282238"
+    },
+    "advance": {
+      "status": "success",
+      "tx": "0x97c99af3f1aefb562e92774c369d2c6069ca44d8185fbb2434132bc820ad5ea3",
+      "block": "484577127",
+      "gasUsed": "306639"
+    }
+  },
+  "failedAttempts": [
+    {
+      "operation": "create",
+      "classification": "FAILED_PRE_STATE_CREATION",
+      "reason": "INSUFFICIENT_GAS_LIMIT",
+      "gasLimit": "179032",
+      "stateCreated": false
+    },
+    {
+      "operation": "authorize",
+      "classification": "FAILED_PRE_STATE_TRANSITION",
+      "reason": "INSUFFICIENT_GAS_LIMIT",
+      "gasLimit": "59377"
+    },
+    {
+      "operation": "activate",
+      "classification": "FAILED_PRE_STATE_TRANSITION",
+      "reason": "INSUFFICIENT_GAS_LIMIT",
+      "gasLimit": "38448"
+    },
+    {
+      "operation": "commitForecast",
+      "classification": "FAILED_PRE_STATE_CREATION",
+      "reason": "INSUFFICIENT_GAS_LIMIT",
+      "gasLimit": "215121",
+      "stateCreated": false
+    }
+  ],
+  "trialId": "0x9d0ce9d1542b3dc1261e4cf73a1f18b24b9fa61e3dec72b7407823156b954f66",
+  "trialFinal": {
+    "status": "SCORED",
+    "outcome": "DOWN",
+    "pUpBps": 5000,
+    "forecastBrier": "25000000",
+    "marketReferenceBrier": "UNAVAILABLE",
+    "deltaBS": "UNAVAILABLE",
+    "referenceValid": false
+  },
+  "iterationFinal": {
+    "iterationId": "0x6c588551508a0a413d998743e2df2b51eb7d2c294431e3b8bc856e48840fa1c0",
+    "circuitId": "0x6cdfdf64cc70b5bb2e6519ab1dc0372e3ed7fdfb6d16a0ca0043f7aea4f23437",
+    "marketId": "0x0000000000000000000000000000000000000000000000000000000000018e83",
+    "trialId": "0x9d0ce9d1542b3dc1261e4cf73a1f18b24b9fa61e3dec72b7407823156b954f66",
+    "bound": true,
+    "processed": true,
+    "missed": false
+  },
+  "settlement": {
+    "contract": "0xbF4a49e0Dfd092e5FBE8E5761064C49533e6Ed23",
+    "finalized": true,
+    "voided": false,
+    "canonicalOutcome": "DOWN",
+    "payoutNumerators": [
+      "0",
+      "10000000"
+    ]
+  },
+  "zeroAction": {
+    "executor": "0x6e6Bf80Dc412f4DFCb59C15494C83785d54fb66d",
+    "BUY_UP": {
+      "reverted": true,
+      "selector": "0x829e3733",
+      "reason": "ActionNotAllowed"
+    },
+    "BUY_DOWN": {
+      "reverted": true,
+      "selector": "0x829e3733",
+      "reason": "ActionNotAllowed"
+    }
+  },
+  "recovery": {
+    "classification": "LIVE_RECOVERY_FROM_CANONICAL_STATE",
+    "existingCircuitRecovered": true,
+    "existingRFTRecovered": true,
+    "existingBindingRecovered": true,
+    "noSecondForecast": true,
+    "noSecondCommit": true,
+    "noSecondBind": true,
+    "duplicateAdvancePrevented": true,
+    "duplicateSimulationSelector": "0xbaf3f0f7"
+  },
+  "economicExecution": {
+    "dreamdexOrders": 0,
+    "collateral": 0,
+    "tokenApprovals": 0,
+    "operatorPermissions": 0,
+    "economicExecution": 0
+  },
+  "claims": {
+    "forecastingCompetence": "NOT_CLAIMED",
+    "autonomousEconomicExecution": "NOT_CLAIMED",
+    "productionSafeExecutor": "NOT_CLAIMED"
+  }
+}

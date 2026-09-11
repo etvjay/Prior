@@ -1,0 +1,18 @@
+{
+  "status": "ABORTED_PRE_FORECAST",
+  "reason": "MARKET_EXPIRY_SAFETY_STOP",
+  "circuitId": "0xa914f9200049c5724ec51fc6bfd53cd8181c7a6e4900761f61a2d5d2bdccaba4",
+  "marketId": "0x00000000000000000000000000000000000000000000000000000000000187fb",
+  "owner": "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55",
+  "forecaster": "0x233FE0d8D75e15b668b94eFD0e6DE50A8e50D364",
+  "invariant": "Do not advance, attach a Forecast, or reuse this Circuit",
+  "observedAt": "2026-09-09T22:44:42Z",
+  "observedShannonTimestamp": 1788993882,
+  "marketExpiry": 1788993900,
+  "remainingSeconds": 18,
+  "evidenceClassification": "SHANNON_WRITE_VERIFIED_ABORTED",
+  "economicExecution": 0,
+  "dreamdexOrders": 0,
+  "collateral": 0,
+  "approvals": 0
+}

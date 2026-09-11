@@ -53,7 +53,7 @@ DreamDEX canonically resolves the market
 RFT records score and evidence
 ```
 
-The DreamDEX build is the first proving environment. It demonstrates that an external agent can contribute useful judgment without receiving custody or unrestricted economic authority.
+The DreamDEX build is the first proving environment. It demonstrates that an external agent can contribute attributable judgment without receiving custody or unrestricted economic authority.
 
 ## Live V2 hero proof
 

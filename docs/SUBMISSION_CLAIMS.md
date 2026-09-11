@@ -3,7 +3,7 @@
 ## We prove
 
 - PRIOR records an attributable Forecast as an immutable RFT before a market resolves.
-- A live external Forecast agent produced an EIP-712 Forecast recovering to the configured Forecaster.
+- A separately run external proof agent produced an EIP-712 Forecast recovering to the configured Forecaster.
 - The V2 hero Circuit bound the RFT to a canonical Circuit-market iteration.
 - The hero Circuit allowed no economic action; BUY_UP and BUY_DOWN returned `ActionNotAllowed`.
 - DreamDEX canonically resolved the market `DOWN`.

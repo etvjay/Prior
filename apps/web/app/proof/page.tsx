@@ -12,7 +12,7 @@ function Fact({ label, value, source = "ARCHIVED EVIDENCE" }: { label: string; v
 export default function ProofPage() {
   return <><PriorHeader/><main id="main" className="proof-page">
     <header className="proof-hero">
-      <div><span className="instrument-label">PRIOR · CANONICAL V2 HERO PROOF</span><h1>JUDGMENT<br/><em>WITH BOUNDS.</em></h1><p>One external Forecast became attributable evidence. One Circuit determined what it could cause. The market resolved. The RFT recorded what happened.</p></div>
+      <div><span className="instrument-label">PRIOR · CANONICAL V2 HERO PROOF</span><h1>JUDGMENT<br/><em>WITH BOUNDS.</em></h1><p>One external proof agent produced an attributable Forecast. One Circuit determined what it could cause. The market resolved. The RFT recorded what happened.</p></div>
       <aside className="proof-status"><span>ARCHIVED EVIDENCE</span><strong>LIVE SHANNON<br/>READBACK</strong><small>Canonical artifact · chain ID 50312 · zero economic execution</small></aside>
     </header>
 
@@ -21,7 +21,7 @@ export default function ProofPage() {
       <div className="proof-arrow">↓</div>
       <div className="proof-step"><b>02</b><span>WHAT DID THEY BELIEVE?</span><h2>50.00% probability</h2><Fact label="Forecast" value={pct(hero.forecast.probabilityUpBps)} source="RFT COMMITMENT"/><Fact label="Market" value={`${hero.market.asset} · ${hero.market.intervalSec / 3600}H`} source="MARKET ID CANONICAL"/><Fact label="Committed" value={`Block ${hero.receipts.commit.block}`} source="SHANNON WRITE VERIFIED"/></div>
       <div className="proof-arrow">↓</div>
-      <div className="proof-step"><b>03</b><span>WHAT AUTHORITY EXISTED?</span><h2>Bounded Circuit</h2><Fact label="Circuit" value={short(hero.circuitId)} source="CIRCUITREGISTRYV2"/><Fact label="Owner" value={short(hero.owner)} source="CANONICAL READBACK"/><Fact label="Budget" value="0 economic authority" source="INTENT: NONE"/><Fact label="Allowed actions" value="0" source="BITMAP"/></div>
+      <div className="proof-step"><b>03</b><span>WHAT AUTHORITY EXISTED?</span><h2>Bounded Circuit</h2><Fact label="Circuit" value={short(hero.circuitId)} source="CIRCUITREGISTRYV2"/><Fact label="Owner" value={short(hero.owner)} source="CANONICAL READBACK"/><Fact label="Intent budget" value={hero.circuitIntent.totalBudget} source="CIRCUIT INTENT"/><Fact label="Economic authority" value="0" source="CAPITAL / EXECUTION NONE"/><Fact label="Allowed actions" value="0" source="BITMAP"/></div>
       <div className="proof-arrow">↓</div>
       <div className="proof-step proof-consequence"><b>04</b><span>WHAT WAS IT ALLOWED TO DO?</span><h2>Deliberate refusal</h2><div className="refusal"><strong>BUY_UP</strong><span>ActionNotAllowed</span></div><div className="refusal"><strong>BUY_DOWN</strong><span>ActionNotAllowed</span></div><small>No order · no collateral · no approvals · no operator permissions</small></div>
       <div className="proof-arrow">↓</div>

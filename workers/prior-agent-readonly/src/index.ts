@@ -32,7 +32,8 @@ async function discoverMarkets(env: Env, limit: number) {
   const query = `query M($n: Int!) { Market(limit: $n, order_by: {createdAtBlock: desc}) { marketId asset intervalSec clobStatus expiry marketAddress binaryPoolAddress quoteToken quoteDecimals baseSymbol baseDecimals oracleQuestionId yesTokenId noTokenId createdAtBlock } }`;
   const response = await fetch(env.MARKET_INDEXER_URL ?? INDEXER_URL, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ query, variables: { n: Math.min(limit, 20) } }) });
   if (!response.ok) throw new IntegrationError("DISCOVERY_UNAVAILABLE", `market discovery upstream returned ${response.status}`, 503);
-  const body = await response.json() as { data?: { Market?: unknown[] }; errors?: unknown[] };
+  let body: { data?: { Market?: unknown[] }; errors?: unknown[] };
+  try { body = await response.json() as typeof body; } catch { throw new IntegrationError("DISCOVERY_MALFORMED", "market discovery upstream returned invalid JSON", 502); }
   if (body.errors || !Array.isArray(body.data?.Market)) throw new IntegrationError("DISCOVERY_MALFORMED", "market discovery upstream response was malformed", 502);
   return { chainId: 50312, discoveryCompleteness: "BOUNDED", source: "DreamDEX indexer for discovery; verify canonical detail by marketId", limit: Math.min(limit, 20), items: body.data.Market };
 }
