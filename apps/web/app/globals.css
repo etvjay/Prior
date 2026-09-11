@@ -529,3 +529,44 @@ a.forecast-miniature:hover { background: var(--surface-2); transform: translateX
 @media (max-width: 900px) {
   .proof-hero { grid-template-columns: 1fr; gap: 28px; padding: 44px 16px; }.proof-status { align-self: start; }.proof-chain { padding-inline: 16px; }.proof-verify { padding: 44px 16px 64px; }.proof-identifiers { grid-template-columns: 1fr; }.proof-fact { grid-template-columns: 1fr; gap: 6px; }.proof-fact small { text-align: left; }
 }
+
+/* Plain-language orientation for first-time visitors */
+.plain-intro { width: min(100%, 1240px); min-height: min(760px, calc(100svh - var(--topbar))); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(360px, .95fr); align-items: center; gap: clamp(44px, 8vw, 112px); padding: clamp(72px, 10vw, 132px) clamp(24px, 6vw, 80px); border-bottom: 1px solid var(--border-subtle); }
+.plain-intro-copy { max-width: 700px; }
+.plain-kicker { margin: 0 0 20px; color: var(--purple-bright); font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+.plain-intro h1 { max-width: 720px; margin: 0; font-size: clamp(46px, 6vw, 82px); font-weight: 600; letter-spacing: -.05em; line-height: .98; }
+.plain-lede { max-width: 610px; margin: 28px 0 0; color: var(--text-secondary); font-size: clamp(17px, 1.6vw, 21px); line-height: 1.55; }
+.plain-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+.plain-actions .primary-button, .plain-actions .secondary-button { min-width: 156px; }
+.plain-preview { border: 1px solid var(--border); background: var(--surface-1); padding: 24px; }
+.plain-preview-step { display: grid; grid-template-columns: 30px 1fr auto; align-items: baseline; gap: 12px; padding: 22px 0; }
+.plain-preview-step + .plain-preview-step { padding-top: 24px; }
+.plain-preview-step > span { color: var(--purple-bright); font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; }
+.plain-preview-step strong { font-size: 16px; font-weight: 500; }
+.plain-preview-step b { color: var(--forecast); font-size: 20px; font-weight: 500; }
+.plain-preview-step:nth-of-type(3) b { color: var(--up); }
+.plain-preview-step small { grid-column: 2 / -1; color: var(--text-muted-aa); font-size: 12px; }
+.plain-preview-line { width: 1px; height: 20px; margin-left: 14px; background: var(--purple-muted); }
+.how-it-works { width: min(100%, 1240px); margin: 0 auto; padding: clamp(72px, 9vw, 120px) clamp(24px, 6vw, 80px); }
+.how-it-works > div:first-child { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; border-bottom: 1px solid var(--border); padding-bottom: 28px; }
+.how-it-works h2 { max-width: 600px; margin: 0; font-size: clamp(34px, 4.3vw, 58px); letter-spacing: -.045em; line-height: 1; }
+.plain-cards { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--border); }
+.plain-cards article { min-height: 260px; padding: 28px 24px 32px 0; }
+.plain-cards article + article { border-left: 1px solid var(--border); padding-left: 24px; }
+.plain-cards span { color: var(--purple-bright); font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; }
+.plain-cards h3 { margin: 42px 0 12px; font-size: 22px; font-weight: 500; letter-spacing: -.02em; }
+.plain-cards p { max-width: 300px; margin: 0; color: var(--text-secondary); line-height: 1.6; }
+.plain-note { max-width: 620px; margin: 28px 0 0; color: var(--text-muted-aa); font-size: 13px; }
+.deep-dive-heading { width: min(100%, 1240px); margin: 0 auto; padding: 24px clamp(24px, 6vw, 80px) 0; }
+.deep-dive-heading span { color: var(--text-muted-aa); font-size: 10px; letter-spacing: .12em; }
+.deep-dive-heading h2 { margin: 12px 0 0; font-size: clamp(28px, 4vw, 52px); letter-spacing: -.04em; }
+@media (max-width: 760px) {
+  .plain-intro { min-height: auto; grid-template-columns: 1fr; padding-block: 76px 64px; }
+  .plain-preview { order: -1; }
+  .plain-intro h1 { font-size: clamp(44px, 12vw, 64px); }
+  .how-it-works > div:first-child { display: block; }
+  .how-it-works h2 { margin-top: 30px; }
+  .plain-cards { grid-template-columns: 1fr; }
+  .plain-cards article, .plain-cards article + article { min-height: auto; padding: 26px 0; border-left: 0; }
+  .plain-cards article + article { border-top: 1px solid var(--border); }
+}

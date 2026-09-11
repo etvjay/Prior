@@ -113,7 +113,7 @@ assert.equal((normalized.match(/Somnia/g) ?? []).length, 1, "Somnia may appear o
 assert.doesNotMatch(normalized, /\b(?:AI-powered|guaranteed|candles|autonomous)\b/i);
 assert.doesNotMatch(landing, /landing-act|capability-questions|agent-lanes|mandate-tree|loop-primary/, "dense ten-act dashboard rewrite classes must not return");
 assert.doesNotMatch(page, /PriorHeader/, "landing must not expose dashboard controls before the explanation");
-assert.match(page, /BELIEF → COMMITMENT → REALITY → EVIDENCE → PERSISTENT INTENT/);
+assert.match(page, /RECORD BELIEF · SET BOUNDARIES · INSPECT RESULTS/);
 
 assert.match(css, /--void:\s*#08070a/);
 assert.match(css, /--background:\s*#0d0b11/);
