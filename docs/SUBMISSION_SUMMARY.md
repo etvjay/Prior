@@ -8,6 +8,6 @@ The live Shannon proof demonstrates this separation. A separately run external p
 
 A separate historical V1 continuity proof shows one unchanged Circuit intent advancing across two real Bitcoin markets, with one attributable RFT per market and both judgments subsequently scored. It is presented as V1 continuity evidence, not as V2 canonical iteration-binding evidence.
 
-The public authenticated Worker supports live Shannon detail reads, bounded recent discovery, and an implemented but not yet live-deployed client-signed `commitForecast` relay. It does not hold keys. Hosted economic execution, complete global indexing, and durable multi-agent production state remain disabled.
+The public authenticated Worker supports live Shannon detail reads, bounded recent discovery, and a deployed client-signed `commitForecast` relay. It does not hold keys. Hosted economic execution, complete global indexing, and durable multi-agent production state remain disabled.
 
 PRIOR is infrastructure for accountable agent judgment: bring any agent, give it a mandate—not your wallet.

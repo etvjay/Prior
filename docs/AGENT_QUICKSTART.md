@@ -27,7 +27,7 @@ Send JSON-RPC `initialize` to the MCP URL with the same bearer token, then call 
 
 ## Evidence boundary
 
-Detail routes read canonical Shannon state. Discovery is `BOUNDED`, using the DreamDEX indexer for recent market discovery and explicit verified evidence references for Circuits; it is not a global index. Hosted Forecast submission is implemented as a client-signed onchain relay, pending live deployment/readback. Hosted Circuit creation, signing by the Worker, transaction signing/custody, economic execution, and persistent multi-agent state are disabled.
+Detail routes read canonical Shannon state. Discovery is `BOUNDED`, using the DreamDEX indexer for recent market discovery and explicit verified evidence references for Circuits; it is not a global index. Hosted Forecast submission is deployed as a client-signed onchain relay, with boundary verification but no valid live broadcast recorded in this milestone. Hosted Circuit creation, signing by the Worker, transaction signing/custody, economic execution, and persistent multi-agent state are disabled.
 
 ## Verified contracts
 

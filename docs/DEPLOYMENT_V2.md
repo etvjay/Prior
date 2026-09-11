@@ -36,7 +36,7 @@ This document originally recorded the pre-deployment local design state. That hi
 
 ## Boundaries
 
-The hosted Worker now has a separately scoped, client-signed Forecast relay implementation: it can forward only an EIP-1559 `RFTRegistry.commitForecast` transaction after target, chain, signature, replay, receipt, and `trialFor` checks. It does not hold a key. This implementation remains `IMPLEMENTED_PENDING_LIVE_DEPLOYMENT`; hosted economic execution remains disabled.
+The hosted Worker now has a separately scoped, client-signed Forecast relay implementation: it can forward only an EIP-1559 `RFTRegistry.commitForecast` transaction after target, chain, signature, replay, receipt, and `trialFor` checks. It does not hold a key. This implementation is now deployed and its authenticated boundary is externally verified. No live Forecast broadcast has been performed in this milestone; hosted economic execution remains disabled.
 
 Source artifacts:
 
