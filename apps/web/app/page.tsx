@@ -116,6 +116,28 @@ function ResolutionEvidence() {
   );
 }
 
+function AuthorityBoundary() {
+  return (
+    <section className="authority-boundary" aria-labelledby="authority-boundary-title">
+      <div className="authority-copy">
+        <p className="plain-kicker">The boundary is part of the product</p>
+        <h2 id="authority-boundary-title">A rule is only useful if it can say no.</h2>
+        <p>The Circuit does not turn every Forecast into a trade. It checks the declared policy, budget, timing, and permissions first. If the action is outside the boundary, the Circuit abstains and the evidence still remains.</p>
+        <div className="authority-callout"><span>CORE RULE</span><strong>Belief can continue even when execution is refused.</strong></div>
+      </div>
+      <div className="authority-record" aria-label="Illustrative Circuit authority decision showing an action refused while evidence is preserved">
+        <div className="authority-record-head"><span>ILLUSTRATIVE CIRCUIT DECISION</span><b>BOUNDED</b></div>
+        <div className="authority-checks">
+          <div><span>FORECAST</span><strong>72% UP</strong><em>committed</em></div>
+          <div><span>POLICY</span><strong>8 POINT GAP</strong><em>required threshold</em></div>
+          <div><span>AUTHORITY</span><strong>NO ACTION</strong><em>not granted</em></div>
+        </div>
+        <div className="authority-result"><small>RESULT</small><strong>ABSTAIN</strong><p>No trade was placed. The Forecast still becomes an RFT and can be scored after resolution.</p></div>
+      </div>
+    </section>
+  );
+}
+
 export default function LandingPage() {
   return (
     <>
@@ -129,6 +151,7 @@ export default function LandingPage() {
         <IterationFlow />
         <RoleSeparation />
         <ResolutionEvidence />
+        <AuthorityBoundary />
         <div className="deep-dive-heading"><span>FOR PEOPLE WHO WANT THE FULL MODEL</span><h2>How belief becomes evidence.</h2></div>
         <LandingScenes />
       </main>
