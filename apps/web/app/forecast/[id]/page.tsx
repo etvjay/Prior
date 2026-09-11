@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import Link from "next/link";
 import { findForecast, formatBps, OWNER, score } from "../../evidence";
 import { EvidenceDrawer, ForecastNode, MarketNode, PriorHeader } from "../../components";

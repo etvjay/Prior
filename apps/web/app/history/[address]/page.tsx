@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import { ACCEPTED_FORECASTS, OWNER, short } from "../../evidence";
 import { HistoryModes, PriorHeader } from "../../components";
 

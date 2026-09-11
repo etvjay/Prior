@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { composeLiveContinuityView } from "../../../../../packages/agent-integration/src/continuity";
 import { LiveReadAdapter } from "../../../../../workers/prior-agent-readonly/src/live-read";
 
+export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 function id(value: string | null, name: string): `0x${string}` {

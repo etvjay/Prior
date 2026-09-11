@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import Link from "next/link";
 import { ACCEPTED_FORECASTS, CONTINUITY_ID, OWNER, short } from "../../evidence";
 import { ForecastMiniature, PriorHeader } from "../../components";

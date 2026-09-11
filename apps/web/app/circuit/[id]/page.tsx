@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import Link from "next/link";
 import { ACCEPTED_FORECASTS, CONTINUITY, CONTINUITY_ID, formatBps, short } from "../../evidence";
 import hero from "../../../../../evidence/m4-3-live-zero-action-lifecycle.json";
