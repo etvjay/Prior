@@ -1,7 +1,8 @@
 import { PriorApplicationService, IntegrationError, type AuthContext } from "@prior/agent-integration";
 import { LiveReadAdapter } from "./live-read";
+import { submitSignedForecast } from "./hosted-write";
 
-interface Env { SHANNON_RPC_HTTP?: string; PRIOR_READ_TOKEN?: string; MARKET_INDEXER_URL?: string }
+interface Env { SHANNON_RPC_HTTP?: string; PRIOR_READ_TOKEN?: string; PRIOR_FORECAST_WRITE_TOKEN?: string; MARKET_INDEXER_URL?: string }
 const service = new PriorApplicationService();
 const tools = [
   { name: "get_capabilities", description: "Read hosted Prior capabilities; never executes economic actions.", inputSchema: { type: "object", additionalProperties: false } },
@@ -10,6 +11,7 @@ const tools = [
   { name: "get_forecast", description: "Read canonical Shannon RFT Forecast trial by forecastId.", inputSchema: { type: "object", required: ["forecastId"], additionalProperties: false, properties: { forecastId: { type: "string", minLength: 1 } } } },
   { name: "discover_markets", description: "List a bounded recent DreamDEX market sample; not a complete global index.", inputSchema: { type: "object", additionalProperties: false, properties: { limit: { type: "integer", minimum: 1, maximum: 20 } } } },
   { name: "discover_circuits", description: "List verified bounded Circuit references; not a complete global index.", inputSchema: { type: "object", additionalProperties: false } },
+  { name: "submit_signed_forecast", description: "Broadcast one client-signed commitForecast transaction after strict target and signer validation; the Worker never holds a key.", inputSchema: { type: "object", required: ["signedTransaction", "expectedMarketId"], additionalProperties: false }, },
 ];
 const resources = [
   { uri: "prior://capabilities", name: "Prior capabilities", mimeType: "application/json" },
@@ -22,7 +24,7 @@ const KNOWN_CIRCUITS = [
   { circuitId: "0x6cdfdf64cc70b5bb2e6519ab1dc0372e3ed7fdfb6d16a0ca0043f7aea4f23437", version: "V2", source: "m4-3-live-zero-action-lifecycle.json" },
   { circuitId: "0x15e18e2aecb7d00ca3243181fb2fa38af81b021266e2d0a290eb0c55d2b5f4c1", version: "V1", source: "circuit-continuity-recovery.json" },
 ];
-function auth(request: Request, env: Env): AuthContext { const token = request.headers.get("authorization")?.match(/^Bearer (.+)$/i)?.[1]; return !env.PRIOR_READ_TOKEN || !token || token !== env.PRIOR_READ_TOKEN ? { scopes: [] } : { scopes: ["prior:read"], principalId: "cloudflare-bearer" }; }
+function auth(request: Request, env: Env): AuthContext { const token = request.headers.get("authorization")?.match(/^Bearer (.+)$/i)?.[1]; const scopes: string[] = []; if (token && env.PRIOR_READ_TOKEN && token === env.PRIOR_READ_TOKEN) scopes.push("prior:read"); if (token && env.PRIOR_FORECAST_WRITE_TOKEN && token === env.PRIOR_FORECAST_WRITE_TOKEN) scopes.push("prior:read", "prior:forecast:submit"); return { scopes: [...new Set(scopes)], principalId: scopes.includes("prior:forecast:submit") ? "cloudflare-forecast-writer" : scopes.includes("prior:read") ? "cloudflare-bearer" : undefined }; }
 function json(body: unknown, status = 200): Response { return new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } }); }
 function id(pathname: string, prefix: string): string | undefined { if (!pathname.startsWith(prefix)) return undefined; try { return decodeURIComponent(pathname.slice(prefix.length)); } catch { throw new IntegrationError("MALFORMED_INPUT", "path identifier is not valid percent-encoding", 400); } }
 function page(url: URL, name: "limit" | "offset", fallback: number): number { const raw = url.searchParams.get(name); if (raw === null) return fallback; if (!/^(0|[1-9][0-9]*)$/.test(raw)) throw new IntegrationError("MALFORMED_INPUT", `${name} must be a finite safe integer in canonical decimal form`, 400); const value = Number(raw); if (!Number.isSafeInteger(value)) throw new IntegrationError("MALFORMED_INPUT", `${name} is outside the safe integer range`, 400); return value; }
@@ -40,6 +42,8 @@ async function discoverMarkets(env: Env, limit: number) {
 function discoverCircuits() { return { chainId: 50312, discoveryCompleteness: "BOUNDED", source: "explicit verified evidence references; not a global Circuit index", items: KNOWN_CIRCUITS }; }
 function rpc(id: unknown, result: unknown): Response { return json({ jsonrpc: "2.0", id: id ?? null, result }); }
 function rpcError(id: unknown, code: number, message: string): Response { return json({ jsonrpc: "2.0", id: id ?? null, error: { code, message } }, 200); }
+async function readJson(request: Request): Promise<Record<string, unknown>> { try { const body = await request.json(); if (!body || typeof body !== "object" || Array.isArray(body)) throw new Error(); return body as Record<string, unknown>; } catch { throw new IntegrationError("MALFORMED_INPUT", "request body must be a JSON object", 400); } }
+async function rpcWrite(env: Env, method: string, params: unknown[]): Promise<unknown> { const response = await fetch(env.SHANNON_RPC_HTTP ?? "https://dream-rpc.somnia.network", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }) }); if (!response.ok) throw new IntegrationError("UPSTREAM_UNAVAILABLE", `RPC returned HTTP ${response.status}`, 503); let body: { result?: unknown; error?: { message?: string } }; try { body = await response.json() as typeof body; } catch { throw new IntegrationError("UPSTREAM_MALFORMED", "RPC returned invalid JSON", 502); } if (body.error) throw new IntegrationError("BROADCAST_REJECTED", body.error.message ?? "RPC rejected transaction", 502); return body.result; }
 function argument(args: unknown, key: string): string { if (!args || typeof args !== "object" || Array.isArray(args) || typeof (args as Record<string, unknown>)[key] !== "string" || !(args as Record<string, unknown>)[key]) throw new IntegrationError("MALFORMED_INPUT", `${key} is required`, 400); return (args as Record<string, unknown>)[key] as string; }
 function decodeResource(raw: string): string { try { return decodeURIComponent(raw); } catch { throw new IntegrationError("MALFORMED_INPUT", "resource identifier is not valid percent-encoding", 400); } }
 function discoveryLimit(value: unknown): number { if (value === undefined) return 10; if (typeof value !== "number" || !Number.isSafeInteger(value) || value < 1 || value > 20) throw new IntegrationError("MALFORMED_INPUT", "discovery limit must be an integer from 1 to 20", 400); return value; }
@@ -53,18 +57,19 @@ async function mcp(request: Request, env: Env, context: AuthContext): Promise<Re
   if (method === "tools/call") {
     const name = body.params?.name; const args = body.params?.arguments;
     const live = new LiveReadAdapter({ rpcUrl: env.SHANNON_RPC_HTTP }); let result: unknown;
-    if (name === "get_capabilities") result = { ...service.capabilities(context), scopes: ["prior:read"], routes: ["GET /health", "GET /v1/capabilities", "GET /v1/circuits/:id", "GET /v1/markets/:marketId", "GET /v1/forecasts/:id", "GET /v1/discovery/markets", "GET /v1/discovery/circuits"], mcp: { resources, tools }, hosted: { mode: "SHANNON_RPC_READ_ONLY", canonicalState: "SHANNON_RPC_READ_VERIFIED_FOR_BOUND_DETAILS", submission: "DISABLED", execution: "DISABLED", persistence: "NONE", listIndexing: "NOT_CONNECTED", evidenceMode: "SHANNON_RPC_READ_ONLY" } };
+    if (name === "get_capabilities") result = { ...service.capabilities(context), scopes: context.scopes ?? [], routes: ["GET /health", "GET /v1/capabilities", "GET /v1/circuits/:id", "GET /v1/markets/:marketId", "GET /v1/forecasts/:id", "GET /v1/discovery/markets", "GET /v1/discovery/circuits", "POST /v1/forecast-submissions"], mcp: { resources, tools }, hosted: { mode: "SHANNON_RPC_READ_WITH_CLIENT_SIGNED_FORECAST_RELAY", canonicalState: "SHANNON_RPC_READ_VERIFIED_FOR_BOUND_DETAILS", submission: "CLIENT_SIGNED_RELAY", execution: "DISABLED", persistence: "NONE", listIndexing: "BOUNDED", evidenceMode: "SHANNON_RPC_READ_AND_CLIENT_SIGNED_BROADCAST" } };
     else if (name === "get_market") result = await live.readMarket(argument(args, "marketId") as `0x${string}`);
     else if (name === "get_circuit") result = await live.readCircuit(argument(args, "circuitId") as `0x${string}`);
     else if (name === "get_forecast") result = await live.readForecast(argument(args, "forecastId") as `0x${string}`);
     else if (name === "discover_markets") result = await discoverMarkets(env, discoveryLimit(args && typeof args === "object" ? (args as Record<string, unknown>).limit : undefined));
     else if (name === "discover_circuits") result = discoverCircuits();
+    else if (name === "submit_signed_forecast") { service.authorize(context, "prior:forecast:submit"); const a = args && typeof args === "object" ? args : {}; result = await submitSignedForecast(a, { rpc: (method, params) => rpcWrite(env, method, params) }); }
     else return rpcError(rid, -32601, "MCP tool not found");
     return rpc(rid, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
   }
   if (method === "resources/read") {
     const uri = typeof body.params?.uri === "string" ? body.params.uri : ""; const live = new LiveReadAdapter({ rpcUrl: env.SHANNON_RPC_HTTP }); let result: unknown;
-    if (uri === "prior://capabilities") result = { ...service.capabilities(context), scopes: ["prior:read"], routes: ["GET /health", "GET /v1/capabilities", "GET /v1/circuits/:id", "GET /v1/markets/:marketId", "GET /v1/forecasts/:id", "GET /v1/discovery/markets", "GET /v1/discovery/circuits"], mcp: { resources, tools }, hosted: { mode: "SHANNON_RPC_READ_ONLY", canonicalState: "SHANNON_RPC_READ_VERIFIED_FOR_BOUND_DETAILS", submission: "DISABLED", execution: "DISABLED", persistence: "NONE", listIndexing: "NOT_CONNECTED", evidenceMode: "SHANNON_RPC_READ_ONLY" } };
+    if (uri === "prior://capabilities") result = { ...service.capabilities(context), scopes: context.scopes ?? [], routes: ["GET /health", "GET /v1/capabilities", "GET /v1/circuits/:id", "GET /v1/markets/:marketId", "GET /v1/forecasts/:id", "GET /v1/discovery/markets", "GET /v1/discovery/circuits", "POST /v1/forecast-submissions"], mcp: { resources, tools }, hosted: { mode: "SHANNON_RPC_READ_WITH_CLIENT_SIGNED_FORECAST_RELAY", canonicalState: "SHANNON_RPC_READ_VERIFIED_FOR_BOUND_DETAILS", submission: "CLIENT_SIGNED_RELAY", execution: "DISABLED", persistence: "NONE", listIndexing: "BOUNDED", evidenceMode: "SHANNON_RPC_READ_AND_CLIENT_SIGNED_BROADCAST" } };
     else { const c = uri.match(/^prior:\/\/circuit\/(.+)$/), m = uri.match(/^prior:\/\/market\/(.+)$/), f = uri.match(/^prior:\/\/forecast\/(.+)$/); if (c) result = await live.readCircuit(decodeResource(c[1]) as `0x${string}`); else if (m) result = await live.readMarket(decodeResource(m[1]) as `0x${string}`); else if (f) result = await live.readForecast(decodeResource(f[1]) as `0x${string}`); else return rpcError(rid, -32004, "MCP resource not found"); }
     return rpc(rid, { contents: [{ uri, mimeType: "application/json", text: JSON.stringify(result) }] });
   }
@@ -74,10 +79,11 @@ async function mcp(request: Request, env: Env, context: AuthContext): Promise<Re
 export default { async fetch(request: Request, env: Env): Promise<Response> {
   try {
     const url = new URL(request.url); const context = auth(request, env);
-    if (url.pathname === "/health" && request.method === "GET") return json({ ok: true, service: "prior-agent-readonly", version: "v1", mode: "SHANNON_RPC_READ_ONLY", chainId: 50312 });
+    if (url.pathname === "/health" && request.method === "GET") return json({ ok: true, service: "prior-agent-readonly", version: "v1", mode: "SHANNON_RPC_READ_WITH_CLIENT_SIGNED_FORECAST_RELAY", chainId: 50312 });
     if (url.pathname === "/mcp" && request.method === "POST") return await mcp(request, env, context);
-    if (request.method !== "GET") return json({ code: "CAPABILITY_DENIED", message: "only read-only GET routes and the read-only MCP POST endpoint are exposed" }, 403);
-    if (url.pathname === "/v1/capabilities") { service.authorize(context, "prior:read"); return json({ ...service.capabilities(context), scopes: ["prior:read"], routes: ["GET /health", "GET /v1/capabilities", "GET /v1/circuits/:id", "GET /v1/markets/:marketId", "GET /v1/forecasts/:id", "GET /v1/discovery/markets", "GET /v1/discovery/circuits", "POST /mcp"], mcp: { resources, tools }, hosted: { mode: "SHANNON_RPC_READ_ONLY", canonicalState: "SHANNON_RPC_READ_VERIFIED_FOR_BOUND_DETAILS", submission: "DISABLED", execution: "DISABLED", persistence: "NONE", listIndexing: "NOT_CONNECTED", evidenceMode: "SHANNON_RPC_READ_ONLY" } }); }
+    if (url.pathname === "/v1/forecast-submissions" && request.method === "POST") { service.authorize(context, "prior:forecast:submit"); const body = await readJson(request); return json(await submitSignedForecast(body, { rpc: (method, params) => rpcWrite(env, method, params) })); }
+    if (request.method !== "GET") return json({ code: "CAPABILITY_DENIED", message: "only read-only GET routes, Forecast submission, and the read-only MCP POST endpoint are exposed" }, 403);
+    if (url.pathname === "/v1/capabilities") { service.authorize(context, "prior:read"); return json({ ...service.capabilities(context), scopes: context.scopes ?? [], routes: ["GET /health", "GET /v1/capabilities", "GET /v1/circuits/:id", "GET /v1/markets/:marketId", "GET /v1/forecasts/:id", "GET /v1/discovery/markets", "GET /v1/discovery/circuits", "POST /v1/forecast-submissions", "POST /mcp"], mcp: { resources, tools }, hosted: { mode: "SHANNON_RPC_READ_WITH_CLIENT_SIGNED_FORECAST_RELAY", canonicalState: "SHANNON_RPC_READ_VERIFIED_FOR_BOUND_DETAILS", submission: "CLIENT_SIGNED_RELAY", execution: "DISABLED", persistence: "NONE", listIndexing: "BOUNDED", evidenceMode: "SHANNON_RPC_READ_AND_CLIENT_SIGNED_BROADCAST" } }); }
     if (url.pathname === "/v1/discovery/markets") { service.authorize(context, "prior:read"); const limit = Math.min(page(url, "limit", 10), 20); return json(await discoverMarkets(env, limit)); }
     if (url.pathname === "/v1/discovery/circuits") { service.authorize(context, "prior:read"); return json(discoverCircuits()); }
     if (url.pathname === "/v1/markets" || url.pathname === "/v1/circuits") { service.authorize(context, "prior:read"); page(url, "limit", 50); page(url, "offset", 0); return notConnected(url.pathname); }

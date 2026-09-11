@@ -1,6 +1,6 @@
-# PRIOR hosted read-only Worker
+# PRIOR hosted Worker
 
-The Worker is a bounded public observation surface for PRIOR. It reads canonical Shannon detail state and exposes bounded discovery; it does not hold keys, sign, submit Forecasts, create Circuits, execute trades, or persist agent state.
+The Worker is a bounded authenticated surface for PRIOR. It reads canonical Shannon detail state, exposes bounded discovery, and supports one narrowly scoped client-signed Forecast commit relay. It never holds a private key or signs for a user. Economic execution remains disabled.
 
 ## Endpoints
 
@@ -11,14 +11,19 @@ The Worker is a bounded public observation surface for PRIOR. It reads canonical
 - `GET /v1/markets/:marketId` — canonical BinaryMarketsModule detail plus market nonce.
 - `GET /v1/circuits/:circuitId` — deployed V2 `CircuitRegistryV2` intent/runtime tuple.
 - `GET /v1/forecasts/:forecastId` — canonical RFTRegistry trial tuple.
-- `POST /mcp` — bearer-authenticated read-only MCP JSON-RPC.
+- `POST /v1/forecast-submissions` — requires the separate `prior:forecast:submit` scope and a client-signed EIP-1559 Shannon transaction. Only `RFTRegistry.commitForecast` to the pinned RFT registry is accepted. The Worker validates chain, target, calldata, market, and recovered signer, forwards the raw transaction, and reads its receipt. Circuit binding and Circuit-forecaster validation are not performed by this relay; they remain a separate onchain operation.
+- `POST /mcp` — bearer-authenticated MCP JSON-RPC with the same read tools and client-signed Forecast relay tool.
 
-The public URL is `https://prior-agent-readonly.microcosm.workers.dev`. Authentication uses the Worker secret-backed `Authorization: Bearer $PRIOR_READ_TOKEN` header. The bearer value is never stored in the repository or documentation.
+Authentication uses secret-backed `Authorization: Bearer ...` headers. Read and Forecast-write tokens are separate. Secret values are never stored in the repository or documentation.
 
-MCP exposes `initialize`, `tools/list`, `resources/list`, `tools/call` for `get_capabilities`, `get_market`, `get_circuit`, `get_forecast`, `discover_markets`, and `discover_circuits`, plus `resources/read` for the listed read resources. Unknown write tools fail cleanly.
+## MCP
+
+MCP exposes `initialize`, `tools/list`, `resources/list`, `tools/call` for `get_capabilities`, `get_market`, `get_circuit`, `get_forecast`, `discover_markets`, `discover_circuits`, and `submit_signed_forecast`, plus `resources/read` for the listed resources.
 
 ## Evidence boundary
 
-Detail reads are `SHANNON_RPC_READ_ONLY` and bind to the verified chain ID `50312` and deployed addresses. Discovery uses the DreamDEX indexer only to find recent candidates; agents must verify any candidate through the canonical detail endpoint. Circuit discovery is an explicit bounded evidence list. No complete global index is claimed.
+Detail reads are `SHANNON_RPC_READ_VERIFIED_FOR_BOUND_DETAILS` and bind to chain ID `50312` and deployed addresses. Forecast relay is `CLIENT_SIGNED_RELAY`: the client supplies the signed transaction, and the Worker has no signer custody. A relay response is classified from the transaction receipt as `INCLUDED`, `REVERTED`, or `UNKNOWN`; it is not an RFT proof until the returned trial ID is independently read from the RFT route.
 
-There are no signers, writes, submission, execution, persistence, D1 bindings, or Durable Object bindings.
+Discovery uses the DreamDEX indexer only to find recent candidates; agents must verify each candidate through the canonical detail endpoint. Circuit discovery is an explicit bounded evidence list. No complete global index is claimed.
+
+There is no hosted Circuit creation, signer custody, autonomous economic execution, order relay, D1 binding, Durable Object binding, or durable agent state. The client-signed Forecast relay remains an independently reviewable testnet write path; a deployment alone does not promote it to verified live evidence.

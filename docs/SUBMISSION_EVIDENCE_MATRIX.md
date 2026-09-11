@@ -34,7 +34,7 @@ Status: `SUBMISSION_READY_WITH_LIMITATIONS` candidate matrix. This document free
 | Bearer authentication works | unauthenticated/spoofed header denied; bearer accepted | `HOSTED_PASS` | Not production identity federation | The hackathon Worker uses bounded bearer authentication; production federation is not claimed.
 | Market discovery | Worker `/v1/discovery/markets` | `BOUNDED` | Recent DreamDEX indexer sample; not a canonical global index | Agents can discover a bounded recent market sample, then verify detail by marketId. |
 | Circuit discovery | Worker `/v1/discovery/circuits` | `BOUNDED` | Explicit verified hero/supporting references; not global | Agents can find the submitted V2 hero and V1 continuity proof without guessing IDs. |
-| Forecast submission | Worker capability response | `DISABLED` / `BLOCKED_EXTERNAL` | No hosted relay or custody | Hosted Forecast submission remains disabled. |
+| Forecast submission | `workers/prior-agent-readonly/src/hosted-write.ts`; focused tests | `IMPLEMENTED_PENDING_LIVE_DEPLOYMENT` | Client signs exact Shannon `commitForecast`; Worker validates and relays without custody; no live receipt/readback yet | Hosted client-signed Forecast relay is bounded and pending external verification. |
 | Economic execution | Worker capability response and live hero | `DISABLED` / `NOT_CLAIMED` | No autonomous trading | No hosted economic execution is exposed or claimed.
 | Durable multi-agent state | Worker has no bindings | `NONE` | No D1/DO/session store | Durable multi-agent production operation is deferred.
 

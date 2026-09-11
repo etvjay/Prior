@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "prior.forecast-evaluation.v1",
+  "generatedAt": "2026-09-11",
+  "purpose": "Scoped evidence aggregation; not a production competence benchmark",
+  "canonicalTruth": "RFTRegistry finalized trial fields and retained Shannon evidence artifacts",
+  "scopes": [
+    {
+      "scopeId": "somnia-shannon:BTC:5m",
+      "chainId": 50312,
+      "asset": "BTC",
+      "intervalSec": 300,
+      "sampleSize": 2,
+      "records": [
+        { "marketId": "0x0000000000000000000000000000000000000000000000000000000000014d04", "trialId": "0xb467ba8273d0edd06635772d3cbca6ebf5b4d0d481062ae739cd283a5d90145c", "forecastBps": 0, "outcome": "DOWN", "forecastBrier": 0, "marketBrier": 22500, "marketScoreDelta": 22500, "status": "SCORED", "decision": "ABSTAIN", "evidence": "evidence/shannon/circuit-continuity-recovery.json" },
+        { "marketId": "0x0000000000000000000000000000000000000000000000000000000000014d96", "trialId": "0x47bed744a34928c40fe3c0807451dcc59696e586dd7324f802f7ffe27198053e", "forecastBps": 5000, "outcome": "UP", "forecastBrier": 25000000, "marketBrier": 21855625, "marketScoreDelta": -3144375, "status": "SCORED", "decision": "ABSTAIN", "evidence": "evidence/shannon/circuit-continuity-recovery.json" }
+      ],
+      "aggregate": { "forecastBrierSum": 25000000, "forecastBrierMeanNumerator": 25000000, "forecastBrierMeanDenominator": 2, "marketScoreDeltaSum": -3121875, "referenceValidSampleSize": 2 },
+      "interpretation": "Two finalized BTC 5-minute trials are inspectable as a continuity sample. This is too small for a reliable competence claim."
+    },
+    {
+      "scopeId": "somnia-shannon:ETH:1h",
+      "chainId": 50312,
+      "asset": "ETH",
+      "intervalSec": 3600,
+      "sampleSize": 1,
+      "records": [
+        { "marketId": "0x0000000000000000000000000000000000000000000000000000000000014aa9", "trialId": "0x8715447158342b01dc8f17b646f5bd3e36c9727d4b78e85d3a5ded630748e727", "forecastBps": 5000, "outcome": "DOWN", "forecastBrier": 25000000, "marketBrier": 12390400, "marketScoreDelta": -12609600, "status": "SCORED", "decision": "BUY UP", "evidence": "evidence/shannon/market1-lifecycle.json", "executionEvidence": "FILLED guided order; retained artifact marks settlement pending" }
+      ],
+      "aggregate": { "forecastBrierSum": 25000000, "forecastBrierMeanNumerator": 25000000, "forecastBrierMeanDenominator": 1, "marketScoreDeltaSum": -12609600, "referenceValidSampleSize": 1 },
+      "interpretation": "One ETH 1-hour scored trial with a guided filled order; not a competence benchmark."
+    },
+    {
+      "scopeId": "somnia-shannon:BTC:1h",
+      "chainId": 50312,
+      "asset": "BTC",
+      "intervalSec": 3600,
+      "sampleSize": 1,
+      "records": [
+        { "marketId": "0x0000000000000000000000000000000000000000000000000000000000018e83", "trialId": "0x9d0ce9d1542b3dc1261e4cf73a1f18b24b9fa61e3dec72b7407823156b954f66", "forecastBps": 5000, "outcome": "DOWN", "forecastBrier": 25000000, "marketBrier": null, "marketScoreDelta": null, "status": "SCORED", "decision": "ABSTAIN", "evidence": "evidence/m4-3-live-zero-action-lifecycle.json", "referenceValid": false }
+      ],
+      "aggregate": { "forecastBrierSum": 25000000, "forecastBrierMeanNumerator": 25000000, "forecastBrierMeanDenominator": 1, "referenceValidSampleSize": 0 },
+      "interpretation": "The V2 hero is a complete attributable lifecycle proof, not a competence benchmark."
+    }
+  ],
+  "competenceClaim": "NOT_ESTABLISHED",
+  "why": [
+    "The retained samples are small and span different asset and horizon scopes.",
+    "The V2 hero has no valid contemporaneous market reference.",
+    "A small realized sample cannot establish forecasting skill.",
+    "No out-of-sample, preregistered, repeated evaluation campaign is retained."
+  ],
+  "externalAgent": {
+    "qualification": "SEPARATELY_RUN_EXTERNAL_PROOF_PROCESS",
+    "productionThirdPartyService": false,
+    "identityEvidence": "EIP-712 signer recovery in the V2 hero artifact",
+    "providerIndependence": "not claimed beyond the retained proof process",
+    "intelligenceQuality": "NOT_CLAIMED"
+  }
+}

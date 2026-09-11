@@ -36,7 +36,7 @@ This document originally recorded the pre-deployment local design state. That hi
 
 ## Boundaries
 
-The V2 contracts have no public Worker write path and no autonomous economic execution in this submission. Forecast submission relay, signer custody, and unrestricted execution remain disabled.
+The hosted Worker now has a separately scoped, client-signed Forecast relay implementation: it can forward only an EIP-1559 `RFTRegistry.commitForecast` transaction after target, chain, signature, replay, receipt, and `trialFor` checks. It does not hold a key. This implementation remains `IMPLEMENTED_PENDING_LIVE_DEPLOYMENT`; hosted economic execution remains disabled.
 
 Source artifacts:
 
