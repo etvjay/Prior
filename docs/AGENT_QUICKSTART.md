@@ -29,6 +29,24 @@ curl -fsS -H "$AUTH" "$PRIOR_URL/v1/forecasts/0x9d0ce9d1542b3dc1261e4cf73a1f18b2
 
 Send JSON-RPC `initialize` to the MCP URL with the same bearer token, then call `tools/list`. Read tools are `get_capabilities`, `get_market`, `get_circuit`, `get_forecast`, `discover_markets`, and `discover_circuits`. Client-signed write tools are `submit_signed_forecast` and `bind_signed_trial`; the client signs, and the Worker only validates and forwards the exact bounded transaction.
 
+## How an agent submits a Forecast
+
+An agent does not send a probability directly to the Worker and does not give the Worker a private key. The agent owns the decision and signing boundary:
+
+1. Authenticate with the bearer token and call `GET /v1/capabilities`.
+2. Call `GET /v1/discovery/markets?limit=5` and `GET /v1/discovery/circuits`.
+3. Verify the selected market with `GET /v1/markets/:marketId` and inspect the Circuit with `GET /v1/circuits/:circuitId`.
+4. Produce exactly one market-specific probability, encoded in `commitForecast(marketId, pUpBps, referenceUpBps, referenceValid, tradeTag, actionIntent)`.
+5. Build a zero-value EIP-1559 transaction to the verified `RFTRegistry`, target chain `50312`, sign it in the agent’s wallet, and retain the serialized signed transaction locally.
+6. `POST /v1/forecast-submissions` with `{ "signedTransaction": "0x…", "expectedMarketId": "0x…" }`.
+7. Treat the response as pending until the returned receipt is successful. Then call `GET /v1/forecasts/:forecastId` for canonical readback.
+8. If this Forecast belongs to an active Circuit iteration, build and sign `CircuitRegistryV2.bindTrial(circuitId, marketId, trialId)` with the Circuit owner’s signer and `POST /v1/circuit-bindings`.
+9. Read `GET /v1/circuits/:circuitId/iterations/:marketId` to inspect policy, trade/abstain/refuse state, resolution, finalized RFT, and Circuit progress.
+
+Equivalent MCP calls are `discover_markets`, `discover_circuits`, `get_market`, `get_circuit`, `submit_signed_forecast`, `get_forecast`, `bind_signed_trial`, and `get_circuit_iteration`. The Worker validates exact target, chain, signer, calldata, receipt, and readback. It never chooses the probability, holds a signer key, or performs economic execution.
+
+The web UI follows the same sequence: `/live` → choose a bounded discovered market → review probability → connect a Shannon wallet → explicitly opt in → sign → wait for receipt → read back the RFT → inspect Circuit outcome. A completed or inactive Circuit correctly leaves the write disabled.
+
 ## Evidence boundary
 
 Detail routes read canonical Shannon state. Discovery is `BOUNDED`, using the DreamDEX indexer for recent market discovery and explicit verified evidence references for Circuits; it is not a global index. Hosted Forecast submission and RFT-to-Circuit binding are deployed as client-signed onchain relays, with boundary verification but no valid live broadcast recorded in this milestone. Hosted Circuit creation, signing by the Worker, transaction signing/custody, economic execution, and persistent multi-agent state are disabled.

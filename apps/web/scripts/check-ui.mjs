@@ -7,6 +7,7 @@ const routes = [
   "app/page.tsx",
   "app/proof/page.tsx",
   "app/api/continuity/route.ts",
+  "app/api/discovery/markets/route.ts",
   "app/live/page.tsx",
   "app/circuits/page.tsx",
   "app/circuit/[id]/page.tsx",
@@ -111,6 +112,9 @@ assert.match(source, /userRequested:armed/);
 
 assert.match(source, /LiveWorkspace/);
 assert.match(source, /\/api\/continuity/);
+assert.match(source, /\/api\/discovery\/markets/);
+assert.match(source, /market-picker/);
+assert.match(source, /market-select/);
 assert.match(source, /REVIEW &amp; SIGN FORECAST/);
 assert.match(source, /AWAITING_RECEIPT/);
 assert.match(source, /COMMITTED_READBACK/);
