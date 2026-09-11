@@ -96,6 +96,26 @@ function RoleSeparation() {
   );
 }
 
+function ResolutionEvidence() {
+  return (
+    <section className="resolution-evidence" aria-labelledby="resolution-evidence-title">
+      <div className="resolution-copy">
+        <p className="plain-kicker">After reality answers</p>
+        <h2 id="resolution-evidence-title">The market resolves. The belief stays attached.</h2>
+        <p>A Forecast is not replaced by the outcome. Its original probability, timing, market, and forecaster remain visible inside the RFT, now joined by the canonical result and score.</p>
+        <div className="resolution-caption"><span>RFT</span><strong>One evidence trail from commitment through resolution.</strong></div>
+      </div>
+      <div className="resolution-record" aria-label="Illustrative Forecast evidence record before and after market resolution">
+        <div className="resolution-record-head"><span>ILLUSTRATIVE EVIDENCE RECORD</span><b>FINALIZED</b></div>
+        <div className="resolution-belief"><small>COMMITTED BEFORE RESOLUTION</small><strong>72% UP</strong><span>Forecast · Market 1 · BTC 15M</span></div>
+        <div className="resolution-divider" aria-hidden="true"><i /> <b>MARKET RESOLVES</b> <i /></div>
+        <div className="resolution-outcome"><div><small>CANONICAL OUTCOME</small><strong>UP</strong></div><div><small>FORECAST SCORE</small><strong>0.0784</strong></div></div>
+        <p className="resolution-footnote">The score is derived after resolution. It does not rewrite the original belief.</p>
+      </div>
+    </section>
+  );
+}
+
 export default function LandingPage() {
   return (
     <>
@@ -108,6 +128,7 @@ export default function LandingPage() {
         <HowItWorks />
         <IterationFlow />
         <RoleSeparation />
+        <ResolutionEvidence />
         <div className="deep-dive-heading"><span>FOR PEOPLE WHO WANT THE FULL MODEL</span><h2>How belief becomes evidence.</h2></div>
         <LandingScenes />
       </main>
