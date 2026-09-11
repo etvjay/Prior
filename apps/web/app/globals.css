@@ -804,6 +804,8 @@ a.forecast-miniature:hover { background: var(--surface-2); transform: translateX
 .source-warning strong { color: var(--down); font: 10px "IBM Plex Mono", monospace; letter-spacing: .1em; }
 .source-warning small { width: 100%; color: var(--text-muted); }
 .operational-market { margin-top: 36px; border: 1px solid var(--border); background: var(--surface-1); padding: clamp(22px, 4vw, 42px); }
+.participation-next { display: grid; gap: 8px; margin-top: 26px; border: 1px solid var(--purple-muted); padding: 15px 18px; background: rgb(139 92 246 / 6%); }
+.participation-next strong { color: var(--text); font-size: 14px; font-weight: 500; }
 .market-belief { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 34px; }
 .market-belief > div { display: grid; gap: 12px; border-top: 1px solid var(--border); padding-top: 18px; }
 .market-belief span { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); }
