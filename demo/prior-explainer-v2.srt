@@ -1,0 +1,59 @@
+1
+00:00:00,000 --> 00:00:12,000
+PRIOR is a continuity system for recurring DreamDEX Event Contracts.
+
+2
+00:00:12,000 --> 00:00:25,000
+It keeps belief, intent, rules, and evidence connected.
+
+3
+00:00:25,000 --> 00:00:43,000
+A Circuit is a persistent, bounded plan across eligible markets.
+
+4
+00:00:43,000 --> 00:00:59,000
+It carries scope and rules. It does not choose the prediction.
+
+5
+00:00:59,000 --> 00:01:13,000
+A Forecast is one probability committed against one market.
+
+6
+00:01:13,000 --> 00:01:26,000
+The person or agent owns the judgment. The wallet signs it.
+
+7
+00:01:26,000 --> 00:01:39,000
+RFT means Resolution and Forecast Trail.
+
+8
+00:01:39,000 --> 00:01:58,000
+RFT preserves the complete evidence lifecycle for one Forecast.
+
+9
+00:01:58,000 --> 00:02:09,000
+That includes commitment, market, resolution, score, and links.
+
+10
+00:02:09,000 --> 00:02:22,000
+Workflow: discover, select, verify, set probability, review, sign, read back.
+
+11
+00:02:22,000 --> 00:02:35,000
+When the market changes, stale Forecast and RFT values do not carry over.
+
+12
+00:02:35,000 --> 00:02:49,000
+Without a wallet provider, PRIOR says provider required.
+
+13
+00:02:49,000 --> 00:02:54,000
+A successful receipt is required before commitment is accepted.
+
+14
+00:02:54,000 --> 00:02:58,000
+Proof shows bounded policy. Economic execution is not claimed.
+
+15
+00:02:58,000 --> 00:02:59,400
+Forecast captures belief. RFT preserves evidence. Circuit preserves bounded intent.
