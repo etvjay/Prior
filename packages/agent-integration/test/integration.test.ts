@@ -39,6 +39,18 @@ describe("Prior integration equivalence and refusal boundaries", () => {
     const conflicting = await fetch(`${h.url}/v1/forecast-submissions`, { method: "POST", headers: { "content-type": "application/json", "x-prior-scope": "prior:forecast:submit" }, body: JSON.stringify(conflict) });
     expect(conflicting.status).toBe(409);
   });
+  it("composes one continuity view for REST, SDK, and MCP", async () => {
+    const h = await createPriorHttpServer(); handles.push(h);
+    const circuitId = (await h.service.listCircuits(read)).items[0]!.circuitId;
+    const marketId = (await h.service.listMarkets(read)).items[0]!.marketId;
+    const rest = await (await fetch(`${h.url}/v1/circuits/${circuitId}/iterations/${marketId}`, { headers: { "x-prior-scope": "prior:read" } })).json();
+    const mcp = await new PriorMcpCore(h.service).callTool("get_circuit_iteration", { circuitId, marketId }, read);
+    expect(rest.source.mode).toBe("ACCEPTED_SNAPSHOT");
+    expect(rest.circuit.circuitId).toBe(circuitId);
+    expect(rest.iteration.marketId).toBe(marketId);
+    expect(rest.iteration.policy.decision).toBe("PENDING");
+    expect(mcp).toEqual(rest);
+  });
   it("rejects malformed pagination/path input, protects capability resources, and deduplicates fixture identities", async () => {
     const h = await createPriorHttpServer(); handles.push(h);
     const headers = { "x-prior-scope": "prior:read" };

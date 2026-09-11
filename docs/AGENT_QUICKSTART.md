@@ -21,6 +21,10 @@ curl -fsS -H "$AUTH" "$PRIOR_URL/v1/circuits/0x6cdfdf64cc70b5bb2e6519ab1dc0372e3
 curl -fsS -H "$AUTH" "$PRIOR_URL/v1/forecasts/0x9d0ce9d1542b3dc1261e4cf73a1f18b24b9fa61e3dec72b7407823156b954f66"
 ```
 
+- The hosted Worker exposes a composed continuity read at `GET /v1/circuits/:circuitId/iterations/:marketId`.
+- MCP exposes the matching `get_circuit_iteration` read tool.
+- `/live` is the human operational entry point and labels `LIVE READ` separately from `ACCEPTED SNAPSHOT`.
+
 ## MCP first call
 
 Send JSON-RPC `initialize` to the MCP URL with the same bearer token, then call `tools/list`. Read tools are `get_capabilities`, `get_market`, `get_circuit`, `get_forecast`, `discover_markets`, and `discover_circuits`. Client-signed write tools are `submit_signed_forecast` and `bind_signed_trial`; the client signs, and the Worker only validates and forwards the exact bounded transaction.

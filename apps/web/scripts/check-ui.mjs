@@ -5,6 +5,8 @@ import path from "node:path";
 const root = process.cwd();
 const routes = [
   "app/page.tsx",
+  "app/proof/page.tsx",
+  "app/api/continuity/route.ts",
   "app/live/page.tsx",
   "app/circuits/page.tsx",
   "app/circuit/[id]/page.tsx",
@@ -106,5 +108,13 @@ assert.match(source, /inputMode="numeric"/);
 assert.match(source, /eth_getTransactionReceipt/);
 assert.match(source, /marketState!=="TRADING"/);
 assert.match(source, /userRequested:armed/);
+
+assert.match(source, /LiveWorkspace/);
+assert.match(source, /\/api\/continuity/);
+assert.match(source, /REVIEW &amp; SIGN FORECAST/);
+assert.match(source, /AWAITING_RECEIPT/);
+assert.match(source, /COMMITTED_READBACK/);
+assert.match(source, /LIVE STATE UNAVAILABLE/);
+assert.match(source, /prior\.continuity\.v1/);
 
 console.log(`UI contract PASS: ${routes.length} routes, six generated landing sections, Circuit continuity, evidence boundaries, reduced motion, geometry, ARIA, write gates`);

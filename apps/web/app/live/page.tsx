@@ -1,7 +1,19 @@
-import { ACCEPTED_FORECASTS } from "../evidence";
-import { ContextRail, ForecastComposer, ForecastMiniature, PriorHeader } from "../components";
+import hero from "../../../../evidence/m4-3-live-zero-action-lifecycle.json";
+import { PriorHeader } from "../components";
+import { LiveWorkspace, type Fallback } from "./LiveWorkspace";
 
 export default function LivePage() {
-  const focused = ACCEPTED_FORECASTS[0];
-  return <><PriorHeader/><main id="main" className="live-shell"><aside className="market-rail" aria-label="Market selector"><div className="rail-title">MARKETS</div><div className="rail-status"><span>NO ELIGIBLE LIVE MARKETS</span><small>Prior is watching DreamDEX.</small></div>{ACCEPTED_FORECASTS.map((forecast, index) => <button className={index === 0 ? "market-row is-focused" : "market-row"} key={forecast.id} type="button" aria-pressed={index === 0}><span>{forecast.label} · {forecast.interval}</span><b>{forecast.referenceBps === null ? "—" : `${forecast.referenceBps / 100}%`} UP</b><small>RESOLVED · ACCEPTED PROOF</small></button>)}<div className="rail-circuit"><span>ACTIVE AT ACCEPTED SNAPSHOT</span><b>CIRCUIT 04</b><small>2 / 4 completed · 2 abstained</small></div></aside><section className="market-viewport" aria-labelledby="focused-market"><header className="market-meta"><div><span className="instrument-label">ACCEPTED RESOLVED EVIDENCE</span><h1 id="focused-market">BTC · 5 MIN</h1></div><div><span>MARKET STATUS</span><b>RESOLVED</b></div><div><span>LIVE TIMER</span><b>— —</b></div></header><div className="market-confrontation"><div className="market-side"><span className="instrument-label">MARKET AT COMMIT · ◆</span><strong>{focused.referenceBps! / 100}%</strong><em>UP · FIXED REFERENCE</em></div><div className="forecast-side"><ForecastComposer marketBps={focused.referenceBps} marketState="RESOLVED"/></div></div><div className="difference-line">{Math.abs(focused.forecastBps - focused.referenceBps!) / 100} point difference · accepted evidence values</div><section className="resolved-strip"><span>RESOLVED {focused.outcome}</span><span>FORECAST SCORE {(focused.forecastBrier / 100_000_000).toFixed(2)}</span><ForecastMiniature forecast={focused}/></section></section><ContextRail forecast={focused}/></main></>;
+  const fallback: Fallback = {
+    circuitId: hero.circuitId,
+    marketId: hero.market.marketId,
+    forecastId: hero.trialId,
+    probabilityUpBps: hero.forecast.probabilityUpBps,
+    outcome: hero.trialFinal.outcome,
+    status: hero.trialFinal.status,
+    commitBlock: hero.receipts.commit.block,
+    targetWindows: hero.circuitIntent.targetWindows,
+    completed: 1,
+    abstained: 1,
+  };
+  return <><PriorHeader/><main id="main" className="live-shell"><LiveWorkspace fallback={fallback}/></main></>;
 }

@@ -19,7 +19,7 @@ export async function createPriorHttpServer(options: PriorHttpOptions = {}): Pro
       if (request.method === "GET" && url.pathname === "/health") return send(response, 200, { ok: true, service: "prior-agent-integration", version: "v1" });
       if (request.method === "GET" && url.pathname === "/v1/capabilities") return send(response, 200, service.capabilities(context));
       if (request.method === "GET" && url.pathname === "/v1/circuits") return send(response, 200, service.listCircuits(context, pageParam(url, "limit", 50), pageParam(url, "offset", 0)));
-      const circuitId = routeId(url.pathname, "/v1/circuits/"); if (request.method === "GET" && circuitId) return send(response, 200, service.getCircuit(circuitId, context));
+      const circuitId = routeId(url.pathname, "/v1/circuits/"); if (request.method === "GET" && circuitId) { const iteration = circuitId.match(/^([^/]+)\/iterations\/([^/]+)$/); if (iteration) return send(response, 200, service.getCircuitIteration(iteration[1], iteration[2], context)); return send(response, 200, service.getCircuit(circuitId, context)); }
       if (request.method === "GET" && url.pathname === "/v1/markets") return send(response, 200, service.listMarkets(context, pageParam(url, "limit", 50), pageParam(url, "offset", 0)));
       const marketId = routeId(url.pathname, "/v1/markets/"); if (request.method === "GET" && marketId) return send(response, 200, service.getMarket(marketId, context));
       const forecastId = routeId(url.pathname, "/v1/forecasts/"); if (request.method === "GET" && forecastId) return send(response, 200, service.getForecast(forecastId, context));
