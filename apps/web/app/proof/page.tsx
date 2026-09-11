@@ -13,7 +13,7 @@ export default function ProofPage() {
   return <><PriorHeader/><main id="main" className="proof-page">
     <header className="proof-hero">
       <div><span className="instrument-label">PRIOR · CANONICAL V2 HERO PROOF</span><h1>JUDGMENT<br/><em>WITH BOUNDS.</em></h1><p>One external Forecast became attributable evidence. One Circuit determined what it could cause. The market resolved. The RFT recorded what happened.</p></div>
-      <aside className="proof-status"><span>LIVE SHANNON</span><strong>END-TO-END<br/>VERIFIED</strong><small>Chain ID 50312 · zero economic execution</small></aside>
+      <aside className="proof-status"><span>ARCHIVED EVIDENCE</span><strong>LIVE SHANNON<br/>READBACK</strong><small>Canonical artifact · chain ID 50312 · zero economic execution</small></aside>
     </header>
 
     <section className="proof-chain" aria-label="Canonical causal proof chain">
