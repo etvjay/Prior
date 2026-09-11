@@ -58,6 +58,7 @@ async function mcp(request: Request, env: Env, context: AuthContext): Promise<Re
     else if (name === "get_forecast") result = await live.readForecast(argument(args, "forecastId") as `0x${string}`);
     else if (name === "discover_markets") result = await discoverMarkets(env, discoveryLimit(args && typeof args === "object" ? (args as Record<string, unknown>).limit : undefined));
     else if (name === "discover_circuits") result = discoverCircuits();
+    else return rpcError(rid, -32601, "MCP tool not found");
     return rpc(rid, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
   }
   if (method === "resources/read") {
