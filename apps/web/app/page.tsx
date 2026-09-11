@@ -137,6 +137,26 @@ function AuthorityBoundary() {
   );
 }
 
+function FinalHandoff() {
+  return (
+    <section className="final-handoff" aria-labelledby="final-handoff-title">
+      <div className="final-handoff-heading">
+        <p className="plain-kicker">The whole Circuit, in one line</p>
+        <h2 id="final-handoff-title">Belief becomes evidence. Intent keeps going.</h2>
+        <p>PRIOR connects the Forecast, the rule, the decision, and the result without pretending they are the same thing.</p>
+      </div>
+      <div className="handoff-loop" aria-label="Circuit continuity summary">
+        <span>INTENT</span><i>→</i><span>MARKET</span><i>→</i><span>FORECAST</span><i>→</i><span>RFT</span><i>→</i><span>POLICY</span><i>→</i><span>RESULT</span><i>↻</i><span>NEXT MARKET</span>
+      </div>
+      <div className="handoff-actions">
+        <div className="handoff-action-copy"><span>START WITH THE OBJECT</span><strong>Follow one Circuit from its intent to its next market.</strong></div>
+        <div className="handoff-buttons"><Link className="primary-button" href="/live">OPEN LIVE VIEW</Link><Link className="secondary-button" href="/forecast/0x9d0ce9d1542b3dc1261e4cf73a1f18b24b9fa61e3dec72b7407823156b954f66">INSPECT RESOLVED EVIDENCE</Link></div>
+      </div>
+      <div className="handoff-boundary"><span>WHAT THIS BUILD PROVES</span><p>It demonstrates bounded intent, attributable Forecast evidence, Circuit continuity, and deliberate refusal. Forecasting competence and autonomous economic execution are not established here.</p></div>
+    </section>
+  );
+}
+
 export default function LandingPage() {
   return (
     <>
@@ -151,6 +171,7 @@ export default function LandingPage() {
         <RoleSeparation />
         <ResolutionEvidence />
         <AuthorityBoundary />
+        <FinalHandoff />
       </main>
     </>
   );

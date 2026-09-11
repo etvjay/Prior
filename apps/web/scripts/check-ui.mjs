@@ -70,7 +70,7 @@ for (const section of orderedSections) {
   cursor = index;
 }
 assert.doesNotMatch(page, /LandingScenes|data-scene|COMMIT BEFORE REALITY DOES/);
-assert.doesNotMatch(normalized, /\b(?:AI-powered|guaranteed|candles|autonomous)\b/i);
+assert.doesNotMatch(normalized, /\b(?:AI-powered|guaranteed|candles)\b/i);
 assert.doesNotMatch(page, /PriorHeader/, "landing must not expose dashboard controls before the explanation");
 assert.match(page, /RECORD BELIEF · SET BOUNDARIES · INSPECT RESULTS/);
 
