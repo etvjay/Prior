@@ -813,6 +813,95 @@
           }
         ]
       }
+    },
+    "/v1/discovery/markets": {
+      "get": {
+        "operationId": "markets",
+        "security": [
+          {
+            "priorScopes": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bounded discovery result"
+          },
+          "400": {
+            "description": "Structured integration error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Structured integration error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not connected"
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20
+            },
+            "required": false,
+            "description": "Bounded result size; maximum 20."
+          }
+        ]
+      }
+    },
+    "/v1/discovery/circuits": {
+      "get": {
+        "operationId": "circuits",
+        "security": [
+          {
+            "priorScopes": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bounded discovery result"
+          },
+          "400": {
+            "description": "Structured integration error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Structured integration error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not connected"
+          }
+        }
+      }
     }
   }
 }

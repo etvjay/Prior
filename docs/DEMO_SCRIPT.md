@@ -1,53 +1,58 @@
-# PRIOR Demo Script — 2–3 minutes
+# PRIOR Demo Script (3–5 minutes)
 
-## 0:00–0:15 — Thesis
+## 0:00–0:30 — Problem
 
-“Prediction markets tell you what the market believed. PRIOR preserves what you believed before reality.”
+“Agents increasingly make consequential decisions, but belief, authority, execution, and outcome are usually collapsed into one opaque story. A forecast should not automatically become permission to spend money.”
 
-Open `/live` and frame the amber Market node and blue Forecast node as separate objects.
+## 0:30–1:15 — PRIOR model
 
-## 0:15–0:45 — Commit a belief
-
-Show the real DreamDEX market, typed cadence, reference probability, and countdown. Move the blue Forecast node. Explain that the amber market reference is observed data, not the user’s belief.
-
-Commit through the visible state sequence:
+Show the `/proof` page and explain:
 
 ```text
-EDITABLE → SIGNING → SUBMITTED → CONFIRMING → COMMITTED
+Forecast → RFT → Circuit → bounded consequence → canonical outcome → scored evidence
 ```
 
-Only confirmation crosses the commitment boundary.
+- Forecast: attributable belief before resolution.
+- RFT: durable resolved trial measuring judgment.
+- Circuit: bounded mandate deciding what that judgment may cause.
 
-## 0:45–1:15 — Score the belief
+“RFT measures judgment. Circuit assigns bounded consequence.”
 
-Open the RFT proof surface. Show Forecast, market reference, canonical outcome, Forecast Brier, market Brier, and delta. Keep Forecast quality separate from execution.
+## 1:15–2:45 — Live V2 proof
 
-## 1:15–1:50 — Persistent Circuit intent
+Open `/proof` and show:
 
-Open Circuit `0x15e18e2aecb7d00ca3243181fb2fa38af81b021266e2d0a290eb0c55d2b5f4c1`.
+- Forecaster and EIP-712 recovered identity;
+- 50% UP Forecast and commit block;
+- Circuit owner, target window, budget, and allowed-actions bitmap `0`;
+- RFT/trial and `bound=true`;
+- `BUY_UP → ActionNotAllowed`;
+- `BUY_DOWN → ActionNotAllowed`;
+- no order/collateral/approval;
+- canonical DreamDEX outcome `DOWN`;
+- RFT `SCORED`, Forecast Brier `25000000`;
+- final Circuit `COMPLETE`, `processed=true`.
 
-Show the stable intent panel: BTC 5m, four target windows, fixed owner/forecaster, margin, budget, cap, and allowed actions.
+Do not fill the unavailable market-reference metrics.
 
-Walk the timeline:
+## 2:45–3:30 — Historical continuity
 
-```text
-Market A → Forecast → Policy → ABSTAIN → Outcome → RFT lock
-                 ↓
-          Runner restart/recovery
-                 ↓
-Market B → Forecast → Policy → ABSTAIN → Outcome → RFT lock
-```
+Open the V1 continuity evidence. Explain carefully:
 
-Say: “The point is not that the Circuit trades every market. The point is that the same intent survives each market and evaluates it again.”
+“One unchanged V1 Circuit intent advanced across two real Bitcoin markets, with one attributable RFT per market and both judgments scored.”
 
-## 1:50–2:20 — Economic execution evidence
+Clarify that V1 continuity is supporting evidence; V2 adds canonical Circuit ↔ market ↔ RFT binding and action enforcement.
 
-Open Market #1 proof. Show the intentional losing trade: Forecast, reference, BUY_UP policy, `420` maximum temporary pull, `281` actual fill cost, `139` return, zero payout, and `-281` PnL. Explain that PRIOR preserves losses instead of cherry-picking wins.
+## 3:30–4:15 — Agent surface
 
-## 2:20–2:40 — Recovery and close
+Use the public Worker capability endpoint and MCP `/mcp` endpoint. Show:
 
-Show Runner recovery: two reconstructed iterations, zero duplicate Forecasts/proposals/orders.
+- bearer-authenticated capability discovery;
+- bounded market discovery;
+- live market/Circuit/RFT detail reads;
+- read-only MCP tools;
+- disabled writes and execution.
 
-Close: “One committed belief is evidence. One persistent intent across markets is a Circuit. That’s PRIOR.”
+## 4:15–end — Why it matters
 
-Do not demonstrate autonomous execution; it is externally blocked and outside the submitted guided path.
+“Prior lets users bring any agent and give it a mandate, not a wallet. Trust can be allocated from attributable judgment and bounded consequence, not agent claims.”
