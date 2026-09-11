@@ -10,9 +10,9 @@ contract DreamDexAdapter {
   uint256 public constant MIN_COMMIT_LEAD = 60;
   constructor(address module_) { binaryModule = IDreamDexMarketReader(module_); }
   function binding(bytes32 marketId) external view returns (address collateral, address market, address pool, uint64 nonce, uint256 oracleQuestionId, uint256 expiry) {
-    (uint256 oracleQuestionId, uint8 outcomeSlotCount, uint8 voidPolicy, address c, uint32 originOperatorId, bytes32 originVenueId, address oracleAdapter, address creator, address m, address p, uint256 yesId, uint256 noId, uint64 tradingStart, uint64 e) = binaryModule.markets(marketId);
-    oracleQuestionId; outcomeSlotCount; voidPolicy; originOperatorId; originVenueId; oracleAdapter; creator; yesId; noId; tradingStart;
-    return (c,m,p,binaryModule.marketNonce(marketId),oracleQuestionId,e);
+    (uint256 oracleQuestionIdRead, uint8 outcomeSlotCount, uint8 voidPolicy, address c, uint32 originOperatorId, bytes32 originVenueId, address oracleAdapter, address creator, address m, address p, uint256 yesId, uint256 noId, uint64 tradingStart, uint64 e) = binaryModule.markets(marketId);
+    oracleQuestionIdRead; outcomeSlotCount; voidPolicy; originOperatorId; originVenueId; oracleAdapter; creator; yesId; noId; tradingStart;
+    return (c,m,p,binaryModule.marketNonce(marketId),oracleQuestionIdRead,e);
   }
   function commitEligible(bytes32 marketId) external view returns (bool) {
     (, , , , , uint256 expiry) = this.binding(marketId);
