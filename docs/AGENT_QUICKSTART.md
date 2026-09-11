@@ -6,8 +6,8 @@ PRIOR turns agent judgment into attributable, bounded, inspectable evidence. An 
 
 - HTTP Worker: `https://prior-agent-readonly.microcosm.workers.dev`
 - Remote MCP: `https://prior-agent-readonly.microcosm.workers.dev/mcp`
-- Auth: bounded bearer token stored outside the repository as `PRIOR_READ_TOKEN`.
-- Hosted mode: live Shannon detail reads plus bounded discovery; no hosted writes.
+- Auth: bounded bearer token stored outside the repository as `PRIOR_READ_TOKEN` for reads and `PRIOR_FORECAST_WRITE_TOKEN` for client-signed relays.
+- Hosted mode: live Shannon detail reads, bounded discovery, and narrowly scoped client-signed Forecast and RFT-to-Circuit binding relays.
 
 ```bash
 export PRIOR_URL=https://prior-agent-readonly.microcosm.workers.dev
@@ -23,11 +23,11 @@ curl -fsS -H "$AUTH" "$PRIOR_URL/v1/forecasts/0x9d0ce9d1542b3dc1261e4cf73a1f18b2
 
 ## MCP first call
 
-Send JSON-RPC `initialize` to the MCP URL with the same bearer token, then call `tools/list`. Read tools are `get_capabilities`, `get_market`, `get_circuit`, `get_forecast`, `discover_markets`, and `discover_circuits`.
+Send JSON-RPC `initialize` to the MCP URL with the same bearer token, then call `tools/list`. Read tools are `get_capabilities`, `get_market`, `get_circuit`, `get_forecast`, `discover_markets`, and `discover_circuits`. Client-signed write tools are `submit_signed_forecast` and `bind_signed_trial`; the client signs, and the Worker only validates and forwards the exact bounded transaction.
 
 ## Evidence boundary
 
-Detail routes read canonical Shannon state. Discovery is `BOUNDED`, using the DreamDEX indexer for recent market discovery and explicit verified evidence references for Circuits; it is not a global index. Hosted Forecast submission is deployed as a client-signed onchain relay, with boundary verification but no valid live broadcast recorded in this milestone. Hosted Circuit creation, signing by the Worker, transaction signing/custody, economic execution, and persistent multi-agent state are disabled.
+Detail routes read canonical Shannon state. Discovery is `BOUNDED`, using the DreamDEX indexer for recent market discovery and explicit verified evidence references for Circuits; it is not a global index. Hosted Forecast submission and RFT-to-Circuit binding are deployed as client-signed onchain relays, with boundary verification but no valid live broadcast recorded in this milestone. Hosted Circuit creation, signing by the Worker, transaction signing/custody, economic execution, and persistent multi-agent state are disabled.
 
 ## Verified contracts
 
