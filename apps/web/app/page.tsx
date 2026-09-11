@@ -98,7 +98,7 @@ function RoleSeparation() {
 
 function ResolutionEvidence() {
   return (
-    <section className="resolution-evidence" aria-labelledby="resolution-evidence-title">
+    <section className="resolution-evidence" id="resolution-evidence" aria-labelledby="resolution-evidence-title">
       <div className="resolution-copy">
         <p className="plain-kicker">After reality answers</p>
         <h2 id="resolution-evidence-title">The market resolves. The belief stays attached.</h2>
