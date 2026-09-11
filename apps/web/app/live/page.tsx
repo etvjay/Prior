@@ -15,5 +15,5 @@ export default function LivePage() {
     completed: 1,
     abstained: 1,
   };
-  return <><PriorHeader/><main id="main" className="live-shell"><LiveWorkspace fallback={fallback}/></main></>;
+  return <><PriorHeader/><main id="main" className="live-shell operational-shell"><LiveWorkspace fallback={fallback}/></main></>;
 }

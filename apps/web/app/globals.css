@@ -779,6 +779,7 @@ a.forecast-miniature:hover { background: var(--surface-2); transform: translateX
 }
 
 /* Operational continuity workspace */
+.operational-shell { display: block; }
 .operational-workspace { width: min(100%, 1440px); margin: 0 auto; padding: 54px clamp(20px, 5vw, 72px) 96px; }
 .operational-header, .operational-market > header { display: flex; justify-content: space-between; align-items: flex-end; gap: 28px; border-bottom: 1px solid var(--border); padding-bottom: 28px; }
 .operational-header h1, .operational-market h2 { margin: 10px 0 0; font-size: clamp(32px, 4.8vw, 68px); line-height: .95; letter-spacing: -.055em; }
