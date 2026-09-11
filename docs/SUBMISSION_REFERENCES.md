@@ -3,9 +3,9 @@
 ## Product
 
 - App URL: `https://prior-aqf.pages.dev/` (Cloudflare Pages; deployed from `feat/prior-submission-surface`).
-- Pages deployment: `https://f0f0caf8.prior-aqf.pages.dev`.
+- Pages deployment: `https://e451854c.prior-aqf.pages.dev`.
 - Proof route: `https://prior-aqf.pages.dev/proof`.
-- Demo candidate: `demo/prior-cloudflare-pages-demo-candidate.mp4`, 90 seconds, H.264/yuv420p, captured from verified Pages routes; surface tour only, no wallet transaction is claimed.
+- Demo candidate: `demo/prior-foundry-final-demo-v2.mp4`, 106.32 seconds, H.264 video plus Opus narration, captured from verified Pages routes with a real market-selection and provider-boundary interaction; no wallet transaction or autonomous execution is claimed.
 - Repository: `https://github.com/etvjay/Prior/tree/feat/prior-submission-surface`.
 
 ## Hosted agent surface

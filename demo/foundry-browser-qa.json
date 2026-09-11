@@ -1,0 +1,77 @@
+[
+  {
+    "route": "/",
+    "errors": [],
+    "metrics": {
+      "width": 1440,
+      "scrollWidth": 1440,
+      "title": "PRIOR | One bounded intent. Many markets",
+      "main": true,
+      "primaryNav": 0,
+      "wallet": null
+    }
+  },
+  {
+    "route": "/proof",
+    "errors": [],
+    "metrics": {
+      "width": 1440,
+      "scrollWidth": 1440,
+      "title": "PRIOR | One bounded intent. Many markets",
+      "main": true,
+      "primaryNav": 1,
+      "wallet": "CONNECT WALLET"
+    }
+  },
+  {
+    "route": "/live",
+    "walletAfterClick": "PROVIDER REQUIRED",
+    "liveSelector": 1,
+    "step2": 1,
+    "errors": [],
+    "metrics": {
+      "width": 1440,
+      "scrollWidth": 1440,
+      "title": "PRIOR | One bounded intent. Many markets",
+      "main": true,
+      "primaryNav": 1,
+      "wallet": "CONNECT WALLET"
+    }
+  },
+  {
+    "route": "/circuits",
+    "errors": [],
+    "metrics": {
+      "width": 1440,
+      "scrollWidth": 1440,
+      "title": "PRIOR | One bounded intent. Many markets",
+      "main": true,
+      "primaryNav": 1,
+      "wallet": "CONNECT WALLET"
+    }
+  },
+  {
+    "route": "/history/connect-wallet",
+    "errors": [],
+    "metrics": {
+      "width": 1440,
+      "scrollWidth": 1440,
+      "title": "PRIOR | One bounded intent. Many markets",
+      "main": true,
+      "primaryNav": 1,
+      "wallet": "CONNECT WALLET"
+    }
+  },
+  {
+    "route": "/profile/connect-wallet",
+    "errors": [],
+    "metrics": {
+      "width": 1440,
+      "scrollWidth": 1440,
+      "title": "PRIOR | One bounded intent. Many markets",
+      "main": true,
+      "primaryNav": 1,
+      "wallet": "CONNECT WALLET"
+    }
+  }
+]

@@ -1,0 +1,27 @@
+{
+  "schema_version": "prior.demo.v1",
+  "project": "prior-demo",
+  "title": "PRIOR: belief, evidence, bounded intent",
+  "renderer_profile": "browser-native",
+  "source_url": "https://prior-aqf.pages.dev",
+  "scenes": [
+    {"id": "landing", "route": "/", "claim": "PRIOR connects belief, intent, execution, and evidence continuity."},
+    {"id": "proof", "route": "/proof", "claim": "Accepted Shannon evidence shows attributable Forecast and bounded consequence."},
+    {"id": "live", "route": "/live", "claim": "The live surface discovers a bounded market and gates Forecast signing."},
+    {"id": "circuits", "route": "/circuits", "claim": "A Circuit preserves bounded intent across market iterations."},
+    {"id": "history", "route": "/history/connect-wallet", "claim": "History is account-aware and requires a connected wallet before account-specific evidence."},
+    {"id": "profile", "route": "/profile/connect-wallet", "claim": "Profile is account-aware and does not fabricate disconnected identity evidence."}
+  ],
+  "evidence": [
+    "evidence/m4-3-live-zero-action-lifecycle.json",
+    "evidence/shannon/circuit-continuity-recovery.json"
+  ],
+  "limitations": [
+    "No wallet transaction is recorded in this demo.",
+    "No autonomous economic execution is claimed.",
+    "The live surface uses bounded market discovery and the selected hero Circuit is complete."
+  ],
+  "picture_candidate": "demo/prior-cloudflare-pages-demo-picture-114s.mp4",
+  "audio_candidate": "demo/prior-demo-narration.ogg",
+  "audiovisual_candidate": "demo/prior-cloudflare-pages-demo-final-candidate.mp4"
+}
