@@ -3,22 +3,29 @@ import { LandingScenes } from "./LandingScenes";
 
 function PlainLanguageIntro() {
   return (
-    <section className="plain-intro" aria-labelledby="plain-intro-title">
+    <section className="plain-intro circuit-hero" aria-labelledby="plain-intro-title">
       <div className="plain-intro-copy">
-        <p className="plain-kicker">A clearer way to work with AI decisions</p>
-        <h1 id="plain-intro-title">See what an AI believed before you decide what it can do.</h1>
-        <p className="plain-lede">PRIOR records a prediction before the answer is known, shows the rule that limits it, and keeps the final result attached to the original evidence.</p>
+        <p className="plain-kicker">The continuity layer for recurring event markets</p>
+        <h1 id="plain-intro-title">One bounded intent. Many markets. Every result connected.</h1>
+        <p className="plain-lede">A Circuit carries one set of rules across a declared sequence of markets. Each market gets its own Forecast and evidence record, while the intent keeps moving.</p>
         <div className="plain-actions">
-          <Link className="primary-button" href="/live">SEE A REAL EXAMPLE</Link>
+          <Link className="primary-button" href="/live">SEE A CIRCUIT IN MOTION</Link>
           <a className="secondary-button" href="#how-it-works">HOW IT WORKS</a>
         </div>
       </div>
-      <div className="plain-preview" aria-label="A simple example of a prediction becoming evidence">
-        <div className="plain-preview-step"><span>1</span><strong>AI says</strong><b>72% likely</b><small>before the result</small></div>
-        <div className="plain-preview-line" aria-hidden="true" />
-        <div className="plain-preview-step"><span>2</span><strong>Your rule says</strong><b>no trade</b><small>the AI has no wallet</small></div>
-        <div className="plain-preview-line" aria-hidden="true" />
-        <div className="plain-preview-step"><span>3</span><strong>Reality says</strong><b>UP</b><small>now the record can be scored</small></div>
+      <div className="circuit-hero-visual" aria-label="A persistent Circuit carrying one intent across three market iterations">
+        <div className="circuit-hero-intent">
+          <div><span className="circuit-status-dot" /> <small>ILLUSTRATIVE CIRCUIT · ACTIVE INTENT</small></div>
+          <strong>BTC · 15 MINUTES</strong>
+          <p>Use this Forecast source when the difference is at least 8 points. Stop after 2 losses.</p>
+          <div className="circuit-hero-limits"><span>8 markets</span><span>$15 / market</span><span>$100 total</span></div>
+        </div>
+        <div className="circuit-hero-connector" aria-hidden="true" />
+        <ol className="circuit-hero-iterations">
+          <li><b>01</b><div><strong>Market 1</strong><span>Forecast → RFT → abstain</span></div><em>RESOLVED EVIDENCE</em></li>
+          <li><b>02</b><div><strong>Market 2</strong><span>Forecast → RFT → policy</span></div><em>CURRENT ITERATION</em></li>
+          <li className="is-next"><b>03</b><div><strong>Market 3</strong><span>next eligible market</span></div><em>WAITING</em></li>
+        </ol>
       </div>
     </section>
   );
