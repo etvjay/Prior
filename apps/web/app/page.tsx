@@ -118,7 +118,7 @@ function ResolutionEvidence() {
 
 function AuthorityBoundary() {
   return (
-    <section className="authority-boundary" aria-labelledby="authority-boundary-title">
+    <section className="authority-boundary" id="authority-boundary" aria-labelledby="authority-boundary-title">
       <div className="authority-copy">
         <p className="plain-kicker">The boundary is part of the product</p>
         <h2 id="authority-boundary-title">A rule is only useful if it can say no.</h2>
