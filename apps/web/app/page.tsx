@@ -58,6 +58,25 @@ function HowItWorks() {
   );
 }
 
+function IterationFlow() {
+  return (
+    <section className="iteration-flow" id="iteration-flow" aria-labelledby="iteration-flow-title">
+      <div className="iteration-flow-heading">
+        <p className="plain-kicker">Inside every market iteration</p>
+        <h2 id="iteration-flow-title">The intent stays the same. The market gets a new answer.</h2>
+        <p>Each eligible Event Contract passes through the same sequence. The Circuit does not restart. It moves forward with a new piece of evidence.</p>
+      </div>
+      <ol className="iteration-flow-track" aria-label="Market iteration lifecycle">
+        <li><span>01</span><strong>Market opens</strong><p>A new eligible Event Contract enters the Circuit’s declared scope.</p><small>ELIGIBLE MARKET</small></li>
+        <li><span>02</span><strong>Belief is stated</strong><p>The Forecaster gives one probability before this market resolves.</p><small>FORECAST</small></li>
+        <li><span>03</span><strong>Evidence is carried</strong><p>The RFT preserves who believed what, when, and against which market.</p><small>RFT</small></li>
+        <li><span>04</span><strong>Rule is applied</strong><p>The Circuit checks its policy, limits, and stop conditions.</p><small>POLICY</small></li>
+        <li><span>05</span><strong>Reality resolves</strong><p>Trade or abstention remains separate from the final scored evidence.</p><small>RESOLUTION</small></li>
+      </ol>
+    </section>
+  );
+}
+
 export default function LandingPage() {
   return (
     <>
@@ -68,6 +87,7 @@ export default function LandingPage() {
       <main id="main">
         <PlainLanguageIntro />
         <HowItWorks />
+        <IterationFlow />
         <div className="deep-dive-heading"><span>FOR PEOPLE WHO WANT THE FULL MODEL</span><h2>How belief becomes evidence.</h2></div>
         <LandingScenes />
       </main>
