@@ -105,14 +105,14 @@ The surface uses bounded bearer authentication and exposes live Shannon detail r
 - historical V1 two-market continuity evidence;
 - canonical Shannon detail reads;
 - public authenticated HTTP reads;
-- remote read-only MCP transport;
+- remote authenticated MCP transport for reads and client-signed relay tools;
 - bounded recent market discovery;
 - bounded verified Circuit discovery;
-- RFT/Circuit proof visualization.
+- RFT/Circuit proof visualization;
+- deployed client-signed Forecast and RFT-to-Circuit relay boundary;
 
 ### DISABLED OR DEFERRED
 
-- hosted Forecast submission and relay;
 - Circuit creation and authority writes through the public surface;
 - economic execution and order placement;
 - complete global market/Circuit indexing;

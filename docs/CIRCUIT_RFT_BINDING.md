@@ -1,6 +1,6 @@
 # Circuit ↔ RFT Binding — V2
 
-Status: `MOCK_VERIFIED / NOT_DEPLOYED`
+Status: `SHANNON_WRITE_VERIFIED / HOSTED_RELAY_DEPLOYED / LIVE_BINDING_NOT_PROVEN`
 
 M4.3.1 adds a versioned binding boundary without changing the deployed V1
 protocol. `CircuitRegistryV2` and `CircuitExecutorV2` are fresh contract
