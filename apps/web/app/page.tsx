@@ -77,6 +77,25 @@ function IterationFlow() {
   );
 }
 
+function RoleSeparation() {
+  return (
+    <section className="role-separation" aria-labelledby="role-separation-title">
+      <div className="role-separation-heading">
+        <p className="plain-kicker">Continuity needs clear responsibility</p>
+        <h2 id="role-separation-title">Different roles. One accountable flow.</h2>
+        <p>No single agent gets to define the intent, invent the evidence, and act without a boundary. Each role has one job in the Circuit.</p>
+      </div>
+      <div className="role-grid">
+        <article><span>01 · OWNER</span><h3>Sets the intent</h3><p>Declares the market scope, policy, budget, authority, and stop conditions.</p><b>CONFIGURES</b></article>
+        <article><span>02 · FORECASTER</span><h3>Supplies belief</h3><p>Commits one probability for one market before that market resolves.</p><b>COMMITS</b></article>
+        <article><span>03 · RUNNER</span><h3>Keeps it moving</h3><p>Finds the next eligible market and progresses the Circuit without rewriting its rules.</p><b>PROGRESSES</b></article>
+        <article><span>04 · EXECUTOR</span><h3>Acts within bounds</h3><p>Performs an allowed economic action only when the Circuit grants that authority.</p><b>OPTIONAL ACTION</b></article>
+      </div>
+      <div className="role-boundary"><span>THE BOUNDARY</span><strong>The Runner can keep the Circuit alive. It cannot change what the Circuit means.</strong></div>
+    </section>
+  );
+}
+
 export default function LandingPage() {
   return (
     <>
@@ -88,6 +107,7 @@ export default function LandingPage() {
         <PlainLanguageIntro />
         <HowItWorks />
         <IterationFlow />
+        <RoleSeparation />
         <div className="deep-dive-heading"><span>FOR PEOPLE WHO WANT THE FULL MODEL</span><h2>How belief becomes evidence.</h2></div>
         <LandingScenes />
       </main>
