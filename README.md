@@ -93,6 +93,8 @@ Public hosted read surface:
 
 - HTTP: `https://prior-agent-readonly.microcosm.workers.dev`
 - MCP JSON-RPC: `https://prior-agent-readonly.microcosm.workers.dev/mcp`
+- Worker deployment: `f8676b9a-9ba6-4a72-a863-0fd10481525d`
+- Web app: `https://prior-aqf.pages.dev/` (Cloudflare Pages)
 - Quickstart: `docs/AGENT_QUICKSTART.md`
 
 The surface uses bounded bearer authentication and exposes live Shannon detail reads plus bounded discovery. No bearer token belongs in source, documentation, screenshots, or videos.

@@ -2,9 +2,11 @@
 
 ## Product
 
-- App URL: not deployed as a public application in this milestone.
-- Proof route: `/proof` in the repository web application.
-- Repository: current repository checkout; no public repository URL is asserted here.
+- App URL: `https://prior-aqf.pages.dev/` (Cloudflare Pages; deployed from `feat/prior-submission-surface`).
+- Pages deployment: `https://f0f0caf8.prior-aqf.pages.dev`.
+- Proof route: `https://prior-aqf.pages.dev/proof`.
+- Demo candidate: `demo/prior-cloudflare-pages-demo-candidate.mp4`, 90 seconds, H.264/yuv420p, captured from verified Pages routes; surface tour only, no wallet transaction is claimed.
+- Repository: `https://github.com/etvjay/Prior/tree/feat/prior-submission-surface`.
 
 ## Hosted agent surface
 
