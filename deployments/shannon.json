@@ -25,7 +25,20 @@
     "revertSelector": "0x3fb0ba2e",
     "revert": "OnlyApprovedContracts()",
     "interpretation": "additional DreamDEX contract admission required",
-    "autonomousStatus": "BLOCKED_EXTERNAL"
+    "autonomousStatus": "BLOCKED_EXTERNAL",
+    "finalApprovalReadback": {
+      "owner": "0x804c7A511D3ea06651007032F1e009d8717dbCB0",
+      "executor": "0x2D2991e798Fb69f3AC19A2132932328E709990cF",
+      "selector": "0x5d97c566",
+      "block": 481122447,
+      "timestamp": 1788685393,
+      "pools": {
+        "0x14474fcb5d9cde95812380373919f09bc15fb036": false,
+        "0xd459f27bfd82a0c4ce0c3ebc28cc699d81fd959f": false,
+        "0xf0981caa193a3d7e028bb8dd404cc1d8629c66e3": false
+      },
+      "status": "REVOKED"
+    }
   },
   "guidedOrder": {
     "marketId": "0x0000000000000000000000000000000000000000000000000000000000014aa9",

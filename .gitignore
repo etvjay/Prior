@@ -30,6 +30,29 @@ cache/
 .idea/
 .DS_Store
 
+# Generated demo / QA artifacts
+.demo-foundry/
+apps/web/.vercel/
+demo/candidate-scenes/
+demo/explainer-scenes*/
+demo/foundry-frames*/
+demo/foundry-scenes*/
+demo/user-ref-frames/
+demo/*-contact-sheet*.jpg
+demo/*-check-*.png
+demo/*-midpoint.jpg
+demo/*-end.jpg
+demo/*-picture*.mp4
+demo/*-candidate*.mp4
+demo/*-narration*.ogg
+demo/*-voice*.ogg
+demo/*-scenes*/
+demo/toolchain-*.json
+demo/ui-*.png
+demo/hyperframes-prior/renders/
+demo/hyperframes-prior/snapshots*/
+demo/hyperframes-prior/.hyperframes/
+
 # Logs
 *.log
 logs/

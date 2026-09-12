@@ -11,7 +11,7 @@ const ROOT = resolve(import.meta.dirname, "..");
 const RPC = process.env.SHANNON_RPC_HTTP ?? "https://dream-rpc.somnia.network";
 const INDEXER = process.env.DREAMDEX_INDEXER ?? "https://dev.smk.somnia.host/v1/graphql";
 const OWNER = "0x82Daa64CEDfA4d15615ADC6D577Dba0d9FfccF55" as Address;
-const FORECASTER = "0x4EbF775fb6397C1a191614CDCd0E117e04B24AB5";
+const FORECASTER = (process.env.PRIOR_FORECASTER_ADDRESS ?? "0x4EbF775fb6397C1a191614CDCd0E117e04B24AB5") as Address;
 const RFT = "0x5b1B51cB062B7B782c9EC2Bd5674eFAdb5308F41";
 const deadline = Date.now() + 45_000;
 const bounded = async <T,>(p: Promise<T>, label: string): Promise<T> => Promise.race([p, new Promise<T>((_, reject) => setTimeout(() => reject(new Error(`${label}_TIMEOUT`)), Math.min(8_000, Math.max(1, deadline - Date.now()))))]);

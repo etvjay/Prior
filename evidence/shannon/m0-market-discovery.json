@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-09-05T23:29:32.386Z",
+  "timestamp": "2026-09-11T09:21:03.260Z",
   "chainId": 50312,
-  "block": "480778271",
+  "block": "485452005",
   "rpc": "https://dream-rpc.somnia.network",
   "ws": "wss://api.infra.testnet.somnia.network/ws",
   "indexer": "https://dev.smk.somnia.host/v1/graphql",
