@@ -38,6 +38,15 @@ Status: `SUBMISSION_READY_WITH_LIMITATIONS` candidate matrix. This document free
 | Economic execution | Worker capability response and live hero | `DISABLED` / `NOT_CLAIMED` | No autonomous trading | No hosted economic execution is exposed or claimed.
 | Durable multi-agent state | Worker has no bindings | `NONE` | No D1/DO/session store | Durable multi-agent production operation is deferred.
 
+## Participation + Create & Run follow-on
+
+| Claim | Evidence | Class | Limitation | Submission-safe wording |
+|---|---|---|---|---|
+| Public participation entry exists | `apps/web/app/participate` and `docs/PARTICIPATION_MODEL.md` | `LOCAL_INTEGRATED` | Public card is an application template, not a shared canonical Circuit | The human UI maps each participant to a separate V2 Circuit instance because V2 fixes one forecaster per Circuit. |
+| Create & Run guided flow exists | `apps/web/app/create`, `apps/web/app/circuits/CreateCircuitWizard.tsx` | `LOCAL_INTEGRATED` | UI write choreography is not a fresh external receipt | PRIOR provides a seven-step forecast-only intent flow with explicit authority, review, and receipt/readback gates. |
+| Forecast commit and binding remain non-custodial | `apps/web/app/live/LiveWorkspace.tsx`, existing hosted write boundary | `LOCAL_INTEGRATED` | New participant-specific live write/readback not exercised here | The client signs; relays do not hold participant keys or grant economic authority. |
+| Full participant lifecycle | flow docs and local browser checks | `NOT_PROVEN` | No fresh participant create, resolution, finalization, or return evidence | Do not claim the public lifecycle is externally verified until receipts and canonical reads are recorded. |
+
 ## Non-claims
 
 - Forecasting competence from one or a few trials.

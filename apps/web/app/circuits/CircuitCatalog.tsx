@@ -1,0 +1,11 @@
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+import { CONTINUITY_ID, CONTINUITY } from "../evidence";
+import { short } from "../evidence";
+
+export function CircuitCatalog() {
+  const [mode, setMode] = useState<"PUBLIC" | "MINE" | "COMPLETED">("PUBLIC");
+  return <section className="circuit-catalog" aria-label="Circuit catalog"><div className="catalog-tabs" role="tablist" aria-label="Circuit views">{(["PUBLIC", "MINE", "COMPLETED"] as const).map((item) => <button key={item} role="tab" aria-selected={mode === item} onClick={() => setMode(item)}>{item}</button>)}</div>{mode === "PUBLIC" && <div className="catalog-list"><article className="public-template-card"><div><span className="instrument-label">PUBLIC TEMPLATE · FORECAST-ONLY</span><h2>BTC · 5m</h2><p>Public Forecast Circuit starting point. Inspect the rules, then create your own participant-specific Circuit instance.</p></div><div className="catalog-facts"><span><b>4</b> markets</span><span><b>NONE</b> capital</span><span><b>DISABLED</b> execution</span></div><div className="catalog-actions"><Link className="primary-button" href="/create?mode=participate&template=btc-5m">JOIN · CREATE MY INSTANCE</Link><Link className="secondary-button" href="/participate">VIEW TEMPLATE</Link></div></article></div>}{mode === "MINE" && <div className="catalog-empty"><span className="instrument-label">MINE · CONNECTED ADDRESS</span><h2>Connect to recover your Circuits.</h2><p>Participant-specific Circuits are recovered from the connected owner address. No fixture Circuit is shown as yours.</p><Link className="secondary-button" href="/create">CREATE A CIRCUIT</Link></div>}{mode === "COMPLETED" && <div className="catalog-list"><article className="completed-circuit-card"><div><span className="instrument-label">ACCEPTED SNAPSHOT · COMPLETED EVIDENCE</span><h2>BTC · 5m · CIRCUIT 04</h2><small className="mono">{short(CONTINUITY_ID)}</small></div><div><strong>{CONTINUITY.restart.reconstructed.completed} / {CONTINUITY.immutableIntent.targetWindows}</strong><span>markets processed</span></div><div><span className="blocked">AUTONOMOUS PATH BLOCKED_EXTERNAL</span><Link className="text-link" href={`/circuit/${CONTINUITY_ID}`}>OPEN CIRCUIT →</Link></div></article></div>}</section>;
+}

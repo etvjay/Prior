@@ -1,7 +1,7 @@
 # PRIOR — UI One-Shot Implementation Contract
 
 **Version:** 0.1  
-**Scope:** Landing, Live, Forecast, Circuits, Circuit, History, Profile  
+**Scope:** Landing, Live, Participate, Create, Circuits, Circuit, Forecast, History, Profile
 **Design direction:** cinematic + high-concept + dense financial/research instrument  
 **Primary rule:** motion must map to real product state.
 
@@ -23,6 +23,8 @@ Primary navigation:
 
 ```text
 Live
+Participate
+Create
 Circuits
 History
 Profile
@@ -38,6 +40,16 @@ Event Circuit
 ```
 
 as separate brands.
+
+Human entry paths:
+
+```text
+EXPLORE     inspect live or accepted evidence without signing
+PARTICIPATE inspect a PUBLIC TEMPLATE, then create a participant-specific Circuit instance
+CREATE      define, review, authorize, and activate one bounded Circuit intent
+```
+
+Public participation must never imply one shared V2 Circuit with many forecasters. The default human path is Forecast-only, with no capital requirement or economic permission.
 
 Technical terms may appear only in evidence/developer details.
 

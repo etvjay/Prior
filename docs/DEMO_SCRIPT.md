@@ -1,5 +1,11 @@
 # PRIOR Demo Script (3–5 minutes)
 
+## Human entry walkthrough (current UI)
+
+For a human product walkthrough, open `/participate` without a wallet. Inspect the `PUBLIC TEMPLATE` and the explicit `PUBLIC TEMPLATE → YOUR CIRCUIT INSTANCE` mapping. Continue to `/create?mode=participate`, review the forecast-only authority, and show the seven-step flow.
+
+Do not call the template a shared Circuit. Do not claim the create or Forecast write succeeded without a wallet signature, successful receipt, and canonical readback. After activation, the participant-specific ID opens `/circuit/[id]` and `/live`; the Live write gate remains disabled for snapshots, wrong forecasters, wrong chains, expired markets, and missing canonical alignment.
+
 ## 0:00–0:30 — Problem
 
 “Agents increasingly make consequential decisions, but belief, authority, execution, and outcome are usually collapsed into one opaque story. A forecast should not automatically become permission to spend money.”
@@ -13,7 +19,7 @@ Forecast → RFT → Circuit → bounded consequence → canonical outcome → s
 ```
 
 - Forecast: attributable belief before resolution.
-- RFT: durable resolved trial measuring judgment.
+- RFT: Resolution and Forecast Trail, the durable evidence object beneath one Forecast.
 - Circuit: bounded mandate deciding what that judgment may cause.
 
 “RFT measures judgment. Circuit assigns bounded consequence.”

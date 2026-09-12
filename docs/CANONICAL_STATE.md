@@ -1,9 +1,22 @@
 # Canonical State
 
 ## Current phase
-`M3 CONTINUITY WRITE VERIFIED — same four-window Circuit processed two real BTC 5m markets with immutable intent; Market A and Market B finalized/scored; guided abstentions; autonomous path BLOCKED_EXTERNAL; UI/reviews pending`
+`M4 PARTICIPATION + CREATE & RUN — LOCAL_INTEGRATED; V2 fixed-forecaster template mapping documented; human forecast-only UI, receipt gates, canonical readback paths, and local browser/build checks implemented; participant-specific public writes and full resolution return path remain externally unproven`
 
-## Verified implementation
+## Participation + Create & Run follow-on
+
+Implemented locally on 2026-09-12:
+
+- `/participate` exposes a bounded `PUBLIC TEMPLATE`, not a shared canonical Circuit;
+- V2 fixed-forecaster constraints map each participant to a separate Circuit instance;
+- `/create` guides market scope, run length, Forecast source, deterministic forecast-only policy, authority, immutable review, and create → authorize → activate;
+- the Live workspace requires connected forecaster identity, canonical market alignment, receipt-gated Forecast commit, canonical RFT readback, V2 binding, and binding readback;
+- source modes remain explicit: `LIVE` versus `ACCEPTED SNAPSHOT`.
+
+Evidence ceiling: `LOCAL_INTEGRATED`. No public participant-specific write, hosted create write, or complete return-through-resolution flow is claimed until fresh external receipts and canonical reads are recorded.
+
+## Previously verified implementation
+
 - M0 ABI / market / operator-registry read evidence captured against live Shannon at 2026-09-05.
 - Live market discovery works (BTC/ETH 1m and 5m windows, status=Trading).
 - All required `placeBinaryOrderFor` / `setOperatorApprovalForPool` / `isApprovedForPool` selectors
@@ -27,14 +40,14 @@
 - New continuity Circuit `0x15e18e2aecb7d00ca3243181fb2fa38af81b021266e2d0a290eb0c55d2b5f4c1` — **SHANNON_WRITE_VERIFIED** across Market A `0x14d04` and Market B `0x14d96`; same intent, two committed RFTs, both policy ABSTAIN.
 
 ## Next gate
-**Next gate:** Market B resolution/finalization and then extend the same four-window Circuit to additional eligible windows if the expiry budget permits. Browser E2E and review gates remain open.
+**Next gate:** run fresh-chain participant-specific create → authorize → activate → Forecast → bind verification with a disposable Shannon wallet, then exercise resolution/finalization and returning-participant recovery. Keep all public claims below `LOCAL_INTEGRATED` until those receipts and readbacks exist.
 
 ## Newly canonical in v0.2
 ```text
 Prior = sole public product name
 Forecast = public atomic belief action
-RFT = internal atomic evidence primitive
-Circuit = persistent execution intent across markets
+RFT = Resolution and Forecast Trail evidence object
+Circuit = persistent bounded intent across eligible markets
 Runner = liveness runtime
 Circuit authority = bounded/revocable
 belief trajectory = derived Circuit view, not Circuit definition
@@ -93,8 +106,7 @@ Live BTC 5m market 0x14934 binaryPool is a BeaconProxy that delegates
 coding agent to bootstrap, verify M0, execute live Shannon writes, build RFT/Circuit/Runner/UI,
 run reviews, and produce evidence.
 
-The canonical M0 read gate has been satisfied. The M0 write gate is blocked on
-`PRIOR_OWNER_PRIVATE_KEY`.
+The canonical M0 read gate was satisfied. The earlier M0 write-gate note is historical; the current milestone's unproven boundary is recorded above.
 
 ## UI one-shot contract
 `docs/UI_ONESHOT_SPEC.md` freezes the page hierarchy, visual tokens, landing scroll

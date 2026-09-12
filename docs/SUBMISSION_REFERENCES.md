@@ -5,7 +5,9 @@
 - App URL: `https://prior-aqf.pages.dev/` (Cloudflare Pages; deployed from `feat/prior-submission-surface`).
 - Pages deployment: `https://e451854c.prior-aqf.pages.dev`.
 - Proof route: `https://prior-aqf.pages.dev/proof`.
-- Demo candidate: `demo/prior-explainer-final.mp4`, 179.4 seconds, H.264 video plus clear AAC narration and burned-in subtitles. It explains PRIOR, Circuit, Forecast, and RFT in full, then demonstrates market change, the wallet boundary, and proof readback. No wallet transaction or autonomous execution is claimed.
+- Participate route: `https://prior-aqf.pages.dev/participate`.
+- Create route: `https://prior-aqf.pages.dev/create`.
+- Demo: submitted externally before repository cleanup; generated demo and Hyperframes artifacts were intentionally deleted and are not retained in this repository.
 - Repository: `https://github.com/etvjay/Prior/tree/feat/prior-submission-surface`.
 
 ## Hosted agent surface

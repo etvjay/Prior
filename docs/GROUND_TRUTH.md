@@ -2,24 +2,24 @@
 
 ## Purpose
 
-RFT is a **forecast-evidence protocol**. Its job is to preserve a participant's pre-resolution probabilistic belief, bind that belief to a specific DreamDEX Event Contract and contemporaneous market state, and deterministically evaluate it after DreamDEX resolves the event.
+RFT is a **Resolution and Forecast Trail** evidence object. Its job is to preserve a participant's pre-resolution probabilistic belief, bind that belief to a specific DreamDEX Event Contract and contemporaneous market state, and deterministically evaluate it after DreamDEX resolves the event.
 
 ## Canonical product statement
 
-> Forecast Arena lets a human or agent commit a probability against a live DreamDEX Event Contract before resolution, optionally express that belief economically, and receive independently reconstructable forecast evidence when the market resolves.
+> Prior lets a human or agent commit one Forecast against one DreamDEX Event Contract before resolution and preserve the result as attributable evidence.
 
 ## Primitive
 
 ```text
-Forecast Commitment
+Forecast
         +
-Reference Market State
+RFT evidence trail from commitment through resolution
         +
-Optional Economic Action
+Circuit bounded intent and policy
         +
-External Resolved Outcome
+Canonical DreamDEX outcome
         =
-Resolved Forecast Trial
+A reconstructable belief-and-intent iteration
 ```
 
 ## Responsibilities
@@ -137,8 +137,8 @@ Post-resolution comparison may evaluate the participant Brier score against the 
 ## Product vs primitive
 
 ```text
-Forecast Arena          = first application
-Resolved Forecast Trial = primitive
+Prior                    = public application
+Resolution and Forecast Trail = evidence object
 DreamDEX                 = first market adapter
 ```
 

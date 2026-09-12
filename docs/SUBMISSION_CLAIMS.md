@@ -18,6 +18,8 @@
 - Bounded recent market discovery from the DreamDEX indexer, labeled `discoveryCompleteness=BOUNDED`.
 - Bounded Circuit discovery from explicit verified hero/supporting evidence references.
 - A judge-facing `/proof` page and RFT/Circuit visual evidence.
+- Human `/participate` and `/create` entry surfaces use the same Forecast → RFT → Circuit continuity model.
+- The public participation surface truthfully maps a template to participant-specific V2 Circuit instances because V2 fixes one forecaster per Circuit.
 - Read-only MCP JSON-RPC discovery and live read tools.
 
 ## We do not claim
@@ -29,4 +31,6 @@
 - Durable multi-agent production networking.
 - Production OAuth/Cloudflare Access identity federation.
 - Fully trustless enforcement of every application-level policy outside the verified Circuit/action boundary.
-- Hosted Forecast submission or economic execution.
+- Hosted Forecast submission or economic execution as a completed participant lifecycle.
+- Public participant-specific Circuit creation/authorization/activation as externally verified.
+- Returning-participant recovery through DreamDEX resolution/finalization as externally verified.

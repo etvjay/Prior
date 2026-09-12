@@ -8,8 +8,9 @@ function PlainLanguageIntro() {
         <h1 id="plain-intro-title">One bounded intent. Many markets. Every result connected.</h1>
         <p className="plain-lede">A Circuit carries one set of rules across a declared sequence of markets. Each market gets its own Forecast and evidence record, while the intent keeps moving.</p>
         <div className="plain-actions">
-          <Link className="primary-button" href="/live">SEE A CIRCUIT IN MOTION</Link>
-          <a className="secondary-button" href="#how-it-works">HOW IT WORKS</a>
+          <Link className="primary-button" href="/participate">PARTICIPATE</Link>
+          <Link className="secondary-button" href="/create">CREATE &amp; RUN</Link>
+          <Link className="text-link" href="/proof">EXPLORE PROOF →</Link>
         </div>
       </div>
       <div className="circuit-hero-visual" aria-label="A persistent Circuit carrying one intent across three market iterations">

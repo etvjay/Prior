@@ -17,7 +17,7 @@ Profile
 ## Internal primitives
 
 ```text
-Resolved Forecast Trial (RFT)
+Resolution and Forecast Trail (RFT)
 Circuit Intent
 Circuit Policy
 Circuit Authority

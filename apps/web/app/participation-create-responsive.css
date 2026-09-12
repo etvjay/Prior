@@ -1,0 +1,53 @@
+.scope-banner { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+.mapping-line { display: flex; align-items: center; gap: 10px; margin: 18px 0 8px; color: var(--muted); font: 500 10px/1.3 var(--mono); letter-spacing: .1em; }
+.mapping-line span:last-child { color: var(--text); }
+.mapping-line b { color: var(--accent); }
+.wallet-note { color: var(--muted); font: 11px/1.5 var(--mono); margin: 0 0 18px; }
+
+.participation-next-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.cta-divider { color: var(--border); }
+
+@media (max-width: 900px) {
+  .primary-nav { gap: 12px; font-size: 11px; }
+  .mobile-nav { grid-template-columns: repeat(8, 1fr); }
+  .mobile-nav a { font-size: 8px; }
+  .participation-card, .create-wizard-grid { grid-template-columns: 1fr; }
+  .participation-card-action { border-left: 0; border-top: 1px solid var(--border); }
+  .participation-detail { grid-template-columns: 1fr; }
+  .public-template-card, .completed-circuit-card { grid-template-columns: 1fr; gap: 18px; }
+  .catalog-actions { display: flex; flex-wrap: wrap; }
+  .create-truth-rail { position: static; border-left: 0; border-top: 1px solid var(--border); }
+  .wizard-progress { overflow-x: visible; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .wizard-progress button { min-width: 0; }
+  .circuits-create-handoff { align-items: flex-start; flex-direction: column; }
+}
+@media (max-width: 600px) {
+  .mobile-nav { position: static; height: auto; min-height: 52px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .mobile-nav a { min-height: 52px; }
+
+  .mobile-nav a { font-size: 8px; }
+  .create-wizard { overflow: hidden; }
+  .create-wizard-grid { grid-template-columns: 1fr; }
+  .circuit-page { overflow: hidden; }
+  .circuit-header { grid-template-columns: 1fr; }
+  .circuit-header > div { min-width: 0; }
+  .circuit-header strong, .circuit-header .mono { overflow-wrap: anywhere; word-break: break-word; }
+  .wizard-panel, .create-truth-rail, .operational-circuit > div, .operational-header > div, .operational-market > header > div { min-width: 0; }
+  .operational-circuit .mono, .operational-circuit strong, .operational-circuit small { overflow-wrap: anywhere; word-break: break-word; }
+  .operational-circuit { grid-template-columns: 1fr; }
+  .operational-header { grid-template-columns: 1fr; }
+  .operational-market > header { grid-template-columns: 1fr; }
+  .operational-market > header > div { border-left: 0; border-top: 1px solid var(--border); padding: 14px 0 0; }
+  .wizard-progress { display: flex; flex-direction: column; gap: 6px; overflow: visible; }
+  .wizard-progress button { display: grid; grid-template-columns: 40px 1fr; width: 100%; min-width: 0; text-align: left; align-items: center; }
+  .wizard-progress button span { white-space: normal; }
+  .wizard-progress button:not(.is-current) { opacity: .58; }
+  .participation-card-main, .participation-card-action, .wizard-panel { padding: 20px; }
+  .template-stats, .policy-summary, .authority-summary, .wizard-options { grid-template-columns: 1fr; }
+  .participation-actions, .catalog-actions, .wizard-actions { flex-direction: column; align-items: stretch; }
+  .participation-actions a, .participation-actions button, .catalog-actions a, .wizard-actions button { width: 100%; }
+  .intent-review dl div { display: grid; gap: 5px; }
+  .intent-review dd { text-align: left; }
+  .write-sequence { gap: 7px; font-size: 10px; }
+  .mapping-line { flex-wrap: wrap; }
+}

@@ -9,6 +9,9 @@ const routes = [
   "app/api/continuity/route.ts",
   "app/api/discovery/markets/route.ts",
   "app/live/page.tsx",
+  "app/participate/page.tsx",
+  "app/create/page.tsx",
+  "app/my/page.tsx",
   "app/circuits/page.tsx",
   "app/circuit/[id]/page.tsx",
   "app/forecast/[id]/page.tsx",
@@ -127,5 +130,13 @@ assert.match(source, /AWAITING_RECEIPT/);
 assert.match(source, /COMMITTED_READBACK/);
 assert.match(source, /LIVE STATE UNAVAILABLE/);
 assert.match(source, /prior\.continuity\.v1/);
+assert.match(source, /PUBLIC TEMPLATE/);
+assert.match(source, /participant-specific/);
+assert.match(source, /FORECAST_ONLY/);
+assert.match(source, /allowedActionsBitmap/);
+assert.match(source, /WRITE DISABLED/);
+assert.match(source, /READBACK_MISMATCH/);
+assert.match(source, /RECEIPT_REVERTED/);
+assert.doesNotMatch(source, /SHARED CIRCUIT/);
 
-console.log(`UI contract PASS: ${routes.length} routes, six generated landing sections, Circuit continuity, evidence boundaries, reduced motion, geometry, ARIA, write gates`);
+console.log(`UI contract PASS: ${routes.length} routes, participation template, Create & Run lifecycle, Circuit continuity, evidence boundaries, reduced motion, geometry, ARIA, write gates`);

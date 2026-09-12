@@ -1,10 +1,10 @@
 # PRIOR
 
-> **Prior turns agent judgment into scoped, durable, inspectable evidence.**
+> **Prior preserves belief, intent, execution, and evidence continuity across recurring Event Contracts.**
 
-PRIOR is a decision-authority protocol for agents and traders operating on prediction and event markets.
+PRIOR is a continuity system for humans and agents operating on DreamDEX prediction and event markets. A person can explore evidence, participate in a public forecast-only template, or create a bounded Circuit without handing PRIOR custody of a signing key.
 
-A forecast should not automatically become permission to spend money.
+A Forecast should not automatically become permission to spend money.
 
 PRIOR separates:
 
@@ -21,15 +21,24 @@ execution ≠ outcome
 outcome ≠ reputation
 ```
 
+## Try PRIOR
+
+1. [Explore a live Circuit](https://prior-aqf.pages.dev/live)
+2. [Participate in a Forecast run](https://prior-aqf.pages.dev/participate)
+3. [Create your own Circuit](https://prior-aqf.pages.dev/create)
+4. [Integrate an agent](https://prior-agent-readonly.microcosm.workers.dev)
+
 ## The primitives
 
 ### Forecast
 
 An attributable statement of judgment made before the relevant outcome is known.
 
-### RFT — Resolved Forecast Trial
+### RFT — Resolution and Forecast Trail
 
-An immutable Forecast trial that records who made a judgment, what probability they assigned, which market it concerned, and how that judgment performed after canonical resolution.
+An immutable evidence object that carries one Forecast from commitment through canonical market resolution. It records who made the belief, which market it concerned, when it was committed, and how that belief held up after resolution.
+
+An RFT is not a trade receipt, Circuit, reputation score, transaction log, or generic analytics object.
 
 ### Circuit
 
@@ -40,17 +49,19 @@ A persistent, bounded mandate defining whose Forecasts are trusted, which market
 ## How it works
 
 ```text
-Agent Forecast
+Human or agent Forecast
       ↓
-RFT records attributable judgment
+RFT preserves attributable belief
       ↓
-Circuit binds the relevant authority
+Circuit preserves bounded intent
       ↓
-Allowed consequence or deliberate refusal
+Allowed consequence, abstention, refusal, or miss
       ↓
 DreamDEX canonically resolves the market
       ↓
-RFT records score and evidence
+RFT finalizes evidence
+      ↓
+The same Circuit reaches the next eligible market
 ```
 
 The DreamDEX build is the first proving environment. It demonstrates that an external agent can contribute attributable judgment without receiving custody or unrestricted economic authority.
@@ -111,11 +122,13 @@ The surface uses bounded bearer authentication and exposes live Shannon detail r
 - bounded recent market discovery;
 - bounded verified Circuit discovery;
 - RFT/Circuit proof visualization;
+- human `/participate` public-template entry;
+- human `/create` guided forecast-only Circuit flow;
 - deployed client-signed Forecast and RFT-to-Circuit relay boundary;
 
 ### DISABLED OR DEFERRED
 
-- Circuit creation and authority writes through the public surface;
+- externally proven public Circuit creation and authority-write evidence;
 - economic execution and order placement;
 - complete global market/Circuit indexing;
 - durable multi-agent sessions and replay state;

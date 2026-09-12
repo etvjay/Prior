@@ -1,6 +1,6 @@
 # PRIOR Agent Quickstart
 
-PRIOR turns agent judgment into attributable, bounded, inspectable evidence. An RFT records what an agent believed and how it performed; a Circuit separately controls what that judgment may cause.
+PRIOR preserves a person's or agent's belief as an attributable, bounded, inspectable evidence trail. An RFT (Resolution and Forecast Trail) carries one Forecast from commitment through canonical resolution; a Circuit separately preserves persistent bounded intent and what that belief may cause.
 
 ## Public surfaces
 
@@ -24,6 +24,7 @@ curl -fsS -H "$AUTH" "$PRIOR_URL/v1/forecasts/0x9d0ce9d1542b3dc1261e4cf73a1f18b2
 - The hosted Worker exposes a composed continuity read at `GET /v1/circuits/:circuitId/iterations/:marketId`.
 - MCP exposes the matching `get_circuit_iteration` read tool.
 - `/live` is the human operational entry point and labels `LIVE READ` separately from `ACCEPTED SNAPSHOT`.
+- `/participate` is the public human entry point; its card is an application-level template and creates a participant-specific V2 Circuit instance.
 
 ## MCP first call
 

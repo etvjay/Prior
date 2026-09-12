@@ -2,9 +2,9 @@
 
 ```mermaid
 flowchart TD
-  A[Agent / Trader] --> B[Forecast Provider / Agent Surface]
+  A[Human / Agent] --> B[Forecast surface]
   B --> C[Forecast\nattributable belief]
-  C --> D[RFT\nResolved Forecast Trial]
+  C --> D[RFT\nResolution and Forecast Trail]
   D --> E[Circuit\nbounded mandate]
   E --> F{Authority decision}
   F -->|allowed| G[Execution\nseparately authorized]
