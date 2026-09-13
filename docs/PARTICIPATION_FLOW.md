@@ -26,7 +26,9 @@ The user flow is:
 
 ## Identity and custody
 
-The connected address is pinned as both V2 `owner` and `forecaster`. The Worker is not a signer. Forecast-only participation requests no token approval, allowance, collateral, operator permission, or capital movement.
+The UI uses RainbowKit 2.2.11 with wagmi 2.19.5 and a verified Somnia Shannon chain configuration. The connected address is pinned as both V2 `owner` and `forecaster`. The Worker is not a signer. Forecast-only participation requests no token approval, allowance, collateral, operator permission, or capital movement.
+
+The RainbowKit wallet list always exposes its injected `Browser Wallet` connector for MetaMask, Rabby, and other injected EIP-1193 providers. The WalletConnect connector is conditional on `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`; the repository currently has no project ID configured, so WalletConnect/mobile deep-link support is not claimed until that public configuration is supplied.
 
 The Live commit gate is disabled unless:
 

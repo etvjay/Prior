@@ -5,8 +5,10 @@
 - App URL: `https://prior-aqf.pages.dev/` (Cloudflare Pages; deployed from `feat/prior-submission-surface`).
 - Pages deployment: `https://e451854c.prior-aqf.pages.dev`.
 - Proof route: `https://prior-aqf.pages.dev/proof`.
-- Participate route: `https://prior-aqf.pages.dev/participate`.
-- Create route: `https://prior-aqf.pages.dev/create`.
+- Historical Pages deployment: `https://prior-aqf.pages.dev/` (the new `/participate`, `/create`, and `/my` routes are local milestone surfaces and are not yet deployed there).
+- Local participation route: `/participate`.
+- Local create route: `/create`.
+- Local owner recovery route: `/my`.
 - Demo: submitted externally before repository cleanup; generated demo and Hyperframes artifacts were intentionally deleted and are not retained in this repository.
 - Repository: `https://github.com/etvjay/Prior/tree/feat/prior-submission-surface`.
 

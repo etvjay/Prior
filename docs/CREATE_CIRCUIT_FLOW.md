@@ -24,9 +24,11 @@ The judge-friendly preset is:
 - owner = forecaster = connected address;
 - Runner: not required for the Forecast-only preset.
 
-## Receipt-gated writes
+## Wallet boundary
 
-Every V2 write follows:
+The wallet step uses RainbowKit 2.2.11 and wagmi 2.19.5. RainbowKit’s injected Browser Wallet connector supports injected MetaMask/Rabby/EIP-1193 providers. WalletConnect is not enabled without the public `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`; no mobile deep-link claim is made until that value is configured.
+
+## Receipt-gated writes
 
 ```text
 DRAFT

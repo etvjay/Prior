@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import { PriorHeader } from "../components";
 import { CreateCircuitWizard } from "../circuits/CreateCircuitWizard";
 

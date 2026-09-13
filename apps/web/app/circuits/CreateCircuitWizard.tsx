@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { encodeFunctionData, decodeFunctionResult, type Hex } from "viem";
+import { encodeFunctionData, decodeFunctionResult, type Hex, type PublicClient } from "viem";
+import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi";
+import { useConnectModal, useChainModal } from "@rainbow-me/rainbowkit";
 import { useEffect, useMemo, useState } from "react";
 import { instantiatePublicTemplate, transitionCircuitCreation, type CircuitCreationState } from "../lib/prior-participation";
 
-type Provider = { request(args: { method: string; params?: unknown[] }): Promise<unknown> };
 type Market = { marketId: string; asset?: string; intervalSec?: string; clobStatus?: string; expiry?: string; marketAddress?: string; baseSymbol?: string };
-
-declare global { interface Window { ethereum?: Provider } }
 
 const REGISTRY = "0x1eD3B2310F369977ef82569498d5F678f8B73104" as const;
 const CREATE_ABI = [{ type: "function", name: "create", stateMutability: "nonpayable", inputs: [{ name: "intent", type: "tuple", components: [{ name: "circuitId", type: "bytes32" }, { name: "owner", type: "address" }, { name: "forecaster", type: "address" }, { name: "marketClass", type: "uint8" }, { name: "targetWindows", type: "uint16" }, { name: "totalBudget", type: "uint128" }, { name: "maxPerMarket", type: "uint128" }, { name: "minMarginBps", type: "uint16" }, { name: "maxConsecutiveLosses", type: "uint8" }, { name: "startsAt", type: "uint64" }, { name: "expiresAt", type: "uint64" }, { name: "allowedActionsBitmap", type: "uint256" }] }], outputs: [{ name: "circuitId", type: "bytes32" }] }] as const;
@@ -20,22 +19,22 @@ const steps = ["MARKET SCOPE", "RUN LENGTH", "FORECAST SOURCE", "POLICY", "AUTHO
 function short(value: string) { return `${value.slice(0, 10)}…${value.slice(-8)}`; }
 function asHex(value: unknown): Hex { return String(value) as Hex; }
 
-async function waitReceipt(provider: Provider, hash: string) {
-  for (let attempt = 0; attempt < 90; attempt += 1) {
-    const receipt = await provider.request({ method: "eth_getTransactionReceipt", params: [hash] }) as { status?: string; blockNumber?: string; logs?: Array<{ topics?: string[] }> } | null;
-    if (receipt) {
-      if (receipt.status !== "0x1") throw new Error("RECEIPT_REVERTED");
-      return receipt;
-    }
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  }
-  throw new Error("RECEIPT_TIMEOUT");
+async function waitReceipt(publicClient: PublicClient, hash: Hex) {
+  const receipt = await publicClient.waitForTransactionReceipt({ hash });
+  if (receipt.status !== "success") throw new Error("RECEIPT_REVERTED");
+  return receipt;
 }
 
 export function CreateCircuitWizard({ participation = false }: { participation?: boolean }) {
+  const { address: connectedAddress, isConnected } = useAccount();
+  const chainId = useChainId();
+  const publicClient = usePublicClient();
+  const { data: walletClient } = useWalletClient();
+  const { openConnectModal } = useConnectModal();
+  const { openChainModal } = useChainModal();
+  const wallet = connectedAddress ?? null;
+  const walletStatus = !isConnected ? "DISCONNECTED" : chainId === 50312 ? "CONNECTED · SHANNON" : "WRONG NETWORK · SWITCH TO SHANNON";
   const [step, setStep] = useState(0);
-  const [wallet, setWallet] = useState<string | null>(null);
-  const [walletStatus, setWalletStatus] = useState("DISCONNECTED");
   const [markets, setMarkets] = useState<Market[]>([]);
   const [market, setMarket] = useState<Market | null>(null);
   const [targetWindows, setTargetWindows] = useState(4);
@@ -56,43 +55,34 @@ export function CreateCircuitWizard({ participation = false }: { participation?:
   const intent = useMemo(() => wallet ? instantiatePublicTemplate({ marketClass: 5, targetWindows }, wallet) : null, [wallet, targetWindows]);
   const reviewText = `Over the next ${targetWindows} eligible BTC five-minute Event Contracts, use my Forecasts. Economic execution is disabled. Each successful Forecast commit becomes attributable evidence; no capital approval is requested.`;
 
-  async function connect() {
-    const provider = window.ethereum;
-    if (!provider) { setWalletStatus("PROVIDER REQUIRED"); return; }
-    setWalletStatus("CONNECTING");
-    try {
-      const accounts = await provider.request({ method: "eth_requestAccounts" }) as string[];
-      const chain = String(await provider.request({ method: "eth_chainId" })).toLowerCase();
-      if (!accounts[0]) throw new Error("NO_ACCOUNT");
-      if (chain !== "0xc488") {
-        await provider.request({ method: "wallet_switchEthereumChain", params: [{ chainId: "0xc488" }] });
-      }
-      setWallet(accounts[0]); setWalletStatus("CONNECTED · SHANNON");
-    } catch (reason) { setWalletStatus(reason instanceof Error && /reject|denied/i.test(reason.message) ? "CONNECTION REJECTED" : "WRONG NETWORK OR CONNECTION FAILED"); }
+  function connect() {
+    if (isConnected && chainId !== 50312) { openChainModal?.(); return; }
+    if (!openConnectModal) { setError("RAINBOWKIT_MODAL_UNAVAILABLE"); return; }
+    openConnectModal();
   }
 
   async function createAndActivate() {
-    const provider = window.ethereum;
-    if (!provider || !wallet || !intent || !market) { setError("WALLET_AND_CANONICAL_MARKET_REQUIRED"); return; }
+    if (!wallet || !intent || !market || !walletClient || !publicClient || chainId !== 50312) { setError("WALLET_SHANNON_CLIENT_AND_CANONICAL_MARKET_REQUIRED"); return; }
     setError(null); setPhase("SIGNING_CREATE");
     let creationState = transitionCircuitCreation(state, { type: "REVIEW" });
     creationState = transitionCircuitCreation(creationState, { type: "APPROVE" });
     setState(creationState);
     try {
-      const block = await provider.request({ method: "eth_getBlockByNumber", params: ["latest", false] }) as { timestamp?: string };
-      const startsAt = BigInt(block.timestamp ?? "0x0");
+      const block = await publicClient.getBlock();
+      const startsAt = block.timestamp;
       if (startsAt === 0n) throw new Error("CHAIN_TIMESTAMP_UNAVAILABLE");
       const expiresAt = startsAt + BigInt(targetWindows * 300 + 900);
       const data = encodeFunctionData({ abi: CREATE_ABI, functionName: "create", args: [{ circuitId: "0x" + "00".repeat(32) as Hex, owner: wallet as `0x${string}`, forecaster: wallet as `0x${string}`, marketClass: intent.marketClass, targetWindows: intent.targetWindows, totalBudget: intent.totalBudget, maxPerMarket: intent.maxPerMarket, minMarginBps: 0, maxConsecutiveLosses: 1, startsAt, expiresAt, allowedActionsBitmap: 0n }] });
-      const hash = await provider.request({ method: "eth_sendTransaction", params: [{ from: wallet, to: REGISTRY, data, value: "0x0" }] }) as string;
+      const hash = await walletClient.sendTransaction({ account: walletClient.account, to: REGISTRY, data, value: 0n });
       setPhase("AWAITING_CREATE_RECEIPT"); creationState = transitionCircuitCreation(creationState, { type: "SUBMITTED", hash }); setState(creationState);
-      const receipt = await waitReceipt(provider, hash);
+      const receipt = await waitReceipt(publicClient, hash);
       creationState = transitionCircuitCreation(creationState, { type: "RECEIPT_SUCCESS" }); setState(creationState);
       const id = receipt.logs?.map((log) => log.topics?.[1]).find((topic) => /^0x[\da-f]{64}$/i.test(topic ?? ""));
       if (!id) throw new Error("CREATE_READBACK_MISSING_CIRCUIT_ID");
       const intentCall = encodeFunctionData({ abi: INTENT_ABI, functionName: "intents", args: [id as Hex] });
-      const intentRaw = await provider.request({ method: "eth_call", params: [{ to: REGISTRY, data: intentCall }, "latest"] }) as Hex;
-      const verifiedIntent = decodeFunctionResult({ abi: INTENT_ABI, functionName: "intents", data: intentRaw });
+      const intentCallResult = await publicClient.call({ to: REGISTRY, data: intentCall });
+      if (!intentCallResult.data) throw new Error("READBACK_EMPTY");
+      const verifiedIntent = decodeFunctionResult({ abi: INTENT_ABI, functionName: "intents", data: intentCallResult.data });
       const values = Array.isArray(verifiedIntent) ? verifiedIntent[0] : verifiedIntent;
       const verifiedOwner = String((values as Record<string, unknown>).owner ?? (values as unknown[])[1]);
       const verifiedForecaster = String((values as Record<string, unknown>).forecaster ?? (values as unknown[])[2]);
@@ -106,12 +96,13 @@ export function CreateCircuitWizard({ participation = false }: { participation?:
       for (const action of ["authorize", "activate"] as const) {
         setPhase(action === "authorize" ? "SIGNING_AUTHORIZE" : "SIGNING_ACTIVATE");
         const actionData = encodeFunctionData({ abi: ACTION_ABI, functionName: action, args: [id as Hex] });
-        const actionHash = await provider.request({ method: "eth_sendTransaction", params: [{ from: wallet, to: REGISTRY, data: actionData, value: "0x0" }] }) as string;
-        await waitReceipt(provider, actionHash);
+        const actionHash = await walletClient.sendTransaction({ account: walletClient.account, to: REGISTRY, data: actionData, value: 0n });
+        await waitReceipt(publicClient, actionHash);
       }
       const runtimeData = encodeFunctionData({ abi: RUNTIME_ABI, functionName: "runtime", args: [id as Hex] });
-      const runtimeRaw = await provider.request({ method: "eth_call", params: [{ to: REGISTRY, data: runtimeData }, "latest"] }) as Hex;
-      const runtime = decodeFunctionResult({ abi: RUNTIME_ABI, functionName: "runtime", data: runtimeRaw });
+      const runtimeCallResult = await publicClient.call({ to: REGISTRY, data: runtimeData });
+      if (!runtimeCallResult.data) throw new Error("RUNTIME_READBACK_EMPTY");
+      const runtime = decodeFunctionResult({ abi: RUNTIME_ABI, functionName: "runtime", data: runtimeCallResult.data });
       const runtimeValues = Array.isArray(runtime) ? runtime[0] : runtime;
       const status = Number((runtimeValues as Record<string, unknown>).status ?? (runtimeValues as unknown[])[0]);
       if (status !== 2) throw new Error("ACTIVATE_READBACK_MISMATCH");

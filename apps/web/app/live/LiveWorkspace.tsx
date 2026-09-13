@@ -2,11 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { encodeFunctionData } from "viem";
+import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi";
 import { ForecastNode, MarketNode, ProbabilityTrack } from "../components";
 import type { AcceptedForecast } from "../evidence";
-
-type Provider = { request(args: { method: string; params?: unknown[] }): Promise<unknown> };
-declare global { interface Window { ethereum?: Provider } }
 
 type Fallback = {
   circuitId: string;
@@ -39,6 +37,10 @@ const BIND_ABI = [{ type: "function", name: "bindTrial", inputs: [{ name: "circu
 function snapshot(f: Fallback, historical = true): View { return { schemaVersion: "prior.continuity.v1", source: { mode: "ACCEPTED_SNAPSHOT", chainId: 50312, fetchedAt: "2026-09-06T00:00:00.000Z", freshness: historical ? "historical accepted snapshot" : "participant readback pending", endpoint: "committed repository evidence", evidenceClassification: historical ? "SHANNON_WRITE_VERIFIED" : "LOCAL_INTEGRATED" }, circuit: { circuitId: f.circuitId, status: historical ? "COMPLETE" : f.status, forecaster: historical ? "accepted evidence" : "participant readback pending", targetWindows: f.targetWindows, completed: f.completed, missed: 0, abstained: f.abstained, budget: { total: "0", maxPerMarket: "0" }, authority: { allowedActionsBitmap: "0", execution: "NONE" } }, iteration: { marketId: f.marketId, market: { status: historical ? "RESOLVED" : "UNKNOWN", referenceValid: false }, forecast: historical ? { trialId: f.forecastId, probability: f.probabilityUpBps, status: "SCORED", forecaster: historical ? "accepted evidence" : "participant readback pending" } : undefined, rft: historical ? { trialId: f.forecastId, status: "SCORED", outcome: f.outcome } : undefined, binding: { bound: historical, processed: historical }, policy: historical ? { state: "EVALUATED", decision: "ABSTAIN", reason: "Accepted Circuit evidence recorded a deliberate abstention." } : { state: "UNAVAILABLE", decision: "WAITING", reason: "Participant state requires a live canonical read." }, execution: historical ? { status: "ABSTAINED", authorized: false, refusalReason: "No economic action was requested in the accepted evidence." } : { status: "DISABLED", authorized: false, refusalReason: "No participant execution state is available from the fallback." }, resolution: historical ? { finalized: true, outcome: f.outcome, source: "accepted evidence artifact" } : { finalized: false, source: "live canonical read required" } }, next: { state: historical ? "COMPLETE" : "WAITING_FOR_LIVE_READ" } }; }
 
 export function LiveWorkspace({ fallback, snapshotEvidence = true }: { fallback: Fallback; snapshotEvidence?: boolean }) {
+  const { address: walletAccount } = useAccount();
+  const chainId = useChainId();
+  const publicClient = usePublicClient();
+  const { data: walletClient } = useWalletClient();
   const [view, setView] = useState<View>(() => snapshot(fallback, snapshotEvidence));
   const [sourceError, setSourceError] = useState<string | null>(null);
   const [probability, setProbability] = useState(fallback.probabilityUpBps / 100);
@@ -46,20 +48,9 @@ export function LiveWorkspace({ fallback, snapshotEvidence = true }: { fallback:
   const [phase, setPhase] = useState("READING_LIVE_STATE");
   const [error, setError] = useState<string | null>(null);
   const [txHash, setTxHash] = useState<string | null>(null);
-  const [walletAccount, setWalletAccount] = useState<string | null>(null);
   const [markets, setMarkets] = useState<MarketOption[]>([]);
   const [selectedMarketId, setSelectedMarketId] = useState(fallback.marketId);
   const selectedMarket = markets.find((market) => market.marketId.toLowerCase() === selectedMarketId.toLowerCase());
-  useEffect(() => {
-    const provider = window.ethereum;
-    if (!provider) return;
-    const syncAccount = async () => { const accounts = await provider.request({ method: "eth_accounts" }) as string[]; setWalletAccount(accounts[0] ?? null); };
-    void syncAccount();
-    const events = provider as Provider & { on?: (event: string, listener: (value: unknown) => void) => void; removeListener?: (event: string, listener: (value: unknown) => void) => void };
-    const onAccounts = () => void syncAccount();
-    events.on?.("accountsChanged", onAccounts);
-    return () => events.removeListener?.("accountsChanged", onAccounts);
-  }, []);
   const accountMatches = Boolean(walletAccount && /^0x[0-9a-fA-F]{40}$/.test(view.circuit.forecaster) && walletAccount.toLowerCase() === view.circuit.forecaster.toLowerCase());
 
   const refresh = async (marketId = selectedMarketId): Promise<View | null> => {
@@ -79,44 +70,29 @@ export function LiveWorkspace({ fallback, snapshotEvidence = true }: { fallback:
   const marketLabel = selectedMarket ? "DISCOVERED MARKET · VERIFYING" : terminal ? "SELECTED HERO ITERATION" : "CURRENT ELIGIBLE MARKET";
   const marketState = selectedMarket ? marketStatus : terminal ? "RESOLVED" : view.iteration.market.status;
   const data = useMemo(() => encodeFunctionData({ abi: COMMIT_ABI, functionName: "commitForecast", args: [selectedMarketId as `0x${string}`, Math.round(probability * 100), 0, false, 0n, 0] }), [selectedMarketId, probability]);
-  const canCommit = requested && view.source.mode === "LIVE" && aligned && accountMatches && marketStatus === "TRADING" && !view.iteration.forecast && phase === "READY";
-  const accountReason = view.source.mode === "LIVE" && aligned && !accountMatches ? walletAccount ? "WRITE DISABLED · connected wallet is not this Circuit’s forecaster" : "CONNECT THE CIRCUIT FORECASTER WALLET TO CONTINUE" : null;
+  const canCommit = Boolean(requested && view.source.mode === "LIVE" && aligned && accountMatches && chainId === 50312 && walletClient && publicClient && marketStatus === "TRADING" && !view.iteration.forecast && phase === "READY");
+  const accountReason = view.source.mode === "LIVE" && aligned && chainId !== 50312 ? "WRITE DISABLED · switch the connected wallet to Somnia Shannon" : view.source.mode === "LIVE" && aligned && !accountMatches ? walletAccount ? "WRITE DISABLED · connected wallet is not this Circuit’s forecaster" : "CONNECT THE CIRCUIT FORECASTER WALLET TO CONTINUE" : null;
   async function commit() {
-    if (!canCommit || !window.ethereum) return;
+    if (!canCommit || !walletClient || !publicClient || !walletAccount) return;
     setError(null); setPhase("SIGNING");
     try {
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" }) as string[];
-      if (!accounts[0] || !accountMatches || accounts[0].toLowerCase() !== view.circuit.forecaster.toLowerCase()) throw new Error("FORECASTER_MISMATCH: connected wallet does not own this Circuit");
-      const chain = await window.ethereum.request({ method: "eth_chainId" });
-      if (String(chain).toLowerCase() !== "0xc488") throw new Error("CHAIN_MISMATCH: connect to Somnia Shannon");
-      const hash = await window.ethereum.request({ method: "eth_sendTransaction", params: [{ from: accounts[0], to: RFT_REGISTRY, data, value: "0x0" }] }) as string;
+      const hash = await walletClient.sendTransaction({ account: walletClient.account, to: RFT_REGISTRY, data, value: 0n });
       setTxHash(hash); setPhase("AWAITING_RECEIPT");
-      for (let attempt = 0; attempt < 60; attempt += 1) {
-        const receipt = await window.ethereum.request({ method: "eth_getTransactionReceipt", params: [hash] }) as { status?: string } | null;
-        if (receipt) {
-          if (receipt.status !== "0x1") throw new Error("RECEIPT_REVERTED: commit transaction reverted");
-          const canonical = await refresh();
-          const trialId = canonical?.iteration.forecast?.trialId;
-          if (!canonical || !trialId) throw new Error("READBACK_MISMATCH: canonical Forecast was not found");
-          if (!canonical.iteration.binding.bound) {
-            setPhase("BINDING_RFT");
-            const bindData = encodeFunctionData({ abi: BIND_ABI, functionName: "bindTrial", args: [fallback.circuitId as `0x${string}`, selectedMarketId as `0x${string}`, trialId as `0x${string}`] });
-            const bindHash = await window.ethereum.request({ method: "eth_sendTransaction", params: [{ from: accounts[0], to: CIRCUIT_REGISTRY, data: bindData, value: "0x0" }] }) as string;
-            let bindConfirmed = false;
-            for (let bindAttempt = 0; bindAttempt < 60; bindAttempt += 1) {
-              const bindReceipt = await window.ethereum.request({ method: "eth_getTransactionReceipt", params: [bindHash] }) as { status?: string } | null;
-              if (bindReceipt) { if (bindReceipt.status !== "0x1") throw new Error("BIND_RECEIPT_REVERTED: Circuit binding was not confirmed"); bindConfirmed = true; break; }
-              await new Promise((resolve) => setTimeout(resolve, 1000));
-            }
-            if (!bindConfirmed) throw new Error("BIND_RECEIPT_TIMEOUT: Circuit binding receipt was not observed");
-          }
-          const bound = await refresh();
-          if (!bound?.iteration.binding.bound) throw new Error("BIND_READBACK_MISMATCH: Circuit iteration is not bound");
-          setPhase("COMMITTED_READBACK"); return;
-        }
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+      const receipt = await publicClient.waitForTransactionReceipt({ hash });
+      if (receipt.status !== "success") throw new Error("RECEIPT_REVERTED: commit transaction reverted");
+      const canonical = await refresh();
+      const trialId = canonical?.iteration.forecast?.trialId;
+      if (!canonical || !trialId) throw new Error("READBACK_MISMATCH: canonical Forecast was not found");
+      if (!canonical.iteration.binding.bound) {
+        setPhase("BINDING_RFT");
+        const bindData = encodeFunctionData({ abi: BIND_ABI, functionName: "bindTrial", args: [fallback.circuitId as `0x${string}`, selectedMarketId as `0x${string}`, trialId as `0x${string}`] });
+        const bindHash = await walletClient.sendTransaction({ account: walletClient.account, to: CIRCUIT_REGISTRY, data: bindData, value: 0n });
+        const bindReceipt = await publicClient.waitForTransactionReceipt({ hash: bindHash });
+        if (bindReceipt.status !== "success") throw new Error("BIND_RECEIPT_REVERTED: Circuit binding was not confirmed");
       }
-      throw new Error("TIMEOUT: receipt was not observed");
+      const bound = await refresh();
+      if (!bound?.iteration.binding.bound) throw new Error("BIND_READBACK_MISMATCH: Circuit iteration is not bound");
+      setPhase("COMMITTED_READBACK");
     } catch (e) { setError(e instanceof Error ? e.message : "commit failed"); setPhase("SIGNATURE_REJECTED"); }
   }
 

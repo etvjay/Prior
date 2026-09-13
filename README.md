@@ -23,9 +23,9 @@ outcome ≠ reputation
 
 ## Try PRIOR
 
-1. [Explore a live Circuit](https://prior-aqf.pages.dev/live)
-2. [Participate in a Forecast run](https://prior-aqf.pages.dev/participate)
-3. [Create your own Circuit](https://prior-aqf.pages.dev/create)
+1. `http://localhost:3000/` — explore a live Circuit locally
+2. `http://localhost:3000/participate` — participate in a Forecast run locally
+3. `http://localhost:3000/create` — create your own Circuit locally
 4. [Integrate an agent](https://prior-agent-readonly.microcosm.workers.dev)
 
 ## The primitives
@@ -124,6 +124,7 @@ The surface uses bounded bearer authentication and exposes live Shannon detail r
 - RFT/Circuit proof visualization;
 - human `/participate` public-template entry;
 - human `/create` guided forecast-only Circuit flow;
+- RainbowKit/wagmi wallet connection with injected Browser Wallet support;
 - deployed client-signed Forecast and RFT-to-Circuit relay boundary;
 
 ### DISABLED OR DEFERRED

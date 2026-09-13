@@ -6,7 +6,8 @@
 
 - `/participate`: **LOCAL_INTEGRATED** — bounded public template, explicit participant-specific Circuit mapping, wallet-required handoff, no shared multi-forecaster claim.
 - `/create`: **LOCAL_INTEGRATED** — seven-step forecast-only flow with immutable review and client-side create → authorize → activate receipt/readback choreography.
-- `/live`: **LOCAL_INTEGRATED** — connected forecaster gate, canonical market alignment, Forecast receipt/readback, V2 binding receipt/readback path.
+- `/live`: **LOCAL_INTEGRATED** — connected forecaster gate, canonical market alignment, RainbowKit/wagmi wallet client, Forecast receipt/readback, V2 binding receipt/readback path.
+- Wallet UI: **LOCAL_VERIFIED** — RainbowKit modal with injected `Browser Wallet` connector; no WalletConnect project ID is configured.
 - Responsive/browser QA: **LOCAL_PASS** — hydrated Chromium route checks at desktop and mobile widths; no page errors; fresh external browser E2E is still deferred.
 - Live participant-specific writes, hosted Circuit creation, returning-participant recovery through DreamDEX resolution, and full MCP parity: **NOT PROVEN**.
 - Evidence ceiling: **LOCAL_INTEGRATED** for this follow-on. Existing Shannon evidence below remains valid but is not evidence of the new public-participant path.

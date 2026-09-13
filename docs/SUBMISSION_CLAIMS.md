@@ -19,6 +19,7 @@
 - Bounded Circuit discovery from explicit verified hero/supporting evidence references.
 - A judge-facing `/proof` page and RFT/Circuit visual evidence.
 - Human `/participate` and `/create` entry surfaces use the same Forecast → RFT → Circuit continuity model.
+- RainbowKit/wagmi wallet connection with an injected Browser Wallet connector is present and locally verified.
 - The public participation surface truthfully maps a template to participant-specific V2 Circuit instances because V2 fixes one forecaster per Circuit.
 - Read-only MCP JSON-RPC discovery and live read tools.
 

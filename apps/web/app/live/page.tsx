@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import hero from "../../../../evidence/m4-3-live-zero-action-lifecycle.json";
 import { PriorHeader } from "../components";
 import { LiveWorkspace, type Fallback } from "./LiveWorkspace";
